@@ -1,6 +1,6 @@
 <?php
 require_once './app/trait/AuthTrait.php';
-require_once './app/repositories/UserRepository.php';
+require_once './app/repositories/UtilisateurRepository.php';
 class AuthService {
 
     use AuthTrait;

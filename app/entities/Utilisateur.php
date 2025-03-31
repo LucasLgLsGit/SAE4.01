@@ -1,6 +1,6 @@
 <?php
 
-class User
+class Utilisateur
 {
     public function __construct(
         private ?int $id_user,
