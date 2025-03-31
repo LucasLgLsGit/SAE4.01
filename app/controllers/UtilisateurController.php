@@ -31,6 +31,6 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/utilisateur/create.html.twig', ['errors' => $errors, 'data' => $data]);
+		$this->view('/utilisateur/create.html.twig', 'Création d\'un utilisateur', ['errors' => $errors, 'data' => $data]);
 	}
 }
