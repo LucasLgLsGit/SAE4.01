@@ -36,10 +36,10 @@
 						<img src="/assets/images/bde.webp" alt="logoBDE" height="50">
 					</a>
 				</li>
-				<li class="nav-item"><a class="nav-link page" href="#">Contact</a></li>
-				<li class="nav-item"><a class="nav-link page" href="#">Événement</a></li>
-				<li class="nav-item"><a class="nav-link page" href="#">Boutique</a></li>
-				<li class="nav-item"><a class="nav-link page" href="#">FAQ</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/contact.php' %}active{% endif %}" href="#">Contact</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/evenement.php' %}active{% endif %}" href="#">Événement</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/boutique.php' %}active{% endif %}" href="#">Boutique</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/faq.php' %}active{% endif %}" href="/faq.php">FAQ</a></li>
 				<li class="nav-item d-lg-none">
 					<a class="nav-link nav-link-button login-button" href="/login.php">Connexion</a>
 				</li>
