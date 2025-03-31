@@ -20,7 +20,10 @@ class ImageRepository {
     }
 
     private function createImageFromRow(array $row): Image {
-        return new Image($row['id_image'], $row['nom_image'], $row['chemin_image'], $row['id_produit']);
+        return new Image(   $row['id_image'], 
+                            $row['nom_image'],      
+                            $row['chemin_image'], 
+                            $row['id_produit']);
     }
 
     public function create(Image $image): void {

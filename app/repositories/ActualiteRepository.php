@@ -19,7 +19,11 @@ class ActualiteRepository {
     }
 
     private function createActualiteFromRow(array $row): Actualite {
-        return new Actualite($row['id_actu'], $row['titre_article'], $row['contenu'], $row['date_publication'], $row['id_user']);
+        return new Actualite(   $row['id_article'], 
+                                $row['titre_article'], 
+                                $row['contenu'], 
+                                new DateTime($row['date_publication']), 
+                                $row['id_user']);
     }
 
     public function create(Actualite $actualite): void {
@@ -33,24 +37,24 @@ class ActualiteRepository {
     }
 
     public function update(Actualite $actualite): void {
-        $stmt = $this->pdo->prepare('UPDATE "actualite" SET titre_article = :titre_article, contenu = :contenu, date_publication = :date_publication WHERE id_actu = :id_actu');
+        $stmt = $this->pdo->prepare('UPDATE "actualite" SET titre_article = :titre_article, contenu = :contenu, date_publication = :date_publication WHERE id_article = :id_article');
         $stmt->execute([
             ':titre_article' => $actualite->getTitreArticle(),
             ':contenu' => $actualite->getContenu(),
             ':date_publication' => $actualite->getDatePublication()->format('Y-m-d H:i:s'),
-            ':id_actu' => $actualite->getIdActu()
+            ':id_article' => $actualite->getIdArticle()
         ]);
     }
 
     public function findById(int $id): ?Actualite {
-        $stmt = $this->pdo->prepare('SELECT * FROM "actualite" WHERE id_actu = :id');
+        $stmt = $this->pdo->prepare('SELECT * FROM "actualite" WHERE id_article = :id');
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->createActualiteFromRow($row) : null;
     }
 
     public function delete(int $id): void {
-        $stmt = $this->pdo->prepare('DELETE FROM "actualite" WHERE id_actu = :id');
+        $stmt = $this->pdo->prepare('DELETE FROM "actualite" WHERE id_article = :id');
         $stmt->execute([':id' => $id]);
     }
 }

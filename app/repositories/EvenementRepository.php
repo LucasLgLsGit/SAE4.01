@@ -20,8 +20,8 @@ class EvenementRepository {
 
 	private function createEvenementFromRow(array $row): Evenement {
 		return new Evenement(
-			$row['id_evenement'],
-			$row['titre_evenement'],
+			$row['id_event'],
+			$row['titre_event'],
 			new DateTime($row['date_debut']),
 			new DateTime($row['date_fin']),
 			$row['adresse'],

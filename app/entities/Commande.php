@@ -1,6 +1,6 @@
 <?php
 
-Class Commmande
+Class Commande
 {
 
 	public function __construct(

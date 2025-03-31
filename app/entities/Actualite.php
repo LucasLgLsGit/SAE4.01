@@ -4,7 +4,7 @@ Class Actualite
 {
 
 	public function __construct(
-		private int $id_actu,
+		private int $id_article,
 		private string $titre_article,
 		private string $contenu,
 		private DateTime $date_publication,
@@ -12,9 +12,9 @@ Class Actualite
 	)
 	{}
 
-		public function setIdActu(int $id_actu): void
+		public function setIdArticle(int $id_article): void
 		{
-			$this->id_actu = $id_actu;
+			$this->id_article = $id_article;
 		}
 
 		public function setIdUser(int $id_user): void
@@ -22,9 +22,9 @@ Class Actualite
 			$this->id_user = $id_user;
 		}
 
-	public function getIdActu(): int
+	public function getIdArticle(): int
 	{
-		return $this->id_actu;
+		return $this->id_article;
 	}
 
 
