@@ -1,0 +1,138 @@
+.bde-in-number {
+	background-color: #C4EBFF;
+	color: #030C43;
+	padding: 20px;
+	width: 100vw;
+	min-height: 50vh;
+}
+
+.number {
+	font-size: 150px;
+	font-weight: bold;
+}
+
+.about {
+	min-height: 100vh;
+	width: 100vw;
+	margin-bottom: 10px;
+}
+
+.about > main > section > article > div{
+	height: 500px;
+	background-color: #f0f0f0;
+	margin-bottom: 5px;
+}
+
+.btn-show-more {
+	padding: 10px 20px;
+	background-color: white;
+	color: #030C43;
+	border: none;
+	border-radius: 40px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
+
+.btn-show-more:hover {
+	background-color: #C4EBFF;
+	color: #030C43;
+}
+
+.next-events {
+	background-color: #030C43;
+	padding: 50px 20px;
+	color: white;
+	width: 100vw;
+	min-height: 100vh;
+}
+
+.link-event {
+	text-decoration: none;
+	color: white;
+}
+
+.next-events > main > section > a > div {
+	height: auto;
+	justify-content: center;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 5px;
+	background-color: white;
+	color : #030C43;
+}
+
+.next-event-date {
+	background-color: #030C43;
+	color: white;
+	border-radius: 50px;
+	padding: 5px 20px;
+	width: max-content;
+	margin: 10px auto;
+}
+
+.next-event-place {
+	background-color: #030C43;
+	color: white;
+	border-radius: 50px;
+	padding: 5px 20px;
+	width: max-content;
+	margin: 0 auto;
+}
+
+.actualites {
+    background-color: white;
+    color: #030C43;
+    width: 100vw;
+    text-align: center;
+    padding: 20px;
+}
+
+.actualites-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.actualites-container {
+    display: flex;
+    overflow-x: auto; /* Permet le défilement horizontal */
+    white-space: nowrap; /* Empêche les éléments de passer à la ligne */
+    padding: 10px;
+    gap: 10px;
+    scroll-snap-type: x mandatory; /* Active le snap scrolling */
+    scroll-behavior: smooth; /* Défilement fluide */
+	width: 75vw;
+}
+
+.actu-item {
+    min-width: 250px;
+    max-width: 300px;
+    flex-shrink: 0;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    scroll-snap-align: start;
+    padding: 20px;
+    border-radius: 10px;
+    white-space: normal;
+}
+
+.actu-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.actu-date {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.actu-content {
+    font-size: 1rem;
+    color: #333;
+}
