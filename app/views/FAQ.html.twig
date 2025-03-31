@@ -4,5 +4,51 @@
 <link rel="stylesheet" href="/assets/css/faq.css">
 {% endblock %}
 {% block body %}
-dfdf
+<div class="faq-container text-center">
+    <h1 class="mb-4">FAQ</h1>
+    <div class="faq-item">
+        <div class="faq-question">
+            Quelle est la mission du BDE ?
+            <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">La mission du BDE est d'organiser des événements pour les étudiants et de favoriser la cohésion entre les promotions.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question">
+            Comment puis-je participer aux événements ?
+            <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">Vous pouvez participer aux événements en vous inscrivant via notre site ou en contactant directement le BDE.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question">
+            Quels sont les avantages d'être membre du BDE ?
+            <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">Être membre du BDE vous permet de bénéficier de réductions sur les événements et d'accéder à des ressources exclusives.</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const faqItems = document.querySelectorAll('.faq-question');
+
+        faqItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const answer = this.nextElementSibling;
+                const toggle = this.querySelector('.faq-toggle');
+
+                if (answer.style.display === 'none' || answer.style.display === '') {
+                    answer.style.display = 'block'; // Affiche la réponse
+                    toggle.textContent = '-'; // Change le symbole en "-"
+                } else {
+                    answer.style.display = 'none'; // Masque la réponse
+                    toggle.textContent = '+'; // Change le symbole en "+"
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}
