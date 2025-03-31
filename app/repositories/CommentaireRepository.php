@@ -20,37 +20,48 @@ class CommentaireRepository {
 
 	private function createCommentaireFromRow(array $row): Commentaire
 	{
-		return new Commentaire($row['id_commentaire'], $row['texte_commentaire'], $row['date_commentaire'], $row['id_produit'], $row['id_user']);
+		return new Commentaire(
+			$row['id_commentaire'], 
+			$row['texte_commentaire'], 
+			new DateTime($row['date_commentaire']), 
+			$row['id_user'], 
+			$row['id_event']
+		);
+	}
+
+	public function findById(int $id): ?Commentaire {
+		$stmt = $this->pdo->prepare('SELECT * FROM "Commentaire" WHERE id_commentaire = :id');
+		$stmt->execute(['id' => $id]);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $row ? $this->createCommentaireFromRow($row) : null;
 	}
 
 	public function create(Commentaire $commentaire): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "Commentaire" (texte_commentaire, date_commentaire, id_produit, id_user) VALUES (:texte_commentaire, :date_commentaire, :id_produit, :id_user)');
+		$stmt = $this->pdo->prepare('INSERT INTO "Commentaire" (id_commentaire, texte_commentaire, date_commentaire, id_user, id_event) VALUES (:id, :texte, :date, :user, :event)');
 		return $stmt->execute([
-			'texte_commentaire' => $commentaire->getTexte_commentaire(),
-			'date_commentaire' => $commentaire->getDate_commentaire(),
-			'id_produit' => $commentaire->getId_produit(),
-			'id_user' => $commentaire->getId_user()
+			'id' => $commentaire->getId_commentaire(),
+			'texte' => $commentaire->getTexte_commentaire(),
+			'date' => $commentaire->getDate_commentaire()->format('Y-m-d H:i:s'),
+			'user' => $commentaire->getId_user(),
+			'event' => $commentaire->getId_event()
 		]);
 	}
 
 	public function update(Commentaire $commentaire): bool {
-		$stmt = $this->pdo->prepare('UPDATE "Commentaire" SET texte_commentaire = :newtexte_commentaire, date_commentaire = :newdate_commentaire, id_produit = :newid_produit, id_user = :newid_user WHERE id_commentaire = :id_commentaire');
+		$stmt = $this->pdo->prepare('UPDATE "Commentaire" SET texte_commentaire = :texte, date_commentaire = :date, id_user = :user, id_event = :event WHERE id_commentaire = :id');
 		return $stmt->execute([
-			'id_commentaire' => $commentaire->getId_commentaire(),
-			'newtexte_commentaire' => $commentaire->getTexte_commentaire(),
-			'newdate_commentaire' => $commentaire->getDate_commentaire(),
-			'newid_produit' => $commentaire->getId_produit(),
-			'newid_user' => $commentaire->getId_user()
+			'id' => $commentaire->getId_commentaire(),
+			'texte' => $commentaire->getTexte_commentaire(),
+			'date' => $commentaire->getDate_commentaire()->format('Y-m-d H:i:s'),
+			'user' => $commentaire->getId_user(),
+			'event' => $commentaire->getId_event()
 		]);
 	}
 
-	public function findById(int $id): ?Commentaire {
-		$stmt = $this->pdo->prepare('SELECT * FROM "Commentaire" WHERE id_commentaire = :id_commentaire');
-		$stmt->execute(['id_commentaire' => $id]);
-		$commentaire = $stmt->fetch(PDO::FETCH_ASSOC);
-		if ($commentaire) {
-			return $this->createCommentaireFromRow($commentaire);
-		}
-		return null;
+	public function delete(int $id): bool {
+		$stmt = $this->pdo->prepare('DELETE FROM "Commentaire" WHERE id_commentaire = :id');
+		return $stmt->execute(['id' => $id]);
 	}
 }
+
+?>

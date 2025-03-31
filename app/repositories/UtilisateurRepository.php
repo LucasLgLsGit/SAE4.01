@@ -18,12 +18,12 @@ class UtilisateurRepository {
 		return $utilisateurs;
 	}
 
-	private function createUserFromRow(array $row): User
+	private function createUserFromRow(array $row): Utilisateur
 	{
-		return new User($row['id_user'], $row['prenom'], $row['nom'], $row['mail'], $row['mdp'], $row['permission']);
+		return new Utilisateur($row['id_user'], $row['prenom'], $row['nom'], $row['mail'], $row['mdp'], $row['permission']);
 	}
 
-	public function create(User $utilisateur): bool {
+	public function create(Utilisateur $utilisateur): bool {
 		$stmt = $this->pdo->prepare('INSERT INTO "User" (prenom, nom, mail, mdp, permission) VALUES (:prenom, :nom, :mail, :mdp, :permission)');
 		return $stmt->execute([
 			'prenom' => $utilisateur->getPrenom(),
@@ -34,7 +34,7 @@ class UtilisateurRepository {
 		]);
 	}
 
-	public function update(User $utilisateur): bool {
+	public function update(Utilisateur $utilisateur): bool {
 		$stmt = $this->pdo->prepare('UPDATE "User" SET prenom = :newprenom, nom = :newnom, mail = :newmail, mdp = :newmdp, permission = :newpermission WHERE id_user = :id_user');
 		return $stmt->execute([
 			'id_user' => $utilisateur->getId(),
@@ -46,7 +46,7 @@ class UtilisateurRepository {
 		]);
 	}
 
-	public function findById(int $id): ?User {
+	public function findById(int $id): ?Utilisateur {
 		$stmt = $this->pdo->prepare('SELECT * FROM "User" WHERE id_user = :id_user');
 		$stmt->execute(['id_user' => $id]);
 		$utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);

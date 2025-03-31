@@ -37,7 +37,7 @@ class ProduitRepository {
 		]);
 	}
 
-	public function update(User $produit): bool {
+	public function update(Produit $produit): bool {
 		$stmt = $this->pdo->prepare('UPDATE "Produit" SET nom_produit = :newnom_produit, description_produit = :newdescription_produit, date_ajout = :newdate_ajout, couleur = :newcouleur, taille = :newtaille, stock = :newstock, prix = :newprix WHERE id_produit = :id_produit');
 		return $stmt->execute([
 			'id_produit' => $produit->getId_produit(),
