@@ -1,0 +1,30 @@
+.faq-container {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.faq-item {
+    width: 100%;
+    max-width: 800px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.faq-question {
+    cursor: pointer;
+    font-weight: bold;
+    margin: 10px 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.faq-answer {
+    display: none;
+    margin: 5px 0 15px;
+    color: #555;
+}
