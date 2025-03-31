@@ -1,7 +1,7 @@
 <?php
 
-require_once '../repositories/UtilisateurRepository.php';
-require_once '../entities/Utilisateur.php';
+require_once './app/repositories/UtilisateurRepository.php';
+require_once './app/entities/Utilisateur.php';
 
 class UtilisateurService
 {

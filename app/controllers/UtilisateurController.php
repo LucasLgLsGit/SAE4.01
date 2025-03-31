@@ -1,8 +1,9 @@
 <?php
 
 require_once './app/core/Controller.php';
-require_once './app/repositories/UtilisateurService.php';
+require_once './app/services/UtilisateurService.php';
 require_once './app/trait/FormTrait.php';
+require_once './app/trait/AuthTrait.php';
 
 class UtilisateurController extends Controller {
 
@@ -31,7 +32,7 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/utilisateur/create.html.twig', 'Création d\'un utilisateur', ['errors' => $errors, 'data' => $data]);
+		$this->view('/user/signUp.html.twig', ['errors' => $errors, 'data' => $data]);
 	}
 
 	public function update() {
