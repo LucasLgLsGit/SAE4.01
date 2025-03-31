@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS Utilisateur;
 CREATE TABLE Utilisateur(
 	id_user INT,
 	mail VARCHAR(50) NOT NULL,
-	mdp VARCHAR(50) NOT NULL,
+	mdp VARCHAR(255) NOT NULL,
 	permission INT NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	prenom VARCHAR(50) NOT NULL,
