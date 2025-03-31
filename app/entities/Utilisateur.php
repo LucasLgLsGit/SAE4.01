@@ -1,5 +1,13 @@
 <?php
 
+const FLAG_MEMBRE = 0b00000001; // 1
+const FLAG_ADHERENT = 0b00000010; // 2
+const FLAG_ADMIN = 0b00000100; // 4
+
+const IS_MEMBRE = 1;
+const IS_ADHERENT = 2;
+const IS_ADMIN = 4;
+
 class Utilisateur
 {
 	public function __construct(
@@ -69,6 +77,56 @@ class Utilisateur
 	public function setPrenom(string $prenom): void
 	{
 		$this->prenom = $prenom;
+	}
+
+	function is_membre($value) {
+		return is_flag($value, FLAG_MEMBRE);
+	}
+	
+	function is_adherent($value) {
+	  return is_flag($value, FLAG_ADHERENT);
+	}
+	
+	function is_admin($value) {
+	  return is_flag($value, FLAG_ADMIN);
+	}
+
+	function is_flag($value, $flag) {
+		$etat = false;
+		if ($value & $flag) $etat = true;
+		return $etat;
+	}
+
+	function addPermission($typePerm) {
+		switch ($typePerm) {
+			case IS_MEMBRE:
+				$this->permission |= FLAG_MEMBRE;
+				break;
+			case IS_ADHERENT:
+				$this->permission |= FLAG_ADHERENT;
+				break;
+			case IS_ADMIN:
+				$this->permission |= FLAG_ADMIN;
+				break;
+			default:
+				throw new Exception("Permission non reconnue");
+		}
+	}
+
+	function removePermission($typePerm) {
+		switch ($typePerm) {
+			case IS_MEMBRE:
+				$this->permission &= ~FLAG_MEMBRE;
+				break;
+			case IS_ADHERENT:
+				$this->permission &= ~FLAG_ADHERENT;
+				break;
+			case IS_ADMIN:
+				$this->permission &= ~FLAG_ADMIN;
+				break;
+			default:
+				throw new Exception("Permission non reconnue");
+		}
 	}
 }
 
