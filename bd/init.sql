@@ -11,7 +11,7 @@ CREATE TABLE Utilisateur(
 	id_user INT,
 	mail VARCHAR(50) NOT NULL,
 	mdp VARCHAR(50) NOT NULL,
-	permission BYTEA NOT NULL,
+	permission INT NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	prenom VARCHAR(50) NOT NULL,
 	PRIMARY KEY(id_user)
