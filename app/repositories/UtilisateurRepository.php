@@ -32,7 +32,7 @@ class UtilisateurRepository {
 		$stmt = $this->pdo->prepare('INSERT INTO "utilisateur" (mail, mdp, permission, nom, prenom) VALUES (:mail, :mdp, :permission, :nom, :prenom)');
 		return $stmt->execute([
 			'mail' => $utilisateur->getMail(),
-			'mdp' => password_hash($utilisateur->getMdp(), PASSWORD_BCRYPT),
+			'mdp' => $utilisateur->getMdp(),
 			'permission' => $utilisateur->getPermission(),
 			'nom' => $utilisateur->getNom(),
 			'prenom' => $utilisateur->getPrenom()
