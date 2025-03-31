@@ -10,7 +10,7 @@ class ProduitRepository {
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT * FROM "Produit"');
+		$stmt = $this->pdo->query('SELECT * FROM "produit"');
 		$produits = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$produits[] = $this->createProduitFromRow($row);
@@ -24,7 +24,7 @@ class ProduitRepository {
 	}
 
 	public function create(Produit $produit): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "Produit" (nom_produit, description_produit, date_ajout, couleur, taille, stock, prix, id_user) VALUES (:nom_produit, :description_produit, :date_ajout, :couleur, :taille, :stock, :prix, :id_user)');
+		$stmt = $this->pdo->prepare('INSERT INTO "produit" (nom_produit, description_produit, date_ajout, couleur, taille, stock, prix, id_user) VALUES (:nom_produit, :description_produit, :date_ajout, :couleur, :taille, :stock, :prix, :id_user)');
 		return $stmt->execute([
 			'nom_produit' => $produit->getNom_produit(),
 			'description_produit' => $produit->getDescription_produit(),
@@ -38,7 +38,7 @@ class ProduitRepository {
 	}
 
 	public function update(Produit $produit): bool {
-		$stmt = $this->pdo->prepare('UPDATE "Produit" SET nom_produit = :newnom_produit, description_produit = :newdescription_produit, date_ajout = :newdate_ajout, couleur = :newcouleur, taille = :newtaille, stock = :newstock, prix = :newprix WHERE id_produit = :id_produit');
+		$stmt = $this->pdo->prepare('UPDATE "produit" SET nom_produit = :newnom_produit, description_produit = :newdescription_produit, date_ajout = :newdate_ajout, couleur = :newcouleur, taille = :newtaille, stock = :newstock, prix = :newprix WHERE id_produit = :id_produit');
 		return $stmt->execute([
 			'id_produit' => $produit->getId_produit(),
 			'newnom_produit' => $produit->getNom_produit(),
@@ -52,12 +52,17 @@ class ProduitRepository {
 	}
 
 	public function findById(int $id): ?Produit {
-		$stmt = $this->pdo->prepare('SELECT * FROM "Produit" WHERE id_produit = :id_produit');
+		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE id_produit = :id_produit');
 		$stmt->execute(['id_produit' => $id]);
 		$produit = $stmt->fetch(PDO::FETCH_ASSOC);
 		if ($produit) {
 			return $this->createProduitFromRow($produit);
 		}
 		return null;
+	}
+
+	public function delete(int $id): bool {
+		$stmt = $this->pdo->prepare('DELETE FROM "produit" WHERE id_produit = :id_produit');
+		return $stmt->execute(['id_produit' => $id]);
 	}
 }

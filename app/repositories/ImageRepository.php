@@ -11,7 +11,7 @@ class ImageRepository {
     }
 
     public function findAll(): array {
-        $stmt = $this->pdo->query('SELECT * FROM "Image"');
+        $stmt = $this->pdo->query('SELECT * FROM "image"');
         $images = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $images[] = $this->createImageFromRow($row);
@@ -24,33 +24,33 @@ class ImageRepository {
     }
 
     public function create(Image $image): void {
-        $stmt = $this->pdo->prepare('INSERT INTO "Image" (nom_image, chemin_image, id_produit) VALUES (:nom_image, :chemin_image, :id_produit)');
-        $stmt->bindParam(':nom_image', $image->getNom_image());
-        $stmt->bindParam(':chemin_image', $image->getChemin_image());
-        $stmt->bindParam(':id_produit', $image->getId_produit(), PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('INSERT INTO "image" (nom_image, chemin_image, id_produit) VALUES (:nom_image, :chemin_image, :id_produit)');
+        $stmt->execute([
+            ':nom_image' => $image->getNom_image(),
+            ':chemin_image' => $image->getChemin_image(),
+            ':id_produit' => $image->getId_produit()
+        ]);
     }
 
     public function update(Image $image): void {
-        $stmt = $this->pdo->prepare('UPDATE "Image" SET nom_image = :nom_image, chemin_image = :chemin_image, id_produit = :id_produit WHERE id_image = :id_image');
-        $stmt->bindParam(':nom_image', $image->getNom_image());
-        $stmt->bindParam(':chemin_image', $image->getChemin_image());
-        $stmt->bindParam(':id_produit', $image->getId_produit(), PDO::PARAM_INT);
-        $stmt->bindParam(':id_image', $image->getId_image(), PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('UPDATE "image" SET nom_image = :nom_image, chemin_image = :chemin_image, id_produit = :id_produit WHERE id_image = :id_image');
+        $stmt->execute([
+            ':nom_image' => $image->getNom_image(),
+            ':chemin_image' => $image->getChemin_image(),
+            ':id_produit' => $image->getId_produit(),
+            ':id_image' => $image->getId_image()
+        ]);
     }
 
     public function findById(int $id): ?Image {
-        $stmt = $this->pdo->prepare('SELECT * FROM "Image" WHERE id_image = :id');
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('SELECT * FROM "image" WHERE id_image = :id');
+        $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->createImageFromRow($row) : null;
     }
 
     public function delete(int $id): void {
-        $stmt = $this->pdo->prepare('DELETE FROM "Image" WHERE id_image = :id');
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('DELETE FROM "image" WHERE id_image = :id');
+        $stmt->execute([':id' => $id]);
     }
 }

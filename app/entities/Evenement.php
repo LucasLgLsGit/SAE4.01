@@ -5,7 +5,7 @@ class Evenement
 
 	public function __construct(
 		private int $id_evenement,
-		private string $titre_event,
+		private string $titre_evenement,
 		private DateTime $date_debut,
 		private DateTime $date_fin,
 		private string $adresse,
