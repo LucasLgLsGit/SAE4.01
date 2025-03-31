@@ -10,7 +10,7 @@ class UtilisateurRepository {
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT * FROM "User"');
+		$stmt = $this->pdo->query('SELECT * FROM "Utilisateur"');
 		$utilisateurs = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$utilisateurs[] = $this->createUserFromRow($row);
@@ -24,7 +24,7 @@ class UtilisateurRepository {
 	}
 
 	public function create(Utilisateur $utilisateur): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "User" (prenom, nom, mail, mdp, permission) VALUES (:prenom, :nom, :mail, :mdp, :permission)');
+		$stmt = $this->pdo->prepare('INSERT INTO "Utilisateur" (prenom, nom, mail, mdp, permission) VALUES (:prenom, :nom, :mail, :mdp, :permission)');
 		return $stmt->execute([
 			'prenom' => $utilisateur->getPrenom(),
 			'nom' => $utilisateur->getNom(),
@@ -35,7 +35,7 @@ class UtilisateurRepository {
 	}
 
 	public function update(Utilisateur $utilisateur): bool {
-		$stmt = $this->pdo->prepare('UPDATE "User" SET prenom = :newprenom, nom = :newnom, mail = :newmail, mdp = :newmdp, permission = :newpermission WHERE id_user = :id_user');
+		$stmt = $this->pdo->prepare('UPDATE "Utilisateur" SET prenom = :newprenom, nom = :newnom, mail = :newmail, mdp = :newmdp, permission = :newpermission WHERE id_user = :id_user');
 		return $stmt->execute([
 			'id_user' => $utilisateur->getId(),
 			'newprenom' => $utilisateur->getPrenom(),
@@ -47,7 +47,7 @@ class UtilisateurRepository {
 	}
 
 	public function findById(int $id): ?Utilisateur {
-		$stmt = $this->pdo->prepare('SELECT * FROM "User" WHERE id_user = :id_user');
+		$stmt = $this->pdo->prepare('SELECT * FROM "Utilisateur" WHERE id_user = :id_user');
 		$stmt->execute(['id_user' => $id]);
 		$utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 		if ($utilisateur) {
