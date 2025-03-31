@@ -20,6 +20,7 @@ class Produit {
         $this->taille = $taille;
         $this->stock = $stock;
         $this->prix = $prix;
+        $this->id_user = $id_user;
     }
 
     // Getters
