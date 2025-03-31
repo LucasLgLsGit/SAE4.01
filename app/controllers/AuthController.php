@@ -32,6 +32,6 @@ class AuthController extends Controller {
 
         }
 
-        $this->view('login.html.twig', $data ); // Affiche la vue login.php
+        $this->view('/user/login.html.twig', $data ); // Affiche la vue login.php
     }
 }
