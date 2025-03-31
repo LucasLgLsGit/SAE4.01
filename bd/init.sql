@@ -1,8 +1,17 @@
+DROP TABLE IF EXISTS Commande;
+DROP TABLE IF EXISTS Participation;
+DROP TABLE IF EXISTS Commentaire;
+DROP TABLE IF EXISTS Actualite;
+DROP TABLE IF EXISTS Evenement;
+DROP TABLE IF EXISTS Image;
+DROP TABLE IF EXISTS Produit;
+DROP TABLE IF EXISTS Utilisateur;
+
 CREATE TABLE Utilisateur(
 	id_user INT,
 	mail VARCHAR(50) NOT NULL,
 	mdp VARCHAR(50) NOT NULL,
-	permission BYTE NOT NULL,
+	permission BYTEA NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	prenom VARCHAR(50) NOT NULL,
 	PRIMARY KEY(id_user)
@@ -12,7 +21,7 @@ CREATE TABLE Produit(
 	id_produit INT,
 	titre_produit VARCHAR(50) NOT NULL,
 	description_produit TEXT NOT NULL,
-	date_produit DATETIME NOT NULL,
+	date_produit TIMESTAMP NOT NULL,
 	couleur VARCHAR(50) NOT NULL,
 	taille VARCHAR(3) NOT NULL,
 	stock INT NOT NULL,
@@ -33,8 +42,8 @@ CREATE TABLE Image(
 CREATE TABLE Evenement(
 	id_event INT,
 	titre_event VARCHAR(50) NOT NULL,
-	date_debut DATETIME NOT NULL,
-	date_fin DATETIME,
+	date_debut TIMESTAMP NOT NULL,
+	date_fin TIMESTAMP,
 	adresse VARCHAR(50) NOT NULL,
 	description TEXT NOT NULL,
 	prix DECIMAL(4,2),
@@ -47,7 +56,7 @@ CREATE TABLE Actualite(
 	id_article INT,
 	titre_article VARCHAR(50) NOT NULL,
 	contenu TEXT NOT NULL,
-	date_publication DATETIME NOT NULL,
+	date_publication TIMESTAMP NOT NULL,
 	id_user INT NOT NULL,
 	PRIMARY KEY(id_article),
 	FOREIGN KEY(id_user) REFERENCES Utilisateur(id_user)
@@ -57,7 +66,7 @@ CREATE TABLE Commentaire(
 	id_commentaire INT,
 	texte TEXT NOT NULL,
 	note INT NOT NULL,
-	date_commentaire DATETIME NOT NULL,
+	date_commentaire TIMESTAMP NOT NULL,
 	id_user INT NOT NULL,
 	id_event INT NOT NULL,
 	PRIMARY KEY(id_commentaire),
@@ -68,7 +77,7 @@ CREATE TABLE Commentaire(
 CREATE TABLE Participation(
 	id_user INT,
 	id_event INT,
-	date_inscription DATETIME NOT NULL,
+	date_inscription TIMESTAMP NOT NULL,
 	PRIMARY KEY(id_user, id_event),
 	FOREIGN KEY(id_user) REFERENCES Utilisateur(id_user),
 	FOREIGN KEY(id_event) REFERENCES Evenement(id_event)
