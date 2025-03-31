@@ -33,4 +33,27 @@ class UtilisateurController extends Controller {
 
 		$this->view('/utilisateur/create.html.twig', 'Création d\'un utilisateur', ['errors' => $errors, 'data' => $data]);
 	}
+
+	public function update() {
+		$id = $this->getQueryParam('id_user');
+
+		if ($id === null) {
+			throw new Exception("L'identifiant utilisateur est requis !");
+		}
+
+		$data = $this->getAllPostParams();
+		$errors = [];
+
+		if (!empty($data)) {
+			try {
+				$userService = new UtilisateurService();
+				$userService->update($id, $data);
+				$this->redirectTo('utilisateurs.php');
+			} catch (Exception $e) {
+				$errors = explode(', ', $e->getMessage());
+			}
+		}
+
+		$this->view('/utilisateur/update.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
+	}
 }

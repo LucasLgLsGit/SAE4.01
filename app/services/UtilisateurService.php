@@ -5,78 +5,85 @@ require_once '../entities/Utilisateur.php';
 
 class UtilisateurService
 {
-    public function allUtilisateurs(): array
-    {
-        $utilisateurRepo = new UtilisateurRepository();
-        return $utilisateurRepo->findAll();
-    }
+	public function allUtilisateurs(): array
+	{
+		$utilisateurRepo = new UtilisateurRepository();
+		return $utilisateurRepo->findAll();
+	}
 
-    public function create(array $data): Utilisateur
-    {
-        $errors = [];
+	public function create(array $data): Utilisateur
+	{
+		$errors = [];
 
-        if (empty($data['mail'])) {
-            $errors[] = "L'adresse e-mail est requise !";
-        }
-        if (empty($data['mdp'])) {
-            $errors[] = "Le mot de passe est requis !";
-        }
-        if (empty($data['permission'])) {
-            $errors[] = "Le niveau de permission est requis !";
-        }
-        if (empty($data['nom'])) {
-            $errors[] = "Le nom est requis !";
-        }
-        if (empty($data['prenom'])) {
-            $errors[] = "Le prénom est requis !";
-        }
+		if (empty($data['mail'])) {
+			$errors[] = "L'adresse e-mail est requise !";
+		}
+		if (empty($data['mdp'])) {
+			$errors[] = "Le mot de passe est requis !";
+		}
+		if (empty($data['nom'])) {
+			$errors[] = "Le nom est requis !";
+		}
+		if (empty($data['prenom'])) {
+			$errors[] = "Le prénom est requis !";
+		}
 
-        if (!empty($errors)) {
-            throw new Exception(implode(', ', $errors));
-        }
+		if (!empty($errors)) {
+			throw new Exception(implode(', ', $errors));
+		}
 
-        $utilisateur = new Utilisateur(
-            null, // L'ID est auto-incrémenté
-            $data['mail'],
-            $data['mdp'],
-            (int) $data['permission'],
-            $data['nom'],
-            $data['prenom']
-        );
+		$hashedPassword = $this->hash($data['mdp']);
+		$utilisateur = new Utilisateur(
+			null, // L'ID est auto-incrémenté
+			$data['mail'],
+			$hashedPassword,
+			1,
+			$data['nom'],
+			$data['prenom']
+		);
 
-        $utilisateurRepo = new UtilisateurRepository();
-        if (!$utilisateurRepo->create($utilisateur)) {
-            throw new Exception("La création de l'utilisateur a échoué.");
-        }
+		$utilisateurRepo = new UtilisateurRepository();
+		if (!$utilisateurRepo->create($utilisateur)) {
+			throw new Exception("La création de l'utilisateur a échoué.");
+		}
 
-        return $utilisateur;
-    }
+		return $utilisateur;
+	}
 
-    public function update(int $id_user, array $data): bool
-    {
-        $utilisateurRepo = new UtilisateurRepository();
-        $utilisateur = $utilisateurRepo->findById($id_user);
+	public function update(int $id_user, array $data): bool
+	{
+		$utilisateurRepo = new UtilisateurRepository();
+		$utilisateur = $utilisateurRepo->findById($id_user);
 
-        if (!$utilisateur) {
-            throw new Exception("Utilisateur non trouvé.");
-        }
+		if (!$utilisateur) {
+			throw new Exception("Utilisateur non trouvé.");
+		}
 
-        if (isset($data['mail'])) {
-            $utilisateur->setMail($data['mail']);
-        }
-        if (isset($data['mdp'])) {
-            $utilisateur->setMdp($data['mdp']);
-        }
-        if (isset($data['permission'])) {
-            $utilisateur->setPermission((int) $data['permission']);
-        }
-        if (isset($data['nom'])) {
-            $utilisateur->setNom($data['nom']);
-        }
-        if (isset($data['prenom'])) {
-            $utilisateur->setPrenom($data['prenom']);
-        }
+		if (empty($data['mail']) || !filter_var($data['mail'], FILTER_VALIDATE_EMAIL)) {
+			$errors[] = "L'adresse e-mail est invalide !";
+		}
+		if (empty($data['mdp']) && strlen($data['mdp']) < 6) {
+			$errors[] = "Le mot de passe doit contenir au moins 6 caractères !";
+		}
+		if (empty($data['permission'])) {
+			$errors[] = "La permission est requise !";
+		}
+		if (empty($data['nom'])) {
+			$errors[] = "Le nom est requis !";
+		}
+		if (empty($data['prenom'])) {
+			$errors[] = "Le prénom est requis !";
+		}
 
-        return $utilisateurRepo->update($utilisateur);
-    }
+		$utilisateur->setMail($data['mail']);
+		if (!empty($data['mdp'])) {
+			$hashedPassword = $this->hash($data['mdp']);
+			$utilisateur->setMdp($hashedPassword);
+		}
+		$utilisateur->setPermission((int) $data['permission']);
+		$utilisateur->setNom($data['nom']);
+		$utilisateur->setPrenom($data['prenom']);
+
+		return $utilisateurRepo->update($utilisateur);
+	}
 }
