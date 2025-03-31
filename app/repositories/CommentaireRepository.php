@@ -22,7 +22,7 @@ class CommentaireRepository {
 	{
 		return new Commentaire(
 			$row['id_commentaire'], 
-			$row['texte_commentaire'], 
+			$row['texte'], 
 			new DateTime($row['date_commentaire']), 
 			$row['id_user'], 
 			$row['id_event']
@@ -37,7 +37,7 @@ class CommentaireRepository {
 	}
 
 	public function create(Commentaire $commentaire): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "commentaire" (id_commentaire, texte_commentaire, date_commentaire, id_user, id_event) VALUES (:id, :texte, :date, :user, :event)');
+		$stmt = $this->pdo->prepare('INSERT INTO "commentaire" (id_commentaire, texte, date_commentaire, id_user, id_event) VALUES (:id, :texte, :date, :user, :event)');
 		return $stmt->execute([
 			'id' => $commentaire->getId_commentaire(),
 			'texte' => $commentaire->getTexte_commentaire(),
@@ -48,7 +48,7 @@ class CommentaireRepository {
 	}
 
 	public function update(Commentaire $commentaire): bool {
-		$stmt = $this->pdo->prepare('UPDATE "commentaire" SET texte_commentaire = :texte, date_commentaire = :date, id_user = :user, id_event = :event WHERE id_commentaire = :id');
+		$stmt = $this->pdo->prepare('UPDATE "commentaire" SET texte = :texte, date_commentaire = :date, id_user = :user, id_event = :event WHERE id_commentaire = :id');
 		return $stmt->execute([
 			'id' => $commentaire->getId_commentaire(),
 			'texte' => $commentaire->getTexte_commentaire(),

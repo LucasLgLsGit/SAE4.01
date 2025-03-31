@@ -4,8 +4,8 @@ class Evenement
 {
 
 	public function __construct(
-		private int $id_evenement,
-		private string $titre_evenement,
+		private int $id_event,
+		private string $titre_event,
 		private DateTime $date_debut,
 		private DateTime $date_fin,
 		private string $adresse,
@@ -15,9 +15,9 @@ class Evenement
 	)
 	{}
 
-	public function setId(int $id_evenement): void
+	public function setId(int $id_event): void
 	{
-		$this->id_evenement = $id_evenement;
+		$this->id_event = $id_event;
 	}
 
 	public function setIdUser(int $id_user): void
@@ -27,7 +27,7 @@ class Evenement
 
 	public function getId(): int
 	{
-		return $this->id_evenement;
+		return $this->id_event;
 	}
 
 	public function getTitreEvent(): string

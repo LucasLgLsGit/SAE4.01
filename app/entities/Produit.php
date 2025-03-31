@@ -2,9 +2,9 @@
 class Produit { 
 
 	public function __construct(private int $id_produit,
-	private string $nom_produit,
+	private string $titre_produit,
 	private string $description_produit,
-	private Datetime $date_ajout,
+	private Datetime $date_produit,
 	private string $couleur,
 	private string $taille,
 	private int $stock,
@@ -13,9 +13,9 @@ class Produit {
 
 	) {
 		$this->id_produit = $id_produit;
-		$this->nom_produit = $nom_produit;
+		$this->titre_produit = $titre_produit;
 		$this->description_produit = $description_produit;
-		$this->date_ajout = $date_ajout;
+		$this->date_produit = $date_produit;
 		$this->couleur = $couleur;
 		$this->taille = $taille;
 		$this->stock = $stock;
@@ -27,14 +27,14 @@ class Produit {
 	public function getId_produit(): int {
 		return $this->id_produit;
 	}
-	public function getNom_produit(): string {
-		return $this->nom_produit;
+	public function getTitre_produit(): string {
+		return $this->titre_produit;
 	}
 	public function getDescription_produit(): string {
 		return $this->description_produit;
 	}
-	public function getDate_ajout(): Datetime {
-		return $this->date_ajout;
+	public function getDate_produit(): Datetime {
+		return $this->date_produit;
 	}
 	public function getCouleur(): string {
 		return $this->couleur;
@@ -56,14 +56,14 @@ class Produit {
 	public function setId_produit(int $id_produit): void {
 		$this->id_produit = $id_produit;
 	}
-	public function setNom_produit(string $nom_produit): void {
-		$this->nom_produit = $nom_produit;
+	public function setTitre_produit(string $titre_produit): void {
+		$this->titre_produit = $titre_produit;
 	}
 	public function setDescription_produit(string $description_produit): void {
 		$this->description_produit = $description_produit;
 	}
-	public function setDate_ajout(Datetime $date_ajout): void {
-		$this->date_ajout = $date_ajout;
+	public function setDate_produit(Datetime $date_produit): void {
+		$this->date_produit = $date_produit;
 	}
 	public function setCouleur(string $couleur): void {
 		$this->couleur = $couleur;
@@ -83,6 +83,6 @@ class Produit {
 
 
 	public function __toString(): string {
-		return "Produit [id_produit=$this->id_produit, nom_produit=$this->nom_produit, description_produit=$this->description_produit, date_ajout=$this->date_ajout, couleur=$this->couleur, taille=$this->taille, stock=$this->stock, prix=$this->prix]";
+		return "Produit [id_produit=$this->id_produit, titre_produit=$this->titre_produit, description_produit=$this->description_produit, date_produit=$this->date_produit, couleur=$this->couleur, taille=$this->taille, stock=$this->stock, prix=$this->prix]";
 	}
 }

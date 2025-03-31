@@ -20,7 +20,12 @@ class UtilisateurRepository {
 
 	private function createUserFromRow(array $row): Utilisateur
 	{
-		return new Utilisateur($row['id_user'], $row['mail'], $row['mdp'], $row['permission'], $row['nom'], $row['prenom']);
+		return new Utilisateur(	$row['id_user'], 
+								$row['mail'], 
+								$row['mdp'], 
+								$row['permission'], 
+								$row['nom'], 
+								$row['prenom']);
 	}
 
 	public function create(Utilisateur $utilisateur): bool {

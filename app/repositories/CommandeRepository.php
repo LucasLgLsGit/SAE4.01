@@ -12,7 +12,7 @@ class CommandeRepository
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT * FROM "Commande"');
+		$stmt = $this->pdo->query('SELECT * FROM "commande"');
 		$commandes = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$commandes[] = $this->createCommandeFromRow($row);
@@ -30,14 +30,14 @@ class CommandeRepository
 	}
 
 	public function findById(int $id_user, int $id_produit): ?Commande {
-		$stmt = $this->pdo->prepare('SELECT * FROM "Commande" WHERE id_user = :id_user AND id_produit = :id_produit');
+		$stmt = $this->pdo->prepare('SELECT * FROM "commande" WHERE id_user = :id_user AND id_produit = :id_produit');
 		$stmt->execute(['id_user' => $id_user, 'id_produit' => $id_produit]);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $row ? $this->createCommandeFromRow($row) : null;
 	}
 
 	public function create(Commande $commande): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "Commande" (id_user, id_produit, quantite, numero_commande) VALUES (:id_user, :id_produit, :quantite, :numero_commande)');
+		$stmt = $this->pdo->prepare('INSERT INTO "commande" (id_user, id_produit, quantite, numero_commande) VALUES (:id_user, :id_produit, :quantite, :numero_commande)');
 		return $stmt->execute([
 			'id_user' => $commande->getIdUser(),
 			'id_produit' => $commande->getIdProduit(),
@@ -47,7 +47,7 @@ class CommandeRepository
 	}
 
 	public function update(Commande $commande): bool {
-		$stmt = $this->pdo->prepare('UPDATE "Commande" SET quantite = :quantite, numero_commande = :numero_commande WHERE id_user = :id_user AND id_produit = :id_produit');
+		$stmt = $this->pdo->prepare('UPDATE "commande" SET quantite = :quantite, numero_commande = :numero_commande WHERE id_user = :id_user AND id_produit = :id_produit');
 		return $stmt->execute([
 			'id_user' => $commande->getIdUser(),
 			'id_produit' => $commande->getIdProduit(),
@@ -57,7 +57,7 @@ class CommandeRepository
 	}
 
 	public function delete(int $id_user, int $id_produit): bool {
-		$stmt = $this->pdo->prepare('DELETE FROM "Commande" WHERE id_user = :id_user AND id_produit = :id_produit');
+		$stmt = $this->pdo->prepare('DELETE FROM "commande" WHERE id_user = :id_user AND id_produit = :id_produit');
 		return $stmt->execute(['id_user' => $id_user, 'id_produit' => $id_produit]);
 	}
 }

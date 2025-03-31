@@ -20,15 +20,22 @@ class ProduitRepository {
 
 	private function createProduitFromRow(array $row): Produit
 	{
-		return new Produit($row['id_produit'], $row['nom_produit'], $row['description_produit'], $row['date_ajout'], $row['couleur'], $row['taille'], $row['stock'], $row['prix'], $row['id_user']);
+		return new Produit(	$row['id_produit'], 
+							$row['titre_produit'], 
+							$row['description_produit'], 
+							new DateTime($row['date_produit']), 
+							$row['couleur'], $row['taille'], 
+							$row['stock'], 
+							$row['prix'], 
+							$row['id_user']);
 	}
 
 	public function create(Produit $produit): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "produit" (nom_produit, description_produit, date_ajout, couleur, taille, stock, prix, id_user) VALUES (:nom_produit, :description_produit, :date_ajout, :couleur, :taille, :stock, :prix, :id_user)');
+		$stmt = $this->pdo->prepare('INSERT INTO "produit" (titre_produit, description_produit, date_produit, couleur, taille, stock, prix, id_user) VALUES (:titre_produit, :description_produit, :date_produit, :couleur, :taille, :stock, :prix, :id_user)');
 		return $stmt->execute([
-			'nom_produit' => $produit->getNom_produit(),
+			'titre_produit' => $produit->getTitre_produit(),
 			'description_produit' => $produit->getDescription_produit(),
-			'date_ajout' => $produit->getDate_ajout(),
+			'date_produit' => $produit->getDate_produit()->format('Y-m-d H:i:s'),
 			'couleur' => $produit->getCouleur(),
 			'taille' => $produit->getTaille(),
 			'stock' => $produit->getStock(),
@@ -38,12 +45,12 @@ class ProduitRepository {
 	}
 
 	public function update(Produit $produit): bool {
-		$stmt = $this->pdo->prepare('UPDATE "produit" SET nom_produit = :newnom_produit, description_produit = :newdescription_produit, date_ajout = :newdate_ajout, couleur = :newcouleur, taille = :newtaille, stock = :newstock, prix = :newprix WHERE id_produit = :id_produit');
+		$stmt = $this->pdo->prepare('UPDATE "produit" SET titre_produit = :newtitre_produit, description_produit = :newdescription_produit, date_produit = :newdate_produit, couleur = :newcouleur, taille = :newtaille, stock = :newstock, prix = :newprix WHERE id_produit = :id_produit');
 		return $stmt->execute([
 			'id_produit' => $produit->getId_produit(),
-			'newnom_produit' => $produit->getNom_produit(),
+			'newtitre_produit' => $produit->getTitre_produit(),
 			'newdescription_produit' => $produit->getDescription_produit(),
-			'newdate_ajout' => $produit->getDate_ajout(),
+			'newdate_produit' => $produit->getDate_produit(),
 			'newcouleur' => $produit->getCouleur(),
 			'newtaille' => $produit->getTaille(),
 			'newstock' => $produit->getStock(),

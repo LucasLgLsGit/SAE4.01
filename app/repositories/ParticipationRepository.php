@@ -19,7 +19,9 @@ class ParticipationRepository {
     }
 
     private function createParticipationFromRow(array $row): Participation {
-        return new Participation($row['id_user'], $row['id_event'], $row['date_inscription']);
+        return new Participation(   $row['id_user'], 
+                                    $row['id_event'], 
+                                    new DateTime($row['date_inscription']));
     }
 
     public function create(Participation $participation): void {
