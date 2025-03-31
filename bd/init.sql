@@ -21,6 +21,15 @@ CREATE TABLE Produit(
 	FOREIGN KEY(id_user) REFERENCES Utilisateur(id_user)
 );
 
+CREATE TABLE Image(
+	id_image INT,
+	nom_image VARCHAR(50) NOT NULL,
+	chemin_image VARCHAR(50) NOT NULL,
+	id_produit INT NOT NULL,
+	PRIMARY KEY(id_image),
+	FOREIGN KEY(id_produit) REFERENCES Produit(id_produit)
+);
+
 CREATE TABLE Evenement(
 	id_event INT,
 	titre_event VARCHAR(50) NOT NULL,
