@@ -1,5 +1,37 @@
 {% extends '_template/base.html.twig' %}
 
+{% block css %}
+<link rel="stylesheet" href="/assets/css/signUp.css">
+{% endblock %}
+
 {% block body %}
-ssd
+<div class="sign-up-container">
+	<form class="container p-4 border rounded shadow mt-4" style="max-width: 500px;">
+		<h2 class="text-center mb-4">Créer un compte</h2>
+
+		<div class="mb-3">
+			<label for="nom" class="form-label">Nom</label>
+			<input type="text" class="form-control" id="nom" name="nom" required placeholder="Votre nom">
+		</div>
+
+		<div class="mb-3">
+			<label for="prenom" class="form-label">Prénom</label>
+			<input type="text" class="form-control" id="prenom" name="prenom" required placeholder="Votre prénom">
+		</div>
+
+		<div class="mb-3">
+			<label for="mail" class="form-label">Email</label>
+			<input type="email" class="form-control" id="mail" name="mail" required placeholder="Votre email">
+		</div>
+
+		<div class="mb-3">
+			<label for="mdp" class="form-label">Mot de passe</label>
+			<input type="password" class="form-control" id="mdp" name="mdp" required placeholder="Votre mot de passe">
+		</div>
+
+		<button type="submit" class="btn btn-primary w-100">Créer un compte</button>
+	</form>
+</div>
+
+
 {% endblock %}
