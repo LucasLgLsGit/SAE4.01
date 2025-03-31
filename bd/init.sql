@@ -25,6 +25,7 @@ CREATE TABLE Produit(
 	couleur VARCHAR(50) NOT NULL,
 	taille VARCHAR(3) NOT NULL,
 	stock INT NOT NULL,
+	prix DECIMAL(4,2),
 	id_user INT NOT NULL,
 	PRIMARY KEY(id_produit),
 	FOREIGN KEY(id_user) REFERENCES Utilisateur(id_user)
@@ -65,7 +66,6 @@ CREATE TABLE Actualite(
 CREATE TABLE Commentaire(
 	id_commentaire INT,
 	texte TEXT NOT NULL,
-	note INT NOT NULL,
 	date_commentaire TIMESTAMP NOT NULL,
 	id_user INT NOT NULL,
 	id_event INT NOT NULL,
