@@ -19,11 +19,11 @@ class AuthController extends Controller {
 		// Si aucune donnée n'est envoyée en POST ou si la connexion échoue, afficher le formulaire
 		if (!empty($postData))
 		{
-			$userRepository = new UserRepository();
+			$utilisateurRepository = new UtilisateurRepository();
 
-			$user = $userRepository->findByEmail($this->getPostParam('email'));
+			$user = $utilisateurRepository->findByEmail($this->getPostParam('mail'));
 
-			if($user !== null && $this->verify($this->getPostParam('password'),$user->getPassword()))
+			if($user !== null && $this->verify($this->getPostParam('mdp'),$user->getMdp()))
 			{
 				$authService->setUser($user);
 				$this->redirectTo('index.php');

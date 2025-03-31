@@ -60,4 +60,14 @@ class UtilisateurRepository {
 		}
 		return null;
 	}
+
+	public function findByEmail(string $email): ?Utilisateur {
+		$stmt = $this->pdo->prepare('SELECT * FROM "utilisateur" WHERE mail = :mail');
+		$stmt->execute(['mail' => $email]);
+		$utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+		if ($utilisateur) {
+			return $this->createUserFromRow($utilisateur);
+		}
+		return null;
+	}
 }
