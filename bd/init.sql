@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS Produit;
 DROP TABLE IF EXISTS Utilisateur;
 
 CREATE TABLE Utilisateur(
-	id_user INT,
+	id_user SERIAL,
 	mail VARCHAR(50) NOT NULL,
 	mdp VARCHAR(255) NOT NULL,
 	permission INT NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE Utilisateur(
 );
 
 CREATE TABLE Produit(
-	id_produit INT,
+	id_produit SERIAL,
 	titre_produit VARCHAR(50) NOT NULL,
 	description_produit TEXT NOT NULL,
 	date_produit TIMESTAMP NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE Produit(
 );
 
 CREATE TABLE Image(
-	id_image INT,
+	id_image SERIAL,
 	nom_image VARCHAR(50) NOT NULL,
 	chemin_image VARCHAR(50) NOT NULL,
 	id_produit INT NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE Image(
 );
 
 CREATE TABLE Evenement(
-	id_event INT,
+	id_event SERIAL,
 	titre_event VARCHAR(50) NOT NULL,
 	date_debut TIMESTAMP NOT NULL,
 	date_fin TIMESTAMP,
@@ -54,7 +54,7 @@ CREATE TABLE Evenement(
 );
 
 CREATE TABLE Actualite(
-	id_article INT,
+	id_article SERIAL,
 	titre_article VARCHAR(50) NOT NULL,
 	contenu TEXT NOT NULL,
 	date_publication TIMESTAMP NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE Actualite(
 );
 
 CREATE TABLE Commentaire(
-	id_commentaire INT,
+	id_commentaire SERIAL,
 	texte TEXT NOT NULL,
 	date_commentaire TIMESTAMP NOT NULL,
 	id_user INT NOT NULL,
