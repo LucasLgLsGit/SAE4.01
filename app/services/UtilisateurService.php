@@ -2,9 +2,14 @@
 
 require_once './app/repositories/UtilisateurRepository.php';
 require_once './app/entities/Utilisateur.php';
+require_once './app/trait/AuthTrait.php';
+require_once './app/trait/FormTrait.php';
 
 class UtilisateurService
 {
+	use FormTrait;
+	use AuthTrait;
+	
 	public function allUtilisateurs(): array
 	{
 		$utilisateurRepo = new UtilisateurRepository();
