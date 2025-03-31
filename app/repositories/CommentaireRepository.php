@@ -10,7 +10,7 @@ class CommentaireRepository {
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT * FROM "Commentaire"');
+		$stmt = $this->pdo->query('SELECT * FROM "commentaire"');
 		$commentaires = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$commentaires[] = $this->createCommentaireFromRow($row);
@@ -30,14 +30,14 @@ class CommentaireRepository {
 	}
 
 	public function findById(int $id): ?Commentaire {
-		$stmt = $this->pdo->prepare('SELECT * FROM "Commentaire" WHERE id_commentaire = :id');
+		$stmt = $this->pdo->prepare('SELECT * FROM "commentaire" WHERE id_commentaire = :id');
 		$stmt->execute(['id' => $id]);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $row ? $this->createCommentaireFromRow($row) : null;
 	}
 
 	public function create(Commentaire $commentaire): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "Commentaire" (id_commentaire, texte_commentaire, date_commentaire, id_user, id_event) VALUES (:id, :texte, :date, :user, :event)');
+		$stmt = $this->pdo->prepare('INSERT INTO "commentaire" (id_commentaire, texte_commentaire, date_commentaire, id_user, id_event) VALUES (:id, :texte, :date, :user, :event)');
 		return $stmt->execute([
 			'id' => $commentaire->getId_commentaire(),
 			'texte' => $commentaire->getTexte_commentaire(),
@@ -48,7 +48,7 @@ class CommentaireRepository {
 	}
 
 	public function update(Commentaire $commentaire): bool {
-		$stmt = $this->pdo->prepare('UPDATE "Commentaire" SET texte_commentaire = :texte, date_commentaire = :date, id_user = :user, id_event = :event WHERE id_commentaire = :id');
+		$stmt = $this->pdo->prepare('UPDATE "commentaire" SET texte_commentaire = :texte, date_commentaire = :date, id_user = :user, id_event = :event WHERE id_commentaire = :id');
 		return $stmt->execute([
 			'id' => $commentaire->getId_commentaire(),
 			'texte' => $commentaire->getTexte_commentaire(),
@@ -59,7 +59,7 @@ class CommentaireRepository {
 	}
 
 	public function delete(int $id): bool {
-		$stmt = $this->pdo->prepare('DELETE FROM "Commentaire" WHERE id_commentaire = :id');
+		$stmt = $this->pdo->prepare('DELETE FROM "commentaire" WHERE id_commentaire = :id');
 		return $stmt->execute(['id' => $id]);
 	}
 }

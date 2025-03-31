@@ -10,37 +10,13 @@ class CommandeRepository
 	}
 
 	public function findAll() {
-		$sql = "SELECT * FROM Commande";
+		$sql = "SELECT * FROM commande";
 		$stmt = $this->pdo->query($sql);
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function findById($id_user, $id_produit) {
-		$sql = "SELECT * FROM Commande WHERE id_user = :id_user AND id_produit = :id_produit";
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute(['id_user' => $id_user, 'id_produit' => $id_produit]);
-		return $stmt->fetch(PDO::FETCH_ASSOC);
-	}
-
-	public function update($id_user, $id_produit, $quantite, $numero_commande) {
-		$sql = "UPDATE Commande SET quantite = :quantite, numero_commande = :numero_commande WHERE id_user = :id_user AND id_produit = :id_produit";
-		$stmt = $this->pdo->prepare($sql);
-		return $stmt->execute([
-			'quantite' => $quantite,
-			'numero_commande' => $numero_commande,
-			'id_user' => $id_user,
-			'id_produit' => $id_produit
-		]);
-	}
-
-	public function delete($id_user, $id_produit) {
-		$sql = "DELETE FROM Commande WHERE id_user = :id_user AND id_produit = :id_produit";
-		$stmt = $this->pdo->prepare($sql);
-		return $stmt->execute(['id_user' => $id_user, 'id_produit' => $id_produit]);
-	}
-
 	public function create($id_user, $id_produit, $quantite, $numero_commande) {
-		$sql = "INSERT INTO Commande (id_user, id_produit, quantite, numero_commande) VALUES (:id_user, :id_produit, :quantite, :numero_commande)";
+		$sql = "INSERT INTO commande (id_user, id_produit, quantite, numero_commande) VALUES (:id_user, :id_produit, :quantite, :numero_commande)";
 		$stmt = $this->pdo->prepare($sql);
 		return $stmt->execute([
 			'id_user' => $id_user,
@@ -50,5 +26,28 @@ class CommandeRepository
 		]);
 	}
 
+	public function update($id_user, $id_produit, $quantite, $numero_commande) {
+		$sql = "UPDATE commande SET quantite = :quantite, numero_commande = :numero_commande WHERE id_user = :id_user AND id_produit = :id_produit";
+		$stmt = $this->pdo->prepare($sql);
+		return $stmt->execute([
+			'quantite' => $quantite,
+			'numero_commande' => $numero_commande,
+			'id_user' => $id_user,
+			'id_produit' => $id_produit
+		]);
+	}
+
+	public function findById($id_user, $id_produit) {
+		$sql = "SELECT * FROM commande WHERE id_user = :id_user AND id_produit = :id_produit";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute(['id_user' => $id_user, 'id_produit' => $id_produit]);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
+	public function delete($id_user, $id_produit) {
+		$sql = "DELETE FROM commande WHERE id_user = :id_user AND id_produit = :id_produit";
+		$stmt = $this->pdo->prepare($sql);
+		return $stmt->execute(['id_user' => $id_user, 'id_produit' => $id_produit]);
+	}
 }
 ?>

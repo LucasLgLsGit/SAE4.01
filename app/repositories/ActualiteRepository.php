@@ -10,7 +10,7 @@ class ActualiteRepository {
     }
 
     public function findAll(): array {
-        $stmt = $this->pdo->query('SELECT * FROM "Actualite"');
+        $stmt = $this->pdo->query('SELECT * FROM "actualite"');
         $actualites = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $actualites[] = $this->createActualiteFromRow($row);
@@ -23,34 +23,34 @@ class ActualiteRepository {
     }
 
     public function create(Actualite $actualite): void {
-        $stmt = $this->pdo->prepare('INSERT INTO "Actualite" (titre_article, contenu, date_publication, id_user) VALUES (:titre_article, :contenu, :date_publication, :id_user)');
-        $stmt->bindParam(':titre_article', $actualite->getTitreArticle());
-        $stmt->bindParam(':contenu', $actualite->getContenu());
-        $stmt->bindParam(':date_publication', $actualite->getDatePublication()->format('Y-m-d H:i:s'));
-        $stmt->bindParam(':id_user', $actualite->getIdUser(), PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('INSERT INTO "actualite" (titre_article, contenu, date_publication, id_user) VALUES (:titre_article, :contenu, :date_publication, :id_user)');
+        $stmt->execute([
+            ':titre_article' => $actualite->getTitreArticle(),
+            ':contenu' => $actualite->getContenu(),
+            ':date_publication' => $actualite->getDatePublication()->format('Y-m-d H:i:s'),
+            ':id_user' => $actualite->getIdUser()
+        ]);
     }
 
     public function update(Actualite $actualite): void {
-        $stmt = $this->pdo->prepare('UPDATE "Actualite" SET titre_article = :titre_article, contenu = :contenu, date_publication = :date_publication WHERE id_actu = :id_actu');
-        $stmt->bindParam(':titre_article', $actualite->getTitreArticle());
-        $stmt->bindParam(':contenu', $actualite->getContenu());
-        $stmt->bindParam(':date_publication', $actualite->getDatePublication()->format('Y-m-d H:i:s'));
-        $stmt->bindParam(':id_actu', $actualite->getIdActu(), PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('UPDATE "actualite" SET titre_article = :titre_article, contenu = :contenu, date_publication = :date_publication WHERE id_actu = :id_actu');
+        $stmt->execute([
+            ':titre_article' => $actualite->getTitreArticle(),
+            ':contenu' => $actualite->getContenu(),
+            ':date_publication' => $actualite->getDatePublication()->format('Y-m-d H:i:s'),
+            ':id_actu' => $actualite->getIdActu()
+        ]);
     }
 
     public function findById(int $id): ?Actualite {
-        $stmt = $this->pdo->prepare('SELECT * FROM "Actualite" WHERE id_actu = :id');
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('SELECT * FROM "actualite" WHERE id_actu = :id');
+        $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->createActualiteFromRow($row) : null;
     }
 
     public function delete(int $id): void {
-        $stmt = $this->pdo->prepare('DELETE FROM "Actualite" WHERE id_actu = :id');
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt = $this->pdo->prepare('DELETE FROM "actualite" WHERE id_actu = :id');
+        $stmt->execute([':id' => $id]);
     }
 }

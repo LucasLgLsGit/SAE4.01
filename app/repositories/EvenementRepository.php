@@ -10,7 +10,7 @@ class EvenementRepository {
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT * FROM "Evenement"');
+		$stmt = $this->pdo->query('SELECT * FROM "evenement"');
 		$evenements = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$evenements[] = $this->createEvenementFromRow($row);
@@ -20,8 +20,8 @@ class EvenementRepository {
 
 	private function createEvenementFromRow(array $row): Evenement {
 		return new Evenement(
-			$row['id_event'],
-			$row['titre_event'],
+			$row['id_evenement'],
+			$row['titre_evenement'],
 			new DateTime($row['date_debut']),
 			new DateTime($row['date_fin']),
 			$row['adresse'],
@@ -32,7 +32,7 @@ class EvenementRepository {
 	}
 
 	public function create(Evenement $evenement): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "Evenement" (titre_event, date_debut, date_fin, adresse, description, prix, id_user) VALUES (:titre_event, :date_debut, :date_fin, :adresse, :description, :prix, :id_user)');
+		$stmt = $this->pdo->prepare('INSERT INTO "evenement" (titre_event, date_debut, date_fin, adresse, description, prix, id_user) VALUES (:titre_event, :date_debut, :date_fin, :adresse, :description, :prix, :id_user)');
 		return $stmt->execute([
 			'titre_event' => $evenement->getTitreEvent(),
 			'date_debut' => $evenement->getDateDebut()->format('Y-m-d H:i:s'),
@@ -45,7 +45,7 @@ class EvenementRepository {
 	}
 
 	public function update(Evenement $evenement): bool {
-		$stmt = $this->pdo->prepare('UPDATE "Evenement" SET titre_event = :titre_event, date_debut = :date_debut, date_fin = :date_fin, adresse = :adresse, description = :description, prix = :prix WHERE id_event = :id_event');
+		$stmt = $this->pdo->prepare('UPDATE "evenement" SET titre_event = :titre_event, date_debut = :date_debut, date_fin = :date_fin, adresse = :adresse, description = :description, prix = :prix WHERE id_event = :id_event');
 		return $stmt->execute([
 			'id_event' => $evenement->getId(),
 			'titre_event' => $evenement->getTitreEvent(),
@@ -58,7 +58,7 @@ class EvenementRepository {
 	}
 
 	public function findById(int $id): ?Evenement {
-		$stmt = $this->pdo->prepare('SELECT * FROM "Evenement" WHERE id_event = :id_event');
+		$stmt = $this->pdo->prepare('SELECT * FROM "evenement" WHERE id_event = :id_event');
 		$stmt->execute(['id_event' => $id]);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		if ($row) {
@@ -68,7 +68,7 @@ class EvenementRepository {
 	}
 
 	public function delete(int $id): bool {
-		$stmt = $this->pdo->prepare('DELETE FROM "Evenement" WHERE id_event = :id_event');
+		$stmt = $this->pdo->prepare('DELETE FROM "evenement" WHERE id_event = :id_event');
 		return $stmt->execute(['id_event' => $id]);
 	}
 }
