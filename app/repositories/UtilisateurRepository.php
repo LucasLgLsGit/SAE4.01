@@ -70,4 +70,14 @@ class UtilisateurRepository {
 		}
 		return null;
 	}
+
+	public function countMembres(): int {
+		$stmt = $this->pdo->query('SELECT COUNT(*) FROM "utilisateur" WHERE (permission & 1) != 0');
+		return (int) $stmt->fetchColumn();
+	}
+
+	public function countAdherents(): int {
+		$stmt = $this->pdo->query('SELECT COUNT(*) FROM "utilisateur" WHERE (permission & 2) != 0');
+		return (int) $stmt->fetchColumn();
+	}
 }

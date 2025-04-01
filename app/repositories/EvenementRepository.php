@@ -88,5 +88,14 @@ class EvenementRepository {
 		}
 		return $evenements;
 	}
+
+	public function countEvenements2025(): int {
+		$stmt = $this->pdo->query('
+			SELECT COUNT(*) 
+			FROM "evenement" 
+			WHERE date_debut >= \'2025-01-01\' AND date_debut < \'2026-01-01\'
+		');
+		return (int) $stmt->fetchColumn();
+	}
 }
 ?>
