@@ -49,6 +49,19 @@ class Utilisateur
 		return $this->prenom;
 	}
 
+	public function getStatut(): string
+	{
+		if($this->isAdmin()) {
+			return "Administrateur";
+		} elseif($this->isAdherent()) {
+			return "Adhérent";
+		} elseif($this->isMembre()) {
+			return "Membre";
+		} else {
+			return "Visiteur";
+		}
+	}
+
 	public function setId(?int $id_user): void
 	{
 		$this->id_user = $id_user;

@@ -12,15 +12,19 @@ class UtilisateurController extends Controller {
 
 	public function index()
 	{
-		$repository = new UtilisateurRepository();
-		$utilisateurs = $repository->findAll();
-
 		$isLoggedIn = $this->isLoggedIn();
 		$user = $this->getCurrentUser();
 		$isAdmin = $user && $user->isAdmin();
 
-		$this->view('/user/index.html.twig', [
-			'utilisateurs' => $utilisateurs,
+		if ($isLoggedIn && $user) {
+			$repository = new UtilisateurRepository();
+			$utilisateur = $repository->findById($user->getId());
+		} else {
+			$utilisateur = null;
+		}
+
+		$this->view('/user/profile.html.twig', [
+			'utilisateur' => $utilisateur,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin
 		]);
@@ -63,6 +67,6 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/user/profil.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
+		$this->view('/user/profile.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
 	}
 }
