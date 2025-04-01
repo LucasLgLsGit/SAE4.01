@@ -16,7 +16,6 @@ class ShopController extends Controller
         try {
             $produits = $this->produitService->allProduits();
 
-            // Regrouper les produits par titre
             $produitsGroupes = [];
             foreach ($produits as $produit) {
                 $titre = strtolower($produit->getTitre_produit());
@@ -29,7 +28,6 @@ class ShopController extends Controller
             $user = $this->getCurrentUser();
             $isAdmin = $user && $user->isAdmin();
 
-            // Passez les données à la vue
             $this->view('/shop/index.html.twig', [
                 'title' => 'Liste des Produits',
                 'produitsGroupes' => $produitsGroupes,
@@ -54,16 +52,14 @@ class ShopController extends Controller
                 throw new Exception("Le titre du produit est requis !");
             }
 
-            // Fetch all products to find those with the same title
             $allProduits = $this->produitService->allProduits();
             $produitsWithSameTitre = [];
             $representativeProduit = null;
 
-            // Group products by the given title and collect sizes and colors
             foreach ($allProduits as $produit) {
                 if (strtolower($produit->getTitre_produit()) === strtolower($titre)) {
                     if (!$representativeProduit) {
-                        $representativeProduit = $produit; // Use the first product as the representative
+                        $representativeProduit = $produit;
                     }
                     $produitsWithSameTitre[] = $produit;
                 }
@@ -73,7 +69,6 @@ class ShopController extends Controller
                 throw new Exception("Produit non trouvé !");
             }
 
-            // Aggregate sizes and colors
             $tailles = [];
             $couleurs = [];
             foreach ($produitsWithSameTitre as $produit) {
@@ -87,11 +82,17 @@ class ShopController extends Controller
                 }
             }
 
+            $isLoggedIn = $this->isLoggedIn();
+            $user = $this->getCurrentUser();
+            $isAdmin = $user && $user->isAdmin();
+
             $this->view('/shop/detail.html.twig', [
                 'title' => 'Détail du Produit',
-                'produit' => $representativeProduit, // Representative product for title, price, etc.
-                'tailles' => $tailles,               // All available sizes
-                'couleurs' => $couleurs              // All available colors
+                'produit' => $representativeProduit,
+                'tailles' => $tailles,
+                'couleurs' => $couleurs,
+                'isLoggedIn' => $isLoggedIn,
+				'isAdmin' => $isAdmin
             ]);
         } catch (Exception $e) {
             echo "Erreur : " . $e->getMessage();
