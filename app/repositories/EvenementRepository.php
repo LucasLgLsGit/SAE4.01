@@ -71,5 +71,22 @@ class EvenementRepository {
 		$stmt = $this->pdo->prepare('DELETE FROM "evenement" WHERE id_event = :id_event');
 		return $stmt->execute(['id_event' => $id]);
 	}
+
+	public function findUpcomingEvents(int $limit = 3): array {
+		$stmt = $this->pdo->prepare('
+			SELECT * FROM "evenement"
+			WHERE date_debut >= NOW()
+			ORDER BY date_debut ASC
+			LIMIT :limit
+		');
+		$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+		$stmt->execute();
+	
+		$evenements = [];
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$evenements[] = $this->createEvenementFromRow($row);
+		}
+		return $evenements;
+	}
 }
 ?>

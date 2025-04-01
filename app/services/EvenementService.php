@@ -1,7 +1,7 @@
 <?php
 
-require_once '../repositories/EvenementRepository.php';
-require_once '../entities/Evenement.php';
+require_once './app/repositories/EvenementRepository.php';
+require_once './app/entities/Evenement.php';
 
 class EvenementService
 {

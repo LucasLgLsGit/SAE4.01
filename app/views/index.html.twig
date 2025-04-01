@@ -73,60 +73,16 @@
 
 	<main class="container">
 		<section class="row">
+			{% for event in upcomingEvents %}
 			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
 				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
+					<h2>{{ event.getTitreEvent() }}</h2>
+					<p class="next-event-date"><i class="bi bi-calendar"></i> {{ event.getDateDebut()|date("d F Y", "Europe/Paris") }}</p>
+					<p class="next-event-description">{{ event.getDescription() }}</p>
+					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> {{ event.getAdresse() }}</p>
 				</div>
 			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-						<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
+			{% endfor %}
 		</section>
 	</main>
 </div>
