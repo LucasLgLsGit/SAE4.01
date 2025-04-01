@@ -68,13 +68,13 @@
 <div class="d-flex flex-column align-items-center justify-content-center next-events">
 	<div class="d-flex flex-column flex-md-row align-items-center w-100 mb-4">
 		<h1 class="next-events-title mb-3 mb-md-0 me-md-3">PROCHAINS EVENEMENTS</h1>
-		<a href="#" class="btn-show-more">Voir plus <i class="bi bi-arrow-right-short"></i></a>
+		<a href="/events.php" class="btn-show-more">Voir plus <i class="bi bi-arrow-right-short"></i></a>
 	</div>
 
 	<main class="container">
 		<section class="row">
 			{% for event in upcomingEvents %}
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
+			<a href="/event.php?id={{ event.getId() }}" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
 				<div class="p-4 border rounded text-center">
 					<h2>{{ event.getTitreEvent() }}</h2>
 					<p class="next-event-date"><i class="bi bi-calendar"></i> {{ event.getDateDebut()|date_fr('d F Y à H:i') }}</p>
