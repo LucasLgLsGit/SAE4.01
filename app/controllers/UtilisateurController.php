@@ -15,7 +15,15 @@ class UtilisateurController extends Controller {
 		$repository = new UtilisateurRepository();
 		$utilisateurs = $repository->findAll();
 
-		$this->view('/user/index.html.twig', ['utilisateurs' => $utilisateurs]);
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
+
+		$this->view('/user/index.html.twig', [
+			'utilisateurs' => $utilisateurs,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin
+		]);
 	}
 
 	public function create() {

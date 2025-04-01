@@ -13,6 +13,10 @@ class EventController extends Controller
 		$evenementController = new EvenementController();
 		$upcomingEvents = $evenementController->getAllUpcomingEvents(); 
 
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
+
 		$eventsByYear = [];
 		foreach ($upcomingEvents as $event) {
 			$year = $event->getDateDebut()->format('Y');
@@ -23,6 +27,10 @@ class EventController extends Controller
 		}
 		krsort($eventsByYear);
 
-		$this->view('events.html.twig', ['eventsByYear' => $eventsByYear]);
+		$this->view('events.html.twig', [
+			'eventsByYear' => $eventsByYear,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin
+		]);
 	}
 }

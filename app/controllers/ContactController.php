@@ -11,6 +11,10 @@ class ContactController extends Controller
 	{
 		$data = [];
 		$config = require_once './config/mail.php'; // Charger la configuration
+		
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
 
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -50,6 +54,10 @@ class ContactController extends Controller
 		}
 
 		// Afficher la vue avec les données
-		$this->view('contact.html.twig', $data);
+		$this->view('contact.html.twig', [
+			'data' => $data,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin
+		]);
 	}
 }

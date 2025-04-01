@@ -9,7 +9,6 @@ class AuthController extends Controller {
 	use FormTrait;
 	use AuthTrait;
 
-
 	public function login() {
 		$authService = new AuthService();
 
@@ -20,15 +19,18 @@ class AuthController extends Controller {
 		if (!empty($postData)) {
 			$utilisateurRepository = new UtilisateurRepository();
 
+			// Récupérer l'utilisateur par email
 			$user = $utilisateurRepository->findByEmail($this->getPostParam('mail'));
 
 			if ($user !== null) {
 				$password = $this->getPostParam('mdp');
-				$hashedPassword = $user->getMdp(); // Debugging
+				$hashedPassword = $user->getMdp();
 
+				// Vérifier le mot de passe
 				if (!$this->verify($password, $hashedPassword)) {
 					$data = ['error' => 'Mot de passe incorrect.'];
 				} else {
+					// Définir l'utilisateur dans la session
 					$authService->setUser($user);
 					$this->redirectTo('index.php');
 				}

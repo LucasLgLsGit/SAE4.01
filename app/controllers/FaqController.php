@@ -6,6 +6,13 @@ class FaqController extends Controller
 {
 	public function index()
 	{
-		$this->view('FAQ.html.twig');
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
+
+		$this->view('FAQ.html.twig', [
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin
+		]);
 	}
 }

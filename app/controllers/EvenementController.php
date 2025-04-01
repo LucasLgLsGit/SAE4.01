@@ -15,7 +15,15 @@ class EvenementController extends Controller {
 		$repository = new EvenementRepository();
 		$evenements = $repository->findAll();
 
-		$this->view('/event/index.html.twig', ['evenements' => $evenements]);
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
+
+		$this->view('/event/index.html.twig', [
+			'evenements' => $evenements,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin
+		]);
 	}
 
 	public function create() {

@@ -14,12 +14,18 @@ class ShopController extends Controller
 
 	public function index()
 	{
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
+
 		try {
 			$produits = $this->produitService->allProduits();
 
 			$this->view('/shop/index.html.twig', [
 				'title' => 'Liste des Produits',
-				'produits' => $produits
+				'produits' => $produits,
+				'isLoggedIn' => $isLoggedIn,
+				'isAdmin' => $isAdmin
 			]);
 		} catch (Exception $e) {
 			$this->view('error.html.twig', [

@@ -10,15 +10,9 @@ class HomeController extends Controller
 {
 	public function index()
 	{
-		$authService = new AuthService();
-		$isLoggedIn = $authService->isLoggedIn();
-
-		// Vérifiez si l'utilisateur est administrateur
-		$isAdmin = false;
-		if ($isLoggedIn) {
-			$user = $authService->getUser(); // Suppose que cette méthode retourne l'utilisateur connecté
-			$isAdmin = $user && $user->isAdmin(); // Vérifie si l'utilisateur est admin
-		}
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
 
 		$evenementController = new EvenementController();
 		$upcomingEvents = $evenementController->getUpcomingEvents();
@@ -36,7 +30,7 @@ class HomeController extends Controller
 
 		$this->view('index.html.twig', [
 			'isLoggedIn' => $isLoggedIn,
-			'isAdmin' => $isAdmin, // Passe la variable isAdmin à la vue
+			'isAdmin' => $isAdmin,
 			'upcomingEvents' => $upcomingEvents,
 			'lastActualites' => $lastActualites,
 			'nombreMembres' => $nombreMembres,

@@ -14,8 +14,16 @@ class ActualiteController extends Controller {
 	{
 		$repository = new ActualiteRepository();
 		$actualites = $repository->findAll();
+		
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
 
-		$this->view('/news/index.html.twig', ['actualites' => $actualites]);
+		$this->view('/news/index.html.twig', [
+			'actualites' => $actualites,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin
+		]);
 	}
 
 	public function create() {
