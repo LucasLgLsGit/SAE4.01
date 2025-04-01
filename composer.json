@@ -1,12 +1,12 @@
 {
-    "authors": [
-        {
-            "name": "salimkhr",
-            "email": "salimkhr@gmail.com"
-        }
-    ],
-    "require": {
-        "twig/twig": "^3.19",
-        "phpmailer/phpmailer": "^6.9"
-    }
+	"authors": [
+		{
+			"name": "salimkhr",
+			"email": "salimkhr@gmail.com"
+		}
+	],
+	"require": {
+		"twig/twig": "^3.19",
+		"phpmailer/phpmailer": "^6.9"
+	}
 }
