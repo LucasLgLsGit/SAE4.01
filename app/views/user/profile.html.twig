@@ -63,21 +63,23 @@
             </div>
         </div>
 
-		<div class="row mb-3">
-			<!-- Mot de passe -->
-			<div class="col-md-6">
-				<label for="mdp" class="form-label">Mot de passe</label>
-				<div class="form-control">********</div>
-			</div>
+        <!-- Mot de passe -->
+        <div class="col-md-6">
+            <label for="mdp" class="form-label">Mot de passe</label>
+            <div class="form-control">********</div>
+        </div>
 
-			<!-- Nouveau mot de passe -->
-			<div class="col-md-6">
-				<label for="new_mdp" class="form-label">Nouveau mot de passe</label>
-				<div class="d-flex">
-					<input type="password" class="form-control me-2" id="new_mdp" placeholder="Nouveau mot de passe">
-					<button class="profile-btn">Changer</button>
-				</div>
-			</div>
+        <div class="row mb-3">
+            <!-- Nouveau mot de passe -->
+            <div class="col-md-12">
+                <label for="new_mdp" class="form-label">Nouveau mot de passe</label>
+                <form method="POST" action="user_change_password.php" class="d-flex">
+                    <input type="hidden" name="id_user" value="{{ utilisateur.id }}">
+                    <input type="password" class="form-control me-2" id="new_mdp" name="new_mdp" placeholder="Nouveau mot de passe" required>
+                    <input type="password" class="form-control me-2" id="confirm_new_mdp" name="confirm_new_mdp" placeholder="Confirmation du mot de passe" required>
+                    <button type="submit" class="profile-btn">Changer</button>
+                </form>
+            </div>
 		</div>   
 	</div>
 </div>

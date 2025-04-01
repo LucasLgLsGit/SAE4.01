@@ -25,10 +25,16 @@ class ShopController extends Controller
                 }
             }
 
+            $isLoggedIn = $this->isLoggedIn();
+            $user = $this->getCurrentUser();
+            $isAdmin = $user && $user->isAdmin();
+
             // Passez les données à la vue
             $this->view('/shop/index.html.twig', [
                 'title' => 'Liste des Produits',
-                'produitsGroupes' => $produitsGroupes
+                'produitsGroupes' => $produitsGroupes,
+                'isLoggedIn' => $isLoggedIn,
+				'isAdmin' => $isAdmin
             ]);
         } catch (Exception $e) {
             echo "Erreur : " . $e->getMessage();
