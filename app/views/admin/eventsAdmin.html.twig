@@ -1,0 +1,46 @@
+{% extends '_template/base.html.twig' %}
+
+{% block css %}
+	<link rel="stylesheet" href="/assets/css/eventsAdmin.css">
+{% endblock %}
+
+{% block body %}
+<div class="events-container">
+	<div class="container mt-5">
+		<h2 class="mb-4">Gestion des Événements</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Titre</th>
+					<th>Date Début</th>
+					<th>Date Fin</th>
+					<th>Adresse</th>
+					<th>Description</th>
+					<th>Prix (€)</th>
+					<th>Créateur</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for event in events %}
+				<tr>
+					<td>{{ event.getId() }}</td>
+					<td>{{ event.getTitreEvent() }}</td>
+					<td>{{ event.getDateDebut().format('d/m/Y H:i') }}</td>
+					<td>{{ event.getDateFin().format('d/m/Y H:i') }}</td>
+					<td>{{ event.getAdresse() }}</td>
+					<td>{{ event.getDescription() }}</td>
+					<td>{{ event.getPrix()|number_format(2, ',', ' ') }}</td>
+					<td>{{ event.getIdUser() }}</td>
+					<td>
+						<a href="#" class="btn btn-primary btn-sm">Éditer</a>
+						<button class="btn btn-danger btn-sm delete-event" data-event-id="{{ event.getId() }}">Supprimer</button>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

@@ -36,8 +36,8 @@
 					</a>
 				</li>
 				<li class="nav-item"><a class="nav-link page {% if current_url == '/contact.php' %}active{% endif %}" href="/contact.php">Contact</a></li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/events.php' %}active{% endif %}" href="/events.php">Événements</a></li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/shop.php' %}active{% endif %}" href="/shop.php">Boutique</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/events.php' or current_url starts with '/event.php'%}active{% endif %}" href="/events.php">Événements</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/shop.php' or current_url starts with '/detail.php' %}active{% endif %}" href="/shop.php">Boutique</a></li>
 				<li class="nav-item"><a class="nav-link page {% if current_url == '/faq.php' %}active{% endif %}" href="/faq.php">FAQ</a></li>
 
 				<li class="nav-item d-lg-none">
@@ -86,7 +86,7 @@
 				<a class="nav-link second-nav-link page text-white {% if current_url == '/adminActualites.php' %}active{% endif %}" href="/adminActualites.php">Actualités</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/adminEvents.php' %}active{% endif %}" href="/adminEvents.php">Evenements</a>
+				<a class="nav-link second-nav-link page text-white {% if current_url == '/events_admin.php' %}active{% endif %}" href="/events_admin.php">Evenements</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link second-nav-link page text-white {% if current_url == '/users_admin.php' %}active{% endif %}" href="/users_admin.php">Utilisateurs</a>
