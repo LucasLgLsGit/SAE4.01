@@ -39,7 +39,7 @@ class UtilisateurService
 
 		$hashedPassword = $this->hash($data['mdp']);
 		$utilisateur = new Utilisateur(
-			null, // L'ID est auto-incrémenté
+			null,
 			$data['mail'],
 			$hashedPassword,
 			1,

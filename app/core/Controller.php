@@ -13,16 +13,16 @@ abstract class Controller {
 
 		$data['current_url'] = $_SERVER['REQUEST_URI'];
 
-// Rendu du template accueil.twig avec des variables
+		// Rendu du template accueil.twig avec des variables
 		echo $twig->render($viewName,$data);
 	}
 
 	protected function json($data, $status = 200) {
-	   header('Content-Type: application/json');
-	   http_response_code($status);
-	   echo json_encode($data);
-	   exit();
-   }
+		header('Content-Type: application/json');
+		http_response_code($status);
+		echo json_encode($data);
+		exit();
+	}
 
 	protected function redirectTo($url) {
 		header("Location: $url");

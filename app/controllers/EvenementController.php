@@ -57,4 +57,9 @@ class EvenementController extends Controller {
 
 		$this->view('/event/update.html.twig', 'Modification d\'un évenement', ['errors' => $errors, 'data' => $data, 'id_event' => $id]);
 	}
+
+	public function getUpcomingEvents() {
+		$repository = new EvenementRepository();
+		return $repository->findUpcomingEvents(3);
+	}
 }
