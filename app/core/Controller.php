@@ -58,4 +58,10 @@ abstract class Controller {
 
 		return isset($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
 	}
+
+	protected function isAdmin(): bool
+	{
+		$user = $this->getCurrentUser();
+		return $user && $user->isAdmin();
+	}
 }
