@@ -57,4 +57,10 @@ class ActualiteController extends Controller {
 
 		$this->view('/news/update.html.twig', 'Modification d\'une actualité', ['errors' => $errors, 'data' => $data, 'id_event' => $id]);
 	}
+
+	public function getLastActualites(int $limit = 10)
+	{
+		$repository = new ActualiteRepository();
+		return $repository->findLastActualites($limit);
+	}
 }

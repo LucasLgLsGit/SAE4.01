@@ -57,4 +57,20 @@ class ActualiteRepository {
 		$stmt = $this->pdo->prepare('DELETE FROM "actualite" WHERE id_article = :id');
 		$stmt->execute([':id' => $id]);
 	}
+
+	public function findLastActualites(int $limit = 10): array {
+		$stmt = $this->pdo->prepare('
+			SELECT * FROM "actualite"
+			ORDER BY date_publication DESC
+			LIMIT :limit
+		');
+		$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+		$stmt->execute();
+	
+		$actualites = [];
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$actualites[] = $this->createActualiteFromRow($row);
+		}
+		return $actualites;
+	}
 }
