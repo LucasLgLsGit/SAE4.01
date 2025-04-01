@@ -41,7 +41,9 @@
 								{% if event.getPrix() > 0 %}
 									<div class="event-price">{{ event.getPrix()|number_format(2, ',', ' ') }} €</div>
 								{% endif %}
-								<button class="btn btn-more mt-2">VOIR PLUS →</button>
+								<button class="btn btn-more mt-2">
+									<a href="/event.php?id={{ event.getId() }}" class="text-decoration-none text-white">VOIR PLUS →</a>
+								</button>
 							</div>
 						</div>
 					</div>

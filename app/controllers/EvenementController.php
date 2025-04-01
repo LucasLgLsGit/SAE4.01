@@ -67,4 +67,22 @@ class EvenementController extends Controller {
 		$repository = new EvenementRepository();
 		return $repository->findUpcomingEvents(); 
 	}
+
+	public function show()
+	{
+		$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+		if (!$id) {
+			throw new Exception("Identifiant de l'événement invalide !");
+		}
+
+		$repository = new EvenementRepository();
+		$event = $repository->findById($id);
+
+		if (!$event) {
+			throw new Exception("Événement introuvable !");
+		}
+
+		$this->view('event.html.twig', ['event' => $event]);
+	}
 }
