@@ -6,6 +6,7 @@
         }
     ],
     "require": {
-        "twig/twig": "^3.19"
+        "twig/twig": "^3.19",
+        "phpmailer/phpmailer": "^6.9"
     }
 }

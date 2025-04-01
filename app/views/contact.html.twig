@@ -3,32 +3,38 @@
 {% block css %}
 <link rel="stylesheet" href="/assets/css/contact.css">
 {% endblock %}
+
 {% block body %}
-	<div class="contact-container">
-		<h1 class="text-center mb-4">Nous Contacter</h1>
+<div class="contact-container">
+	<h1 class="text-center mb-4">Nous Contacter</h1>
 
-		<form class="p-4 border rounded shadow mx-auto" style="max-width: 600px;">
-			<div class="mb-3">
-				<label for="email" class="form-label">Adresse email</label>
-				<input type="email" class="form-control" id="email" name="email" required placeholder="Votre email">
-			</div>
+	<form class="p-4 border rounded shadow mx-auto" method="post" style="max-width: 600px;">
+		{% if success is defined %}
+			<div class="alert alert-success">{{ success }}</div>
+		{% elseif error is defined %}
+			<div class="alert alert-danger">{{ error }}</div>
+		{% endif %}
 
-			<div class="mb-3">
-				<label for="sujet" class="form-label">Sujet</label>
-				<input type="text" class="form-control" id="sujet" name="sujet" required placeholder="Sujet de votre message">
-			</div>
+		<div class="mb-3">
+			<label for="email" class="form-label">Adresse email</label>
+			<input type="email" class="form-control" id="email" name="email" required placeholder="Votre email">
+		</div>
 
-			<div class="mb-3">
-				<label for="message" class="form-label">Message</label>
-				<textarea class="form-control" id="message" name="message" rows="5" required placeholder="Votre message"></textarea>
-			</div>
+		<div class="mb-3">
+			<label for="sujet" class="form-label">Sujet</label>
+			<input type="text" class="form-control" id="sujet" name="sujet" required placeholder="Sujet de votre message">
+		</div>
 
-			<button type="submit" class="btn btn-primary w-100">Envoyer</button>
+		<div class="mb-3">
+			<label for="message" class="form-label">Message</label>
+			<textarea class="form-control" id="message" name="message" rows="5" required placeholder="Votre message"></textarea>
+		</div>
 
-			<div class="text-center mt-3">
-                <a href="/faq.php" class="text-muted" style="font-size: 0.9rem;">Consultez notre FAQ</a>
-            </div>
-		</form>
-	</div>
+		<button type="submit" class="btn btn-primary w-100">Envoyer</button>
+
+		<div class="text-center mt-3">
+			<a href="/faq.php" class="text-muted" style="font-size: 0.9rem;">Consultez notre FAQ</a>
+		</div>
+	</form>
 </div>
 {% endblock %}
