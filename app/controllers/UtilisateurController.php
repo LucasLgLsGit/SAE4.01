@@ -26,7 +26,7 @@ class UtilisateurController extends Controller {
 			try {
 				$userService = new UtilisateurService();
 				$userService->create($data);
-				$this->redirectTo('utilisateurs.php');
+				$this->redirectTo('index.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
 			}
