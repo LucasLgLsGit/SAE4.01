@@ -5,16 +5,25 @@ abstract class Controller {
 
 
 	protected function view(string $viewName, array $data = []) {
-
-		$loader = new \Twig\Loader\FilesystemLoader('app/views'); // Dossier des templates
+		$loader = new \Twig\Loader\FilesystemLoader('app/views');
 		$twig = new \Twig\Environment($loader, [
-			'cache' => false, // Mettre un dossier ('cache/') en production pour améliorer les performances
+			'cache' => false,
 		]);
-
+	
+		// Ajoute un filtre personnalisé pour les dates en français
+		$twig->addFilter(new \Twig\TwigFilter('date_fr', function(\DateTimeInterface $date, string $format = 'd F Y') {
+			$englishMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+			$frenchMonths = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+			
+			return str_replace(
+				$englishMonths, 
+				$frenchMonths, 
+				$date->format($format)
+			);
+		}));
+	
 		$data['current_url'] = $_SERVER['REQUEST_URI'];
-
-		// Rendu du template accueil.twig avec des variables
-		echo $twig->render($viewName,$data);
+		echo $twig->render($viewName, $data);
 	}
 
 	protected function json($data, $status = 200) {
