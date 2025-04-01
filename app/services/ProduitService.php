@@ -11,6 +11,12 @@ class ProduitService
 		return $produitRepo->findAll();
 	}
 
+	public function findById(int $id): ?Produit
+	{
+		$produitRepo = new ProduitRepository();
+		return $produitRepo->findById($id);
+	}
+
 	public function create(array $data): Produit
 	{
 		$errors = [];

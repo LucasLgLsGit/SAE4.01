@@ -12,11 +12,9 @@ class ShopController extends Controller
         $this->produitService = new ProduitService();
     }
 
-    // Afficher tous les produits
     public function index()
     {
         try {
-            // Récupérer tous les produits via le service
             $produits = $this->produitService->allProduits();
 
             $this->view('/shop/index.html.twig', [
@@ -30,4 +28,35 @@ class ShopController extends Controller
             ]);
         }
     }
+
+    private function getQueryParam(string $key): ?string
+    {
+        return $_GET[$key] ?? null;
+    }
+
+    public function detail()
+{
+    try {
+        $id = $this->getQueryParam('id');
+        if (!$id) {
+            throw new Exception("L'identifiant du produit est requis !");
+        }
+
+        $produit = $this->produitService->findById((int)$id);
+
+        if (!$produit) {
+            throw new Exception("Produit non trouvé !");
+        }
+
+        $this->view('/shop/detail.html.twig', [
+            'title' => 'Détail du Produit',
+            'produit' => $produit
+        ]);
+    } catch (Exception $e) {
+        $this->view('error.html.twig', [
+            'title' => 'Erreur',
+            'message' => $e->getMessage()
+        ]);
+    }
+}
 }
