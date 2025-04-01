@@ -1,0 +1,62 @@
+.events-container {
+	width: 100vw;
+}
+
+.event-card {
+	border-radius: 10px;
+	padding: 15px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.event-date {
+	font-size: 1.5rem;
+	text-align: center;
+}
+.event-title {
+	font-weight: bold;
+}
+.event-price {
+	font-weight: bold;
+	font-size: 1.2rem;
+}
+.btn-more {
+	background-color: #030C43;
+	color: white;
+	font-weight: bold;
+	border-radius: 20px;
+}
+.btn-more:hover {
+	background-color: #06178a;
+	color: white;
+}
+.badge-free {
+	background-color: green;
+	color: white;
+	font-size: 0.8rem;
+	padding: 5px 10px;
+	border-radius: 5px;
+}
+
+.event-year {
+	position: relative;
+	display: block;
+}
+
+.event-year::after {
+	content: '';
+	position: absolute;
+	top	: 50%;
+	left: 10%;
+	height: 1px;
+	background-color: #030C43;
+	width: calc(100% - 10%);
+	z-index: -1;
+}
+
+@media screen and (max-width: 750px) {
+	.event-year {
+		text-align: center;
+	}
+	.event-year::after {
+		content: none;
+	}
+}
