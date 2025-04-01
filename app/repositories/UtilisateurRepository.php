@@ -32,7 +32,7 @@ class UtilisateurRepository {
 		$stmt = $this->pdo->prepare('INSERT INTO "utilisateur" (mail, mdp, permission, nom, prenom) VALUES (:mail, :mdp, :permission, :nom, :prenom)');
 		return $stmt->execute([
 			'mail' => $utilisateur->getMail(),
-			'mdp' => password_hash($utilisateur->getMdp(), PASSWORD_BCRYPT),
+			'mdp' => $utilisateur->getMdp(),
 			'permission' => $utilisateur->getPermission(),
 			'nom' => $utilisateur->getNom(),
 			'prenom' => $utilisateur->getPrenom()
@@ -54,6 +54,16 @@ class UtilisateurRepository {
 	public function findById(int $id): ?Utilisateur {
 		$stmt = $this->pdo->prepare('SELECT * FROM "utilisateur" WHERE id_user = :id_user');
 		$stmt->execute(['id_user' => $id]);
+		$utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+		if ($utilisateur) {
+			return $this->createUserFromRow($utilisateur);
+		}
+		return null;
+	}
+
+	public function findByEmail(string $email): ?Utilisateur {
+		$stmt = $this->pdo->prepare('SELECT * FROM "utilisateur" WHERE mail = :mail');
+		$stmt->execute(['mail' => $email]);
 		$utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 		if ($utilisateur) {
 			return $this->createUserFromRow($utilisateur);

@@ -1,10 +1,15 @@
 <?php
 
-require_once '../repositories/UtilisateurRepository.php';
-require_once '../entities/Utilisateur.php';
+require_once './app/repositories/UtilisateurRepository.php';
+require_once './app/entities/Utilisateur.php';
+require_once './app/trait/AuthTrait.php';
+require_once './app/trait/FormTrait.php';
 
 class UtilisateurService
 {
+	use FormTrait;
+	use AuthTrait;
+	
 	public function allUtilisateurs(): array
 	{
 		$utilisateurRepo = new UtilisateurRepository();
@@ -15,11 +20,11 @@ class UtilisateurService
 	{
 		$errors = [];
 
-		if (empty($data['mail'])) {
-			$errors[] = "L'adresse e-mail est requise !";
+		if (empty($data['mail']) || !filter_var($data['mail'], FILTER_VALIDATE_EMAIL)) {
+			$errors[] = "L'adresse e-mail est invalide !";
 		}
-		if (empty($data['mdp'])) {
-			$errors[] = "Le mot de passe est requis !";
+		if (empty($data['mdp']) || strlen($data['mdp']) < 6) {
+			$errors[] = "Le mot de passe doit contenir au moins 6 caractères !";
 		}
 		if (empty($data['nom'])) {
 			$errors[] = "Le nom est requis !";

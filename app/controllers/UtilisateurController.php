@@ -1,8 +1,9 @@
 <?php
 
 require_once './app/core/Controller.php';
-require_once './app/repositories/UtilisateurService.php';
+require_once './app/services/UtilisateurService.php';
 require_once './app/trait/FormTrait.php';
+require_once './app/trait/AuthTrait.php';
 
 class UtilisateurController extends Controller {
 
@@ -14,7 +15,7 @@ class UtilisateurController extends Controller {
 		$repository = new UtilisateurRepository();
 		$utilisateurs = $repository->findAll();
 
-		$this->view('/utilisateur/index.html.twig', ['utilisateurs' => $utilisateurs]);
+		$this->view('/user/index.html.twig', ['utilisateurs' => $utilisateurs]);
 	}
 
 	public function create() {
@@ -31,7 +32,7 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/utilisateur/create.html.twig', 'Création d\'un utilisateur', ['errors' => $errors, 'data' => $data]);
+		$this->view('/user/signUp.html.twig', ['errors' => $errors, 'data' => $data]);
 	}
 
 	public function update() {
@@ -54,6 +55,6 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/utilisateur/update.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
+		$this->view('/user/profil.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
 	}
 }
