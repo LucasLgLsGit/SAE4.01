@@ -91,4 +91,21 @@ class UtilisateurService
 
 		return $utilisateurRepo->update($utilisateur);
 	}
+
+	public function updateEmail(int $id, string $newEmail): bool 
+	{
+		$utilisateurRepo = new UtilisateurRepository();
+		$user = $utilisateurRepo->findById($id);
+		
+		if (!$user) {
+			throw new Exception("Utilisateur non trouvé");
+		}
+		
+		if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+			throw new Exception("Email invalide");
+		}
+		
+		$user->setMail($newEmail);
+		return $utilisateurRepo->update($user);
+	}
 }
