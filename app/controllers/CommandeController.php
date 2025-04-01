@@ -11,7 +11,6 @@ class CommandeController extends Controller
 		$this->commandeService = new CommandeService();
 	}
 
-	// Créer une commande
 	public function createCommande()
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,7 +31,6 @@ class CommandeController extends Controller
 		}
 	}
 
-	// Modifier une commande
 	public function updateCommande(int $id_user, int $id_produit)
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -53,7 +51,6 @@ class CommandeController extends Controller
 		}
 	}
 
-	// Supprimer une commande
 	public function deleteCommande(int $id_user, int $id_produit)
 	{
 		try {

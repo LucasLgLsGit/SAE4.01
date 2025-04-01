@@ -1,6 +1,5 @@
 <?php
 
-// app/controllers/EventController.php
 require_once './app/core/Controller.php';
 require_once './app/controllers/EvenementController.php';
 
