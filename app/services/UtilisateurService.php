@@ -108,4 +108,24 @@ class UtilisateurService
 		$user->setMail($newEmail);
 		return $utilisateurRepo->update($user);
 	}
+
+	public function updateMdp(int $id, string $plainPassword): bool
+	{
+		// Validation minimale
+		if (strlen($plainPassword) < 6) {
+			throw new Exception("Le mot de passe doit faire au moins 6 caractères");
+		}
+
+		$utilisateurRepo = new UtilisateurRepository();
+		$user = $utilisateurRepo->findById($id);
+
+		if (!$user) {
+			throw new Exception("Utilisateur non trouvé");
+		}
+
+		// Le hachage sera fait dans repository->update()
+		$user->setMdp($plainPassword);
+		
+		return $utilisateurRepo->update($user);
+	}
 }

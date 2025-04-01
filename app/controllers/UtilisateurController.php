@@ -79,6 +79,8 @@ class UtilisateurController extends Controller {
 			throw new Exception("L'identifiant utilisateur et le nouvel email sont requis !");
 		}
 	
+		$isLoggedIn = $this->isLoggedIn();
+
 		try {
 			$userService = new UtilisateurService();
 			$userService->updateEmail($id, $newMail);
@@ -90,11 +92,53 @@ class UtilisateurController extends Controller {
 				$authService->setUser($user);
 			}
 			
-			$this->redirectTo('profile.php');
+
+			$this->view('/user/profile.html.twig', [
+                'utilisateur' => $authService->getUser(),
+                'success' => 'Email modifié avec succès',
+				'isLoggedIn' => $isLoggedIn
+            ]);
 		} catch (Exception $e) {
 			$this->view('/user/profile.html.twig', [
 				'errors' => [$e->getMessage()],
-				'utilisateur' => (new AuthService())->getUser()
+				'utilisateur' => (new AuthService())->getUser(),
+				'isLoggedIn' => $isLoggedIn
+			]);
+		}
+	}
+
+	public function updateMdp()
+	{
+		$id = $this->getPostParam('id_user');
+		$newPassword = $this->getPostParam('new_mdp');
+		$confirmPassword = $this->getPostParam('confirm_new_mdp');
+
+		$isLoggedIn = $this->isLoggedIn();
+
+		try {
+			if ($newPassword !== $confirmPassword) {
+				throw new Exception("Les mots de passe ne correspondent pas");
+			}
+
+			
+
+
+			$userService = new UtilisateurService();
+			if ($userService->updateMdp($id, $newPassword)) {
+				// Succès
+				$this->view('/user/profile.html.twig', [
+					'utilisateur' => (new AuthService())->getUser(),
+					'success' => 'Mot de passe modifié avec succès',
+					'isLoggedIn' => $isLoggedIn
+				]);
+				return;
+			}
+			
+		} catch (Exception $e) {
+			$this->view('/user/profile.html.twig', [
+				'utilisateur' => (new AuthService())->getUser(),
+				'error' => $e->getMessage(),
+				'isLoggedIn' => $isLoggedIn
 			]);
 		}
 	}
