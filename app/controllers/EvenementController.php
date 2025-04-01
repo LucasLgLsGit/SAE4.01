@@ -62,4 +62,9 @@ class EvenementController extends Controller {
 		$repository = new EvenementRepository();
 		return $repository->findUpcomingEvents(3);
 	}
+
+	public function getAllUpcomingEvents() {
+        $repository = new EvenementRepository();
+        return $repository->findUpcomingEvents(); 
+    }
 }

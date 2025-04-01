@@ -72,7 +72,7 @@ class EvenementRepository {
 		return $stmt->execute(['id_event' => $id]);
 	}
 
-	public function findUpcomingEvents(int $limit = 3): array {
+	public function findUpcomingEvents(int $limit = null): array {
 		$stmt = $this->pdo->prepare('
 			SELECT * FROM "evenement"
 			WHERE date_debut >= NOW()

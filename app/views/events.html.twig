@@ -33,7 +33,7 @@
                                     {% endif %}
                                 </h5>
                                 <p class="text-muted small">
-                                    {{ event.getDateDebut()|date("l d F Y", "Europe/Paris")|capitalize }} - {{ event.getAdresse() }}
+                                    {{ event.getDateDebut()|date_fr("m F Y à H:i", "Europe/Paris") }} - {{ event.getAdresse() }}
                                 </p>
                                 <p class="mb-0">{{ event.getDescription() }}</p>
                             </div>
