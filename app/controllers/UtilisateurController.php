@@ -15,7 +15,7 @@ class UtilisateurController extends Controller {
 		$repository = new UtilisateurRepository();
 		$utilisateurs = $repository->findAll();
 
-		$this->view('/utilisateur/index.html.twig', ['utilisateurs' => $utilisateurs]);
+		$this->view('/user/index.html.twig', ['utilisateurs' => $utilisateurs]);
 	}
 
 	public function create() {
@@ -55,6 +55,6 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/utilisateur/update.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
+		$this->view('/user/profil.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
 	}
 }

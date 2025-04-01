@@ -30,7 +30,7 @@ class ImageService
 		}
 
 		$image = new Image(
-			0, // L'ID est auto-incrémenté
+			null, // L'ID est auto-incrémenté
 			$data['nom_image'],
 			$data['chemin_image'],
 			(int) $data['id_produit']

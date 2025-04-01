@@ -33,7 +33,7 @@ class CommentaireService
 		}
 
 		$commentaire = new Commentaire(
-			0,
+			null,
 			$data['texte_commentaire'],
 			new DateTime($data['date_commentaire']),
 			(int) $data['id_user'],

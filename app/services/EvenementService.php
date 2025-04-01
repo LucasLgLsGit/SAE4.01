@@ -42,7 +42,7 @@ class EvenementService
 		}
 
 		$evenement = new Evenement(
-			0,
+			null,
 			$data['titre_event'],
 			new DateTime($data['date_debut']),
 			new DateTime($data['date_fin']),

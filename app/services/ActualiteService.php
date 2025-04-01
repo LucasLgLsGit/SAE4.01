@@ -33,7 +33,7 @@ class ActualiteService
 		}
 
 		$actualite = new Actualite(
-			0,
+			null,
 			$data['titre_article'],
 			$data['contenu'],
 			new DateTime($data['date_publication']),
