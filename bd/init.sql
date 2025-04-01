@@ -55,7 +55,7 @@ CREATE TABLE Evenement(
 
 CREATE TABLE Actualite(
 	id_article SERIAL,
-	titre_article VARCHAR(50) NOT NULL,
+	titre_article VARCHAR(255) NOT NULL,
 	contenu TEXT NOT NULL,
 	date_publication TIMESTAMP NOT NULL,
 	id_user INT NOT NULL,
