@@ -7,20 +7,28 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nom</th>
+                <th>Titre</th>
                 <th>Description</th>
-                <th>Prix</th>
+                <th>Date</th>
+                <th>Couleur</th>
+                <th>Taille</th>
                 <th>Stock</th>
+                <th>Prix</th>
+                <th>ID Utilisateur</th>
             </tr>
         </thead>
         <tbody>
             {% for produit in produits %}
             <tr>
                 <td>{{ produit.id_produit }}</td>
-                <td>{{ produit.nom }}</td>
-                <td>{{ produit.description }}</td>
-                <td>{{ produit.prix }}</td>
+                <td>{{ produit.titre_produit }}</td>
+                <td>{{ produit.description_produit }}</td>
+                <td>{{ produit.date_produit|date('Y-m-d H:i:s') }}</td>
+                <td>{{ produit.couleur }}</td>
+                <td>{{ produit.taille }}</td>
                 <td>{{ produit.stock }}</td>
+                <td>{{ produit.prix }}</td>
+                <td>{{ produit.id_user }}</td>
             </tr>
             {% endfor %}
         </tbody>
