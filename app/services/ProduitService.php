@@ -1,7 +1,7 @@
 <?php
 
-require_once '../repositories/ProduitRepository.php';
-require_once '../entities/Produit.php';
+require_once './app/repositories/ProduitRepository.php';
+require_once './app/entities/Produit.php';
 
 class ProduitService
 {
@@ -45,7 +45,7 @@ class ProduitService
 		}
 
 		$produit = new Produit(
-			null, // L'ID est auto-incrémenté
+			0, // L'ID est auto-incrémenté
 			$data['nom_produit'],
 			$data['description_produit'],
 			new DateTime($data['date_ajout']),

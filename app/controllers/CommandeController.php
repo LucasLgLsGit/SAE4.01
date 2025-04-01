@@ -1,90 +1,67 @@
 <?php
 
-//TODO: Faire tout les redirections avec les $this->view
-
-
 require_once '../services/CommandeService.php';
 
-class CommandeController
+class CommandeController extends Controller
 {
     private CommandeService $commandeService;
-    private CommandeRepository $commandeRepository;
 
     public function __construct()
     {
         $this->commandeService = new CommandeService();
     }
 
-    public function listCommandes()
-    {
-        try {
-            $commandes = $this->commandeService->allCommandes();
-            $this->view('commande/list.html.twig', 'Liste des commandes', ['commandes' => $commandes]);
-        } catch (Exception $e) {
-            $this->view('error.html.twig', 'Erreur', ['message' => $e->getMessage()]);
-        }
-    }
-
+    // Créer une commande
     public function createCommande()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $commande = $this->commandeService->create($_POST);
-                header("Location: /commande/list");
-                exit();
+                $commandeData = [
+                    'id_user' => $_POST['id_user'],
+                    'id_produit' => $_POST['id_produit'],
+                    'quantite' => $_POST['quantite'],
+                    'numero_commande' => $_POST['numero_commande']
+                ];
+
+                $this->commandeService->create($commandeData);
+                $this->redirectTo('/commande/list'); 
             } catch (Exception $e) {
-                //$this->view('commande/create.html.twig', 'Création d\'une commande', ['errors' => $e->getMessage()]);
+                http_response_code(400);
+                echo "Erreur lors de la création de la commande : " . $e->getMessage();
             }
-        } else {
-            //$this->view('commande/create.html.twig', 'Création d\'une commande');
         }
     }
 
+    // Modifier une commande
     public function updateCommande(int $id_user, int $id_produit)
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            $commandeData = [
-                'id_user' => $id_user,
-                'id_produit' => $id_produit,
-                'quantite' => $_POST['quantite'],
-                'numero_commande' => $_POST['numero_commande']
-            ];
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $commandeData = [
+                    'id_user' => $id_user,
+                    'id_produit' => $id_produit,
+                    'quantite' => $_POST['quantite'],
+                    'numero_commande' => $_POST['numero_commande']
+                ];
 
-            $this->commandeService->update($commandeData);
-
-            header("Location: /commande/list");
-            exit();
-        } catch (Exception $e) {
-            $this->view('commande/update.html.twig', 'Modification d\'une commande', [
-                'errors' => $e->getMessage(),
-                'data' => $_POST,
-                'id_user' => $id_user,
-                'id_produit' => $id_produit
-            ]);
+                $this->commandeService->update($commandeData);
+                $this->redirectTo('/commande/list');
+            } catch (Exception $e) {
+                http_response_code(400);
+                echo "Erreur lors de la modification de la commande : " . $e->getMessage();
+            }
         }
-    } else {
-        $commande = $this->commandeRepository->findById($id_user, $id_produit);
-        //$this->view('commande/update.html.twig', 'Modification d\'une commande', ['commande' => $commande]);
     }
-}
 
+    // Supprimer une commande
     public function deleteCommande(int $id_user, int $id_produit)
     {
         try {
             $this->commandeService->delete($id_user, $id_produit);
-            header("Location: /commande/list");
-            exit();
+            $this->redirectTo('/commande/list');
         } catch (Exception $e) {
-            //$this->view('error.html.twig', 'Erreur', ['message' => $e->getMessage()]);
+            http_response_code(400);
+            echo "Erreur lors de la suppression de la commande : " . $e->getMessage();
         }
     }
-
-    private function view(string $template, string $title, array $data = [])
-    {
-        extract($data);
-        require_once "../views/$template";
-    }
 }
-
-?>
