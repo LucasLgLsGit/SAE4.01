@@ -1,27 +1,79 @@
 {% extends './_template/base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="../../../assets/css/shop.css">
+{% endblock %}
+
 {% block body %}
 <div class="container mt-4">
-    <h1 class="mb-4 text-center">{{ produit.titre_produit }}</h1>
     <div class="row">
+        <!-- Image principale -->
         <div class="col-md-6">
-            <div class="d-flex justify-content-center align-items-center" style="height: 300px; background-color: #f8f9fa;">
-                <img src="#" alt="image" class="img-fluid" style="max-height: 100%; max-width: 100%;">
+            <div class="d-flex justify-content-center align-items-center" style="height: 400px; background-color: #f8f9fa;">
+                <img src="{{ produit.image_principale | default('#') }}" alt="{{ produit.titre_produit }}" class="img-fluid" style="max-height: 100%; max-width: 100%;">
+            </div>
+            <!-- Miniatures -->
+            <div class="d-flex justify-content-center mt-3">
+                {% for image in produit.images | default([]) %}
+                <img src="{{ image }}" alt="Miniature" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">
+                {% endfor %}
             </div>
         </div>
+
+        <!-- Détails du produit -->
         <div class="col-md-6">
-            <p><strong>Description :</strong> {{ produit.description_produit }}</p>
-            <p><strong>Couleur :</strong> {{ produit.couleur }}</p>
-            <p><strong>Taille :</strong> {{ produit.taille }}</p>
-            <p><strong>Prix :</strong> {{ produit.prix }} €</p>
-            <p><strong>Stock :</strong> {{ produit.stock }}</p>
+            <h1 class="mb-2">{{ produit.titre_produit }}</h1>
+            <p class="text-muted">{{ produit.date_produit|date('Y') }}</p>
+            <p>{{ produit.description_produit }}</p>
+
+            <!-- Prix avec réduction -->
+            <div class="mb-3">
+                {% if produit.reduction | default(0) %}
+                <span class="text-danger fw-bold" style="font-size: 1.5rem;">-{{ produit.reduction }}%</span>
+                <span class="text-decoration-line-through text-muted">{{ produit.prix_original | default(produit.prix) }} €</span>
+                {% endif %}
+                <span class="fw-bold" style="font-size: 1.5rem;">{{ produit.prix }} €</span>
+            </div>
+
+            <!-- Formulaire d'ajout au panier -->
             <form method="post" action="/cart/add.php">
                 <input type="hidden" name="id_produit" value="{{ produit.id_produit }}">
+
+                <!-- Tailles disponibles -->
+                <div class="mb-3">
+                    <p><strong>Taille :</strong></p>
+                    <div>
+                        {% for taille in tailles %}
+                        <input type="radio" name="selected_taille" id="taille_{{ taille }}" value="{{ taille }}" class="d-none" required>
+                        <label for="taille_{{ taille }}" class="btn btn-outline-secondary btn-sm me-2">{{ taille }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Couleurs disponibles -->
+                <div class="mb-3">
+                    <p><strong>Couleur :</strong></p>
+                    <div>
+                        {% for couleur in couleurs %}
+                        <input type="radio" name="selected_couleur" id="couleur_{{ couleur }}" value="{{ couleur }}" class="d-none" required>
+                        <label for="couleur_{{ couleur }}" class="btn btn-outline-secondary btn-sm me-2" style="background-color: {{ couleur }}; width: 30px; height: 30px; border-radius: 50%;"></label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Quantité -->
                 <div class="mb-3">
                     <label for="quantite" class="form-label">Quantité :</label>
-                    <input type="number" id="quantite" name="quantite" class="form-control" min="1" max="{{ produit.stock }}" required>
+                    <select id="quantite" name="quantite" class="form-select" required>
+                        {% for i in 1..10 %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Ajouter au panier</button>
+
+                <!-- Bouton d'ajout au panier -->
+                <button type="submit" class="btn btn-primary w-100">Ajouter au panier</button>
             </form>
         </div>
     </div>

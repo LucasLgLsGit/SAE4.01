@@ -18,6 +18,14 @@ class ProduitRepository {
 		return $produits;
 	}
 
+	public function findByTitre(string $titre): ?Produit
+	{	
+		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE LOWER(titre_produit) = LOWER(:titre_produit)');
+		$stmt->execute(['titre_produit' => $titre]);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $row ? $this->createProduitFromRow($row) : null;
+	}
+
 	private function createProduitFromRow(array $row): Produit
 	{
 		return new Produit(	$row['id_produit'], 

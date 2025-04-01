@@ -17,6 +17,12 @@ class ProduitService
 		return $produitRepo->findById($id);
 	}
 
+	public function findByTitre(string $titre): ?Produit
+	{
+		$produitRepo = new ProduitRepository();
+		return $produitRepo->findByTitre($titre);
+	}
+
 	public function create(array $data): Produit
 	{
 		$errors = [];
