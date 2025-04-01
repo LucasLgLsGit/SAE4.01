@@ -1,27 +1,33 @@
 {% extends './_template/base.html.twig' %}
 
+{% block css %}
+    <link rel="stylesheet" href="/assets/css/shop.css">
+{% endblock %}
+
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4 text-center">{{ title }}</h1>
-    <div class="row">
-        {% for titre, produit in produitsGroupes %}
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="card h-100">
-                <div class="card-img-top d-flex justify-content-center align-items-center" style="height: 200px; background-color: #f8f9fa;">
-                    <img src="#" alt="{{ produit.titre_produit }}" class="img-fluid" style="max-height: 100%; max-width: 100%;">
-                </div>
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ produit.titre_produit }}</h5>
-                    <p class="card-text"><strong>Couleur :</strong> {{ produit.couleur }}</p>
-                    <p class="card-text"><strong>Taille :</strong> {{ produit.taille }}</p>
-                    <p class="card-text font-weight-bold">{{ produit.prix }} €</p>
-                    <a href="/detail.php?titre={{ produit.titre_produit | url_encode }}" class="btn btn-primary btn-sm">Voir le produit</a>
+<div class="shop-container">
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">{{ title }}</h1>
+        <div class="row">
+            {% for titre, produit in produitsGroupes %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-img-top d-flex justify-content-center align-items-center" style="height: 200px; background-color: #f8f9fa;">
+                        <img src="#" alt="{{ produit.titre_produit }}" class="img-fluid" style="max-height: 100%; max-width: 100%;">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ produit.titre_produit }}</h5>
+                        <p class="card-text"><strong>Couleur :</strong> {{ produit.couleur }}</p>
+                        <p class="card-text"><strong>Taille :</strong> {{ produit.taille }}</p>
+                        <p class="card-text font-weight-bold">{{ produit.prix }} €</p>
+                        <a href="/detail.php?titre={{ produit.titre_produit | url_encode }}" class="btn btn-primary btn-sm">Voir le produit</a>
+                    </div>
                 </div>
             </div>
+            {% else %}
+            <p class="text-center">Aucun produit disponible.</p>
+            {% endfor %}
         </div>
-        {% else %}
-        <p class="text-center">Aucun produit disponible.</p>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}
