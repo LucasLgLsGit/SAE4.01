@@ -1,7 +1,7 @@
 <?php
 
-require_once '../repositories/ActualiteRepository.php';
-require_once '../entities/Actualite.php';
+require_once './app/repositories/ActualiteRepository.php';
+require_once './app/entities/Actualite.php';
 
 class ActualiteService
 {

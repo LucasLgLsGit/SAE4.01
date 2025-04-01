@@ -56,7 +56,7 @@
 }
 
 .next-events > main > section > a > div {
-	height: auto;
+	height: 100%;
 	justify-content: center;
 	display: flex;
 	flex-direction: column;
@@ -99,12 +99,12 @@
 
 .actualites-container {
     display: flex;
-    overflow-x: auto; /* Permet le défilement horizontal */
-    white-space: nowrap; /* Empêche les éléments de passer à la ligne */
+    overflow-x: auto;
+    white-space: nowrap;
     padding: 10px;
     gap: 10px;
-    scroll-snap-type: x mandatory; /* Active le snap scrolling */
-    scroll-behavior: smooth; /* Défilement fluide */
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
 	width: 75vw;
 }
 

@@ -39,4 +39,12 @@ class AuthController extends Controller {
 
         $this->view('/user/login.html.twig', $data);
     }
+
+    public function logout() {
+        $authService = new AuthService();
+        $authService->logout();
+        
+        header('Location: index.php');
+        exit();
+    }
 }

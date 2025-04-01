@@ -45,20 +45,20 @@
 		<section class="row">
 			<article class="col-12 col-md-4">
 				<div class="p-4 text-center">
-					<h2 class="display-1 number">7</h2>
-					<p>C'est le nombre de membres en 2025</p>
+					<h2 class="display-1 number">{{ nombreMembres }}</h2>
+					<p>C'est le nombre de membres en {{ currentYear }}</p>
 				</div>
 			</article>
 			<article class="col-12 col-md-4">
 				<div class="p-4 text-center">
-					<h2 class="display-1 number">25</h2>
-					<p>C'est le nombre d'événements organisés en 2025</p>
+					<h2 class="display-1 number">{{ nombreEvenements }}</h2>
+					<p>C'est le nombre d'événements organisés en {{ currentYear }}</p>
 				</div>
 			</article>
 			<article class="col-12 col-md-4">
 				<div class="p-4 text-center">
-					<h2 class="display-1 number">14</h2>
-					<p>C'est le nombre d'adhérents en 2025</p>
+					<h2 class="display-1 number">{{ nombreAdherents }}</h2>
+					<p>C'est le nombre d'adhérents en {{ currentYear }}</p>
 				</div>
 			</article>
 		</section>
@@ -73,60 +73,16 @@
 
 	<main class="container">
 		<section class="row">
+			{% for event in upcomingEvents %}
 			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
 				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
+					<h2>{{ event.getTitreEvent() }}</h2>
+					<p class="next-event-date"><i class="bi bi-calendar"></i> {{ event.getDateDebut()|date("d F Y", "Europe/Paris") }}</p>
+					<p class="next-event-description">{{ event.getDescription() }}</p>
+					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> {{ event.getAdresse() }}</p>
 				</div>
 			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-						<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
-			<a href="#" class="col-12 col-md-6 col-lg-4 next-event link-event mb-4">
-				<div class="p-4 border rounded text-center">
-					<h2>SOIRÉE D'INTEGRATION</h2>
-					<p class="next-event-date"><i class="bi bi-calendar"></i> 15 Septembre 2025</p>
-					<p class="next-event-description">Rencontres, musique et bonne ambiance au rendez-vous ! Ne manquez
-						pas cette soirée pour bien démarrer l’année</p>
-					<p class="next-event-place"><i class="bi bi-geo-alt-fill"></i> 8 Place Oscar Niemeyer</p>
-				</div>
-			</a>
+			{% endfor %}
 		</section>
 	</main>
 </div>
@@ -134,50 +90,13 @@
 <div class="d-flex flex-column align-items-center justify-content-center actualites py-5">
 	<h1 class="actualites-title mb-4">ACTUALITÉS</h1>
 	<div class="actualites-container d-flex flex-row">
+		{% for actualite in lastActualites %}
 		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Lancement du nouveau site BDE</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 01 Mars 2025</p>
-			<p class="actu-content">Découvrez notre tout nouveau site web avec des fonctionnalités améliorées pour les étudiants !</p>
+			<h2 class="actu-title">{{ actualite.getTitreArticle() }}</h2>
+			<p class="actu-date"><i class="bi bi-calendar"></i> {{ actualite.getDatePublication()|date("d F Y", "Europe/Paris") }}</p>
+			<p class="actu-content">{{ actualite.getContenu() }}</p>
 		</div>
-		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Soirée de Gala 2025</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 15 Février 2025</p>
-			<p class="actu-content">Rejoignez-nous pour une soirée inoubliable avec musique, danse et surprises !</p>
-		</div>
-		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Collecte de fonds pour une cause solidaire</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 20 Janvier 2025</p>
-			<p class="actu-content">Participez à notre collecte de fonds pour soutenir une cause qui nous tient à cœur.</p>
-		</div>
-		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Lancement du nouveau site BDE</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 01 Mars 2025</p>
-			<p class="actu-content">Découvrez notre tout nouveau site web avec des fonctionnalités améliorées pour les étudiants !</p>
-		</div>
-		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Soirée de Gala 2025</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 15 Février 2025</p>
-			<p class="actu-content">Rejoignez-nous pour une soirée inoubliable avec musique, danse et surprises !</p>
-		</div>
-		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Collecte de fonds pour une cause solidaire</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 20 Janvier 2025</p>
-			<p class="actu-content">Participez à notre collecte de fonds pour soutenir une cause qui nous tient à cœur.</p>
-		</div>       <div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Lancement du nouveau site BDE</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 01 Mars 2025</p>
-			<p class="actu-content">Découvrez notre tout nouveau site web avec des fonctionnalités améliorées pour les étudiants !</p>
-		</div>
-		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Soirée de Gala 2025</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 15 Février 2025</p>
-			<p class="actu-content">Rejoignez-nous pour une soirée inoubliable avec musique, danse et surprises !</p>
-		</div>
-		<div class="actu-item p-4 border rounded text-center mx-2">
-			<h2 class="actu-title">Collecte de fonds pour une cause solidaire</h2>
-			<p class="actu-date"><i class="bi bi-calendar"></i> 20 Janvier 2025</p>
-			<p class="actu-content">Participez à notre collecte de fonds pour soutenir une cause qui nous tient à cœur.</p>
-		</div>
+		{% endfor %}
 	</div>
 </div>
 

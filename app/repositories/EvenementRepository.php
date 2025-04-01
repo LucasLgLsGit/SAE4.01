@@ -71,5 +71,37 @@ class EvenementRepository {
 		$stmt = $this->pdo->prepare('DELETE FROM "evenement" WHERE id_event = :id_event');
 		return $stmt->execute(['id_event' => $id]);
 	}
+
+	public function findUpcomingEvents(int $limit = 3): array {
+		$stmt = $this->pdo->prepare('
+			SELECT * FROM "evenement"
+			WHERE date_debut >= NOW()
+			ORDER BY date_debut ASC
+			LIMIT :limit
+		');
+		$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+		$stmt->execute();
+	
+		$evenements = [];
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$evenements[] = $this->createEvenementFromRow($row);
+		}
+		return $evenements;
+	}
+
+	public function countEvenementsByYear(int $year): int {
+		$stmt = $this->pdo->prepare('
+			SELECT COUNT(*) 
+			FROM "evenement" 
+			WHERE date_debut >= :start_date AND date_debut < :end_date
+		');
+		$start_date = "$year-01-01";
+		$end_date = ($year + 1) . "-01-01";
+		$stmt->execute([
+			':start_date' => $start_date,
+			':end_date' => $end_date
+		]);
+		return (int) $stmt->fetchColumn();
+	}
 }
 ?>

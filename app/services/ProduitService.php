@@ -45,7 +45,7 @@ class ProduitService
 		}
 
 		$produit = new Produit(
-			0, // L'ID est auto-incrémenté
+			null,
 			$data['nom_produit'],
 			$data['description_produit'],
 			new DateTime($data['date_ajout']),
