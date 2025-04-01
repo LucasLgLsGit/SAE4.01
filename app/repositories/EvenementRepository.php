@@ -89,12 +89,18 @@ class EvenementRepository {
 		return $evenements;
 	}
 
-	public function countEvenements2025(): int {
-		$stmt = $this->pdo->query('
+	public function countEvenementsByYear(int $year): int {
+		$stmt = $this->pdo->prepare('
 			SELECT COUNT(*) 
 			FROM "evenement" 
-			WHERE date_debut >= \'2025-01-01\' AND date_debut < \'2026-01-01\'
+			WHERE date_debut >= :start_date AND date_debut < :end_date
 		');
+		$start_date = "$year-01-01";
+		$end_date = ($year + 1) . "-01-01";
+		$stmt->execute([
+			':start_date' => $start_date,
+			':end_date' => $end_date
+		]);
 		return (int) $stmt->fetchColumn();
 	}
 }

@@ -9,30 +9,32 @@ require_once './app/controllers/ActualiteController.php';
 class HomeController extends Controller
 {
 	public function index()
-{
-    $authService = new AuthService();
-    $isLoggedIn = $authService->isLoggedIn();
+	{
+		$authService = new AuthService();
+		$isLoggedIn = $authService->isLoggedIn();
 
-    $evenementController = new EvenementController();
-    $upcomingEvents = $evenementController->getUpcomingEvents();
+		$evenementController = new EvenementController();
+		$upcomingEvents = $evenementController->getUpcomingEvents();
 
-    $actualiteController = new ActualiteController();
-    $lastActualites = $actualiteController->getLastActualites(10);
+		$actualiteController = new ActualiteController();
+		$lastActualites = $actualiteController->getLastActualites(10);
 
-    $utilisateurRepo = new UtilisateurRepository();
-    $evenementRepo = new EvenementRepository();
+		$utilisateurRepo = new UtilisateurRepository();
+		$evenementRepo = new EvenementRepository();
 
-    $nombreMembres = $utilisateurRepo->countMembres();
-    $nombreEvenements = $evenementRepo->countEvenements2025();
-    $nombreAdherents = $utilisateurRepo->countAdherents();
+		$currentYear = (int) date('Y');
+		$nombreMembres = $utilisateurRepo->countMembres();
+		$nombreEvenements = $evenementRepo->countEvenementsByYear($currentYear);
+		$nombreAdherents = $utilisateurRepo->countAdherents();
 
-    $this->view('index.html.twig', [
-        'isLoggedIn' => $isLoggedIn,
-        'upcomingEvents' => $upcomingEvents,
-        'lastActualites' => $lastActualites,
-        'nombreMembres' => $nombreMembres,
-        'nombreEvenements' => $nombreEvenements,
-        'nombreAdherents' => $nombreAdherents,
-    ]);
-}
+		$this->view('index.html.twig', [
+			'isLoggedIn' => $isLoggedIn,
+			'upcomingEvents' => $upcomingEvents,
+			'lastActualites' => $lastActualites,
+			'nombreMembres' => $nombreMembres,
+			'nombreEvenements' => $nombreEvenements,
+			'nombreAdherents' => $nombreAdherents,
+			'currentYear' => $currentYear
+		]);
+	}
 }
