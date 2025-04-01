@@ -43,6 +43,8 @@ class AuthController extends Controller {
     public function logout() {
         $authService = new AuthService();
         $authService->logout();
-        $this->redirectTo('index.php');
+        
+        header('Location: index.php');
+        exit();
     }
 }
