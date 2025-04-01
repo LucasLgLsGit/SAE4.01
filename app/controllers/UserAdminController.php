@@ -15,12 +15,19 @@ class UserAdminController extends Controller
 		$isLoggedIn = $this->isLoggedIn();
 		$user = $this->getCurrentUser();
 		$isAdmin = $user && $user->isAdmin();
-
-		$this->view('/admin/usersAdmin.html.twig', [
-			'users' => $users,
-			'actualites' => $actualites,
-			'isLoggedIn' => $isLoggedIn,
-			'isAdmin' => $isAdmin
-		]);
+		
+		if($isAdmin) {
+			$this->view('/admin/usersAdmin.html.twig', [
+				'users' => $users,
+				'actualites' => $actualites,
+				'isLoggedIn' => $isLoggedIn,
+				'isAdmin' => $isAdmin
+			]);
+		} else {
+			$this->view('index.html.twig', [
+				'isLoggedIn' => $isLoggedIn,
+				'isAdmin' => $isAdmin
+			]);
+		}
 	}
 }
