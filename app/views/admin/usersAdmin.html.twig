@@ -1,0 +1,46 @@
+{% extends '_template/base.html.twig' %}
+
+{% block css %}
+	<link rel="stylesheet" href="/assets/css/usersAdmin.css">
+{% endblock %}
+
+{% block body %}
+<div class="users-container">
+	<div class="container mt-5">
+		<h2 class="mb-4">Gestion des Utilisateurs</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Nom</th>
+					<th>Prénom</th>
+					<th>Email</th>
+					<th>Admin</th>
+					<th>Adhérent</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in users %}
+				<tr>
+					<td>{{ user.getId() }}</td>
+					<td>{{ user.getNom() }}</td>
+					<td>{{ user.getPrenom() }}</td>
+					<td>{{ user.getMail() }}</td>
+					<td>
+						<input type="checkbox" class="toggle-perm" data-user-id="{{ user.getId() }}" data-perm="admin" {% if user.isAdmin() %}checked{% endif %}>
+					</td>
+					<td>
+						<input type="checkbox" class="toggle-perm" data-user-id="{{ user.getId() }}" data-perm="adherent" {% if user.isAdherent() %}checked{% endif %}>
+					</td>
+					<td>
+						<a href="#" class="btn btn-primary btn-sm">Éditer</a>
+						<button class="btn btn-danger btn-sm delete-user" data-user-id="{{ user.getId() }}">Supprimer</button>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

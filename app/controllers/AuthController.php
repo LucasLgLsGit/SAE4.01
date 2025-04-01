@@ -9,42 +9,44 @@ class AuthController extends Controller {
 	use FormTrait;
 	use AuthTrait;
 
+	public function login() {
+		$authService = new AuthService();
 
-    public function login() {
-        $authService = new AuthService();
+		// Récupérer les données POST nettoyées
+		$postData = $this->getAllPostParams();
+		$data = [];
 
-        // Récupérer les données POST nettoyées
-        $postData = $this->getAllPostParams();
-        $data = [];
+		if (!empty($postData)) {
+			$utilisateurRepository = new UtilisateurRepository();
 
-        if (!empty($postData)) {
-            $utilisateurRepository = new UtilisateurRepository();
+			// Récupérer l'utilisateur par email
+			$user = $utilisateurRepository->findByEmail($this->getPostParam('mail'));
 
-            $user = $utilisateurRepository->findByEmail($this->getPostParam('mail'));
+			if ($user !== null) {
+				$password = $this->getPostParam('mdp');
+				$hashedPassword = $user->getMdp();
 
-            if ($user !== null) {
-                $password = $this->getPostParam('mdp');
-                $hashedPassword = $user->getMdp(); // Debugging
+				// Vérifier le mot de passe
+				if (!$this->verify($password, $hashedPassword)) {
+					$data = ['error' => 'Mot de passe incorrect.'];
+				} else {
+					// Définir l'utilisateur dans la session
+					$authService->setUser($user);
+					$this->redirectTo('index.php');
+				}
+			} else {
+				$data = ['error' => 'Utilisateur non trouvé.'];
+			}
+		}
 
-                if (!$this->verify($password, $hashedPassword)) {
-                    $data = ['error' => 'Mot de passe incorrect.'];
-                } else {
-                    $authService->setUser($user);
-                    $this->redirectTo('index.php');
-                }
-            } else {
-                $data = ['error' => 'Utilisateur non trouvé.'];
-            }
-        }
+		$this->view('/user/login.html.twig', $data);
+	}
 
-        $this->view('/user/login.html.twig', $data);
-    }
-
-    public function logout() {
-        $authService = new AuthService();
-        $authService->logout();
-        
-        header('Location: index.php');
-        exit();
-    }
+	public function logout() {
+		$authService = new AuthService();
+		$authService->logout();
+		
+		header('Location: index.php');
+		exit();
+	}
 }

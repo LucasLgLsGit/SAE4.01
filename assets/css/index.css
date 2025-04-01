@@ -84,55 +84,55 @@
 }
 
 .actualites {
-    background-color: white;
-    color: #030C43;
-    width: 100vw;
-    text-align: center;
-    padding: 20px;
+	background-color: white;
+	color: #030C43;
+	width: 100vw;
+	text-align: center;
+	padding: 20px;
 }
 
 .actualites-title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 20px;
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
 .actualites-container {
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 10px;
-    gap: 10px;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+	display: flex;
+	overflow-x: auto;
+	white-space: nowrap;
+	padding: 10px;
+	gap: 10px;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
 	width: 75vw;
 }
 
 .actu-item {
-    min-width: 250px;
-    max-width: 300px;
-    flex-shrink: 0;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    scroll-snap-align: start;
-    padding: 20px;
-    border-radius: 10px;
-    white-space: normal;
+	min-width: 250px;
+	max-width: 300px;
+	flex-shrink: 0;
+	background-color: #f9f9f9;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	scroll-snap-align: start;
+	padding: 20px;
+	border-radius: 10px;
+	white-space: normal;
 }
 
 .actu-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 10px;
 }
 
 .actu-date {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 15px;
+	font-size: 0.9rem;
+	color: #666;
+	margin-bottom: 15px;
 }
 
 .actu-content {
-    font-size: 1rem;
-    color: #333;
+	font-size: 1rem;
+	color: #333;
 }

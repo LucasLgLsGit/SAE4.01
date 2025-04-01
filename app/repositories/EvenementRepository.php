@@ -57,13 +57,16 @@ class EvenementRepository {
 		]);
 	}
 
-	public function findById(int $id): ?Evenement {
-		$stmt = $this->pdo->prepare('SELECT * FROM "evenement" WHERE id_event = :id_event');
-		$stmt->execute(['id_event' => $id]);
+	public function findById(int $id): ?Evenement
+	{
+		$stmt = $this->pdo->prepare('SELECT * FROM evenement WHERE id_event = :id');
+		$stmt->execute(['id' => $id]);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
 		if ($row) {
 			return $this->createEvenementFromRow($row);
 		}
+
 		return null;
 	}
 

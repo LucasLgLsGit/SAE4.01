@@ -37,4 +37,31 @@ abstract class Controller {
 		header("Location: $url");
 		exit();
 	}
+
+	protected function isLoggedIn(): bool
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start(); // Démarre la session si elle n'est pas déjà démarrée
+		}
+
+		return isset($_SESSION['user']); // Vérifie si un utilisateur est stocké dans la session
+	}
+
+	protected function getCurrentUser(): ?Utilisateur
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start(); // Démarre la session si elle n'est pas déjà démarrée
+		}
+
+		// Inclure la classe Utilisateur avant de désérialiser
+		require_once './app/entities/Utilisateur.php';
+
+		return isset($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
+	}
+
+	protected function isAdmin(): bool
+	{
+		$user = $this->getCurrentUser();
+		return $user && $user->isAdmin();
+	}
 }

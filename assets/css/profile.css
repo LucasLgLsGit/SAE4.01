@@ -1,0 +1,18 @@
+.profile-container, .profile-titre{
+    width: 100vw;
+}
+
+.profile-btn {
+	background-color: #030C43;
+	color: white;
+	padding: 5px 10px;
+    border: none;
+	font-weight: bold;
+    box-shadow: none;
+	border-radius: 20px ;
+}
+
+.profile-btn:hover {
+	background-color: #0A1D6E;
+	color: white;
+}

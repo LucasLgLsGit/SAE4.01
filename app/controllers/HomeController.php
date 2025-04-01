@@ -10,8 +10,9 @@ class HomeController extends Controller
 {
 	public function index()
 	{
-		$authService = new AuthService();
-		$isLoggedIn = $authService->isLoggedIn();
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
 
 		$evenementController = new EvenementController();
 		$upcomingEvents = $evenementController->getUpcomingEvents();
@@ -29,6 +30,7 @@ class HomeController extends Controller
 
 		$this->view('index.html.twig', [
 			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin,
 			'upcomingEvents' => $upcomingEvents,
 			'lastActualites' => $lastActualites,
 			'nombreMembres' => $nombreMembres,

@@ -49,6 +49,19 @@ class Utilisateur
 		return $this->prenom;
 	}
 
+	public function getStatut(): string
+	{
+		if($this->isAdmin()) {
+			return "Administrateur";
+		} elseif($this->isAdherent()) {
+			return "Adhérent";
+		} elseif($this->isMembre()) {
+			return "Membre";
+		} else {
+			return "Visiteur";
+		}
+	}
+
 	public function setId(?int $id_user): void
 	{
 		$this->id_user = $id_user;
@@ -79,50 +92,64 @@ class Utilisateur
 		$this->prenom = $prenom;
 	}
 
-	function is_membre($value) {
-		return is_flag($value, FLAG_MEMBRE);
-	}
-	
-	function is_adherent($value) {
-	  return is_flag($value, FLAG_ADHERENT);
-	}
-	
-	function is_admin($value) {
-	  return is_flag($value, FLAG_ADMIN);
+	public function isMembre(): bool
+	{
+		return $this->isFlag(FLAG_MEMBRE);
 	}
 
-	function is_flag($value, $flag) {
-		$etat = false;
-		if ($value & $flag) $etat = true;
-		return $etat;
+	public function isAdherent(): bool
+	{
+		return $this->isFlag(FLAG_ADHERENT);
 	}
 
-	function addPermission($typePerm) {
+	public function isAdmin(): bool
+	{
+		return $this->isFlag(FLAG_ADMIN);
+	}
+
+	private function isFlag(int $flag): bool
+	{
+		return ($this->permission & $flag) !== 0;
+	}
+
+	public function addPermission($typePerm): void {
 		switch ($typePerm) {
 			case IS_MEMBRE:
-				$this->permission |= FLAG_MEMBRE;
+				if (!$this->isMembre()) {
+					$this->permission |= FLAG_MEMBRE;
+				}
 				break;
 			case IS_ADHERENT:
-				$this->permission |= FLAG_ADHERENT;
+				if (!$this->isAdherent()) {
+					$this->permission |= FLAG_ADHERENT;
+				}
 				break;
 			case IS_ADMIN:
-				$this->permission |= FLAG_ADMIN;
+				if (!$this->isAdmin()) {
+					$this->permission |= FLAG_ADMIN;
+				}
 				break;
 			default:
 				throw new Exception("Permission non reconnue");
 		}
 	}
 
-	function removePermission($typePerm) {
+	public function removePermission($typePerm): void {
 		switch ($typePerm) {
 			case IS_MEMBRE:
-				$this->permission &= ~FLAG_MEMBRE;
+				if ($this->isMembre()) {
+					$this->permission &= ~FLAG_MEMBRE;
+				}
 				break;
 			case IS_ADHERENT:
-				$this->permission &= ~FLAG_ADHERENT;
+				if ($this->isAdherent()) {
+					$this->permission &= ~FLAG_ADHERENT;
+				}
 				break;
 			case IS_ADMIN:
-				$this->permission &= ~FLAG_ADMIN;
+				if ($this->isAdmin()) {
+					$this->permission &= ~FLAG_ADMIN;
+				}
 				break;
 			default:
 				throw new Exception("Permission non reconnue");

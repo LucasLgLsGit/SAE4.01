@@ -2,6 +2,7 @@
 
 require_once './app/core/Controller.php';
 require_once './app/services/UtilisateurService.php';
+require_once './app/services/AuthService.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
 
@@ -12,10 +13,22 @@ class UtilisateurController extends Controller {
 
 	public function index()
 	{
-		$repository = new UtilisateurRepository();
-		$utilisateurs = $repository->findAll();
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
 
-		$this->view('/user/index.html.twig', ['utilisateurs' => $utilisateurs]);
+		if ($isLoggedIn && $user) {
+			$repository = new UtilisateurRepository();
+			$utilisateur = $repository->findById($user->getId());
+		} else {
+			$utilisateur = null;
+		}
+
+		$this->view('/user/profile.html.twig', [
+			'utilisateur' => $utilisateur,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin
+		]);
 	}
 
 	public function create() {
@@ -55,6 +68,34 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/user/profil.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
+		$this->view('/user/profile.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
+	}
+
+	public function updateMail() {
+		$id = $this->getPostParam('id_user');
+		$newMail = $this->getPostParam('new_mail');
+	
+		if (empty($id) || empty($newMail)) {
+			throw new Exception("L'identifiant utilisateur et le nouvel email sont requis !");
+		}
+	
+		try {
+			$userService = new UtilisateurService();
+			$userService->updateEmail($id, $newMail);
+			
+			$authService = new AuthService();
+			if ($authService->getUser()->getId() == $id) {
+				$user = $authService->getUser();
+				$user->setMail($newMail);
+				$authService->setUser($user);
+			}
+			
+			$this->redirectTo('profile.php');
+		} catch (Exception $e) {
+			$this->view('/user/profile.html.twig', [
+				'errors' => [$e->getMessage()],
+				'utilisateur' => (new AuthService())->getUser()
+			]);
+		}
 	}
 }

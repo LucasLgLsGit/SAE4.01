@@ -1,0 +1,84 @@
+{% extends '_template/base.html.twig' %}
+
+{% block css %}
+<link rel="stylesheet" href="/assets/css/profile.css">
+{% endblock %}
+
+{% block body %}
+<h2 class="profile-titre text-center fw-bold">Mon profil</h2>
+<div class="profile-container">
+	{% if success is defined %}
+		<div class="alert alert-success">{{ success }}</div>
+	{% elseif error is defined %}
+		<div class="alert alert-danger">{{ error }}</div>
+	{% endif %}
+	<div class="container border rounded shadow mt-4 p-4" style="max-width: 800px;">
+		<div class="row mb-3">
+			<!-- Prénom -->
+			<div class="col-md-3">
+				<label for="prenom" class="form-label">Prénom</label>
+				<div class="form-control">{{ utilisateur.prenom }}</div>
+			</div>
+
+			<!-- Nom -->
+			<div class="col-md-3">
+				<label for="nom" class="form-label">Nom</label>
+				<div class="form-control">{{ utilisateur.nom }}</div>
+			</div>
+
+			<!-- Statut -->
+			<div class="col-md-3">
+				<label for="permission" class="form-label">Statut</label>
+				<div class="form-control">{{ utilisateur.getStatut() }}</div>
+			</div>
+
+			<!-- Bouton Adhérer -->
+			{% if utilisateur.isMembre and not utilisateur.isAdherent and not utilisateur.isAdmin %}
+            <div class="col-md-3 d-flex align-items-end">
+                <form method="POST" action="/adhesion.php">
+                    <input type="hidden" name="prenom" value="{{ utilisateur.prenom }}">
+                    <input type="hidden" name="nom" value="{{ utilisateur.nom }}">
+                    <input type="hidden" name="email" value="{{ utilisateur.mail }}">
+                    <button type="submit" class="profile-btn">Adhérer</button>
+                </form>
+            </div>
+            {% endif %}
+		</div>
+
+		<div class="row mb-3">
+            <!-- Adresse mail -->
+            <div class="col-md-6">
+                <label for="mail" class="form-label">Adresse mail</label>
+                <div class="form-control">{{ utilisateur.mail }}</div>
+            </div>
+        
+            <!-- Nouvelle adresse mail -->
+            <div class="col-md-6">
+                <label for="new_mail" class="form-label">Nouvelle adresse mail</label>
+                <form method="POST" action="user_change_mail.php" class="d-flex">
+                    <input type="hidden" name="id_user" value="{{ utilisateur.id }}">
+                    <input type="email" class="form-control me-2" id="new_mail" name="new_mail" placeholder="Nouvelle adresse mail" required>
+                    <button type="submit" class="profile-btn">Changer</button>
+                </form>
+            </div>
+        </div>
+
+		<div class="row mb-3">
+			<!-- Mot de passe -->
+			<div class="col-md-6">
+				<label for="mdp" class="form-label">Mot de passe</label>
+				<div class="form-control">********</div>
+			</div>
+
+			<!-- Nouveau mot de passe -->
+			<div class="col-md-6">
+				<label for="new_mdp" class="form-label">Nouveau mot de passe</label>
+				<div class="d-flex">
+					<input type="password" class="form-control me-2" id="new_mdp" placeholder="Nouveau mot de passe">
+					<button class="profile-btn">Changer</button>
+				</div>
+			</div>
+		</div>   
+	</div>
+</div>
+{% endblock %}
