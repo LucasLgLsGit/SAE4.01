@@ -1,7 +1,7 @@
 <?php
 
-require_once '../repositories/ProduitRepository.php';
-require_once '../entities/Produit.php';
+require_once './app/repositories/ProduitRepository.php';
+require_once './app/entities/Produit.php';
 
 class ProduitService
 {

@@ -27,6 +27,9 @@
 	left: 0;
 }
 
+.nav-link-button {
+	margin-bottom: 5px;
+}
 
 .login-button {
 	background-color: #030C43;
@@ -44,6 +47,50 @@
 .login-button:hover {
 	background-color: #0A1D6E;
 	color: white;
+}
+
+.profil-button {
+	background-color: #030C43;
+	border: none;
+	color: white;
+	padding: 10px 30px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 40px;
+	transition: background-color 0.3s ease;
+}
+
+.profil-button:hover {
+	background-color: #0A1D6E;
+	color: white;
+}
+
+.logout-button {
+	background-color: #a20c0c;
+	border: none;
+	color: white;
+	padding: 10px 30px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 40px;
+	transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+	background-color: #d50707;
+	color: white;
+}
+
+.login-bi {
+	margin-left: 5px;
+}
+
+.logout-bi {
+	margin-left: 5px;
 }
 
 footer {
