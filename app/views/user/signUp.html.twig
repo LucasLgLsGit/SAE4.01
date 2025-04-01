@@ -19,14 +19,15 @@
 		{% endif %}
 		<h2 class="text-center mb-4">Créer un compte</h2>
 
-		<div class="mb-3">
-			<label for="nom" class="form-label">Nom</label>
-			<input type="text" class="form-control" id="nom" name="nom" required placeholder="Votre nom" value="{{data.nom}}" required>
-		</div>
-
-		<div class="mb-3">
-			<label for="prenom" class="form-label">Prénom</label>
-			<input type="text" class="form-control" id="prenom" name="prenom" required placeholder="Votre prénom" value="{{data.prenom}}" required>
+		<div class="row mb-3">
+			<div class="col-md-6">
+				<label for="nom" class="form-label">Nom</label>
+				<input type="text" class="form-control" id="nom" name="nom" required placeholder="Votre nom" value="{{ data.nom }}">
+			</div>
+			<div class="col-md-6">
+				<label for="prenom" class="form-label">Prénom</label>
+				<input type="text" class="form-control" id="prenom" name="prenom" required placeholder="Votre prénom" value="{{ data.prenom }}">
+			</div>
 		</div>
 
 		<div class="mb-3">
