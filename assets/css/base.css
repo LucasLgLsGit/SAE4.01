@@ -1,34 +1,42 @@
 .nav-link.page {
-    color: #030C43;
+	color: #030C43;
 	width: max-content;
 	position: relative;
-    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .nav-link.page:hover::after {
 	content: '';
 	background-color: #030C43;
 	height: 2px;
-	width: 100%;
 	position: absolute;
 	border-radius: 20px;
 	bottom: -2px;
 	left: 0;
+	animation: erase-width 0.3s ease forwards;
 }
 
 .nav-link.active::after {
 	content: '';
 	background-color: #030C43;
 	height: 2px;
-	width: 100%;
 	position: absolute;
 	border-radius: 20px;
 	bottom: -2px;
 	left: 0;
+	width: 100%;
 }
 
 .nav-link-button {
 	margin-bottom: 5px;
+}
+
+@keyframes erase-width {
+	from {
+		width: 0;
+	}
+	to {
+		width: 100%;
+	}
 }
 
 .login-button {
@@ -116,4 +124,36 @@ footer {
 
 .social-button:hover {
 	background-color: #0d34e6;
+}
+
+.second-nav-link.page {
+	color: #030C43;
+	width: max-content;
+	position: relative;
+}
+
+.second-nav-link.page:hover::after {
+	content: '';
+	background-color: #ffffff;
+	height: 2px;
+	position: absolute;
+	border-radius: 20px;
+	bottom: -2px;
+	left: 0;
+	animation: erase-width 0.3s ease forwards;
+}
+
+.second-nav-link.page.active::after {
+	content: '';
+	background-color: #ffffff;
+	height: 2px;
+	position: absolute;
+	border-radius: 20px;
+	bottom: -2px;
+	left: 0;
+	width: 100%;
+}
+
+.nav-link-button {
+	margin-bottom: 5px;
 }
