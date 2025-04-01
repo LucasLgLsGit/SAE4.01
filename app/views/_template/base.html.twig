@@ -36,8 +36,8 @@
 					</a>
 				</li>
 				<li class="nav-item"><a class="nav-link page {% if current_url == '/contact.php' %}active{% endif %}" href="/contact.php">Contact</a></li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/events.php' %}active{% endif %}" href="/events.php">Événements</a></li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/shop.php' %}active{% endif %}" href="/shop.php">Boutique</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/events.php' or current_url starts with '/event.php'%}active{% endif %}" href="/events.php">Événements</a></li>
+				<li class="nav-item"><a class="nav-link page {% if current_url == '/shop.php' or current_url starts with '/detail.php' %}active{% endif %}" href="/shop.php">Boutique</a></li>
 				<li class="nav-item"><a class="nav-link page {% if current_url == '/faq.php' %}active{% endif %}" href="/faq.php">FAQ</a></li>
 
 				<li class="nav-item d-lg-none">
