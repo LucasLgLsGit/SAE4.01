@@ -20,7 +20,7 @@ class CommentaireRepository {
 
 	public function create(array $data): Commentaire {
 		$errors = [];
-		if (empty($data['texte_commentaire'])) {
+		if (empty($data['texte'])) {
 			$errors[] = "Le texte du commentaire est requis !";
 		}
 		if (empty($data['date_commentaire'])) {
@@ -37,7 +37,7 @@ class CommentaireRepository {
 		}
 		$commentaire = new Commentaire(
 			null,
-			$data['texte_commentaire'],
+			$data['texte'],
 			new DateTime($data['date_commentaire']),
 			(int) $data['id_user'],
 			(int) $data['id_event']
@@ -77,7 +77,7 @@ class CommentaireRepository {
 		');
 		return $stmt->execute([
 			'id' => $commentaire->getId_commentaire(),
-			'texte' => $commentaire->getTexte_commentaire(),
+			'texte' => $commentaire->getTexte(),
 			'date' => $commentaire->getDate_commentaire()->format('Y-m-d H:i:s'),
 			'user' => $commentaire->getId_user(),
 			'event' => $commentaire->getId_event()
@@ -89,15 +89,21 @@ class CommentaireRepository {
 		return $stmt->execute(['id' => $id]);
 	}
 
-
-
-
-
 	public function findById(int $id): ?Commentaire {
 		$stmt = $this->pdo->prepare('SELECT * FROM "commentaire" WHERE id_commentaire = :id');
 		$stmt->execute(['id' => $id]);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $row ? $this->createCommentaireFromRow($row) : null;
+	}
+
+	public function findByEventId(int $id_event): array {
+		$stmt = $this->pdo->prepare('SELECT * FROM "commentaire" WHERE id_event = :id_event');
+		$stmt->execute(['id_event' => $id_event]);
+		$commentaires = [];
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$commentaires[] = $this->createCommentaireFromRow($row);
+		}
+		return $commentaires;
 	}
 }
 ?>

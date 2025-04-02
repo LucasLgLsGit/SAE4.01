@@ -32,8 +32,8 @@ class ActualiteController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$newsService = new ActualiteRepository();
-				$newsService->create($data);
+				$newsRepo = new ActualiteRepository();
+				$newsRepo->create($data);
 				$this->redirectTo('actualites.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());

@@ -41,8 +41,8 @@
 					<td>{{ product.getPrix()|number_format(2, ',', ' ') }}</td>
 					<td>{{ product.getId_user() }}</td>
 					<td>
-						<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-						<button class="btn btn-danger btn-sm delete-product" data-product-id="{{ product.getId_product() }}"><i class="bi bi-trash"></i></button>
+						<a href="#" class="btn btn-modifier btn-sm"><i class="bi bi-pencil-square"></i></a>
+						<button class="btn btn-supprimer btn-sm delete-product mt-1" data-product-id="{{ product.getId_product() }}"><i class="bi bi-trash"></i></button>
 					</td>
 				</tr>
 				{% endfor %}
@@ -55,6 +55,16 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
+				{% if errors %}
+					<div class="alert alert-danger" role="alert">
+						{{ errors }}
+					</div>
+				{% endif %}
+				{% if success %}
+					<div class="alert alert-success" role="alert">
+						{{ success }}
+					</div>
+				{% endif %}
 				<h5 class="modal-title" id="createProductModalLabel">Créer un nouveau produit</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
@@ -94,11 +104,14 @@
 										<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
 										<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
 										<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+										<td>
+											<button type="button" class="btn btn-danger btn-sm remove-color-row"><i class="bi bi-trash-fill remove-color-row"></i></button>
+										</td>
 									</tr>
 									<tr>
 										<td>
 											<div class="d-flex justify-content-center">
-												<button type="button" class="btn btn-success btn-sm add-color-row">+</button>
+												<button type="button" class="btn btn-success btn-sm add-color-row"><i class="bi bi-plus-square"></i></button>
 											</div>
 										</td>
 									</tr>
@@ -110,9 +123,154 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-warning" id="resetProductButton">Réinitialiser</button>
 				<button type="button" class="btn btn-primary" id="saveProductButton">Créer</button>
+
 			</div>
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			addEventRow();
+			addEventRowReset();
+			addEventCreate();
+		});
+
+		function addEventCreate() {
+			const saveButton = document.getElementById('saveProductButton');
+			const createProductForm = document.getElementById('createProductForm');
+	
+			saveButton.addEventListener('click', function () {
+				const name = document.getElementById('productName').value;
+				const price = document.getElementById('productPrice').value;
+				const description = document.getElementById('productDescription').value;
+				const stockTableBody = document.querySelector('#stockTable tbody');
+				const rows = stockTableBody.querySelectorAll('tr');
+	
+				const products = [];
+	
+				rows.forEach((row) => {
+					const colorInput = row.querySelector('input[type="color"]');
+					const stockInputs = row.querySelectorAll('input[type="number"]');
+					const sizes = Array.from(stockInputs).map(input => ({
+						taille: input.name.match(/\[(.*?)\]/)[1],
+						stock: input.value
+					}));
+	
+					sizes.forEach(size => {
+						products.push({
+							titre_produit: name,
+							description_produit: description,
+							date_produit: new Date().toISOString(),
+							couleur: colorInput.value,
+							taille: size.taille,
+							stock: size.stock,
+							prix: 2,
+							id_user: 4 
+						});
+					});
+				});
+
+				for(let i = 0; i < products.length; i++) {
+					if (products[i].stock === '') {
+						products[i].stock = 0;
+					}
+				}
+
+				// Parcours les products et fais une requete pour chaque produir
+				products.forEach(product => {
+					console.log(JSON.stringify(product));
+					fetch('/insert_product.php', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(product)
+					})
+					.then(response => {
+						console.log(response)
+						if (!response.ok) {
+							throw new Error('Erreur lors de l\'insertion');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.success) {
+							alert('Produit(s) ajouté(s) avec succès !');
+							location.reload();
+						} else {
+							alert('Erreur : ' + data.message);
+						}
+					})
+					.catch(error => {
+						console.error('Erreur :', error);
+					});
+				});
+			});
+		}
+
+		function addEventRowReset() {
+			const resetButton = document.getElementById('resetProductButton');
+			const createProductForm = document.getElementById('createProductForm');
+			const stockTableBody = document.querySelector('#stockTable tbody');
+	
+			resetButton.addEventListener('click', function () {
+				createProductForm.reset();
+	
+				stockTableBody.innerHTML = `
+					<tr>
+						<td>
+							<input type="color" class="form-control form-control-color" name="couleurs[]" value="#000000">
+						</td>
+						<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+						<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+						<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+						<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+						<td>
+							<button type="button" class="btn btn-danger btn-sm remove-color-row"><i class="bi bi-trash-fill remove-color-row"></i></button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="d-flex justify-content-center">
+								<button type="button" class="btn btn-success btn-sm add-color-row"><i class="bi bi-plus-square"></i></button>
+							</div>
+						</td>
+					</tr>
+				`;
+				addEventRow();
+			});
+		}
+
+		function addEventRow() {
+			document.querySelector('.add-color-row').addEventListener('click', function () {
+				const tableBody = document.querySelector('#stockTable tbody');
+				const newRow = document.createElement('tr');
+				newRow.innerHTML = `
+					<td>
+						<input type="color" class="form-control form-control-color" name="couleurs[]" value="#000000">
+					</td>
+					<td><input type="number" class="form-control" name="stock[${tableBody.rows.length - 1}][]" min="0" placeholder="Stock"></td>
+					<td><input type="number" class="form-control" name="stock[${tableBody.rows.length - 1}][]" min="0" placeholder="Stock"></td>
+					<td><input type="number" class="form-control" name="stock[${tableBody.rows.length - 1}][]" min="0" placeholder="Stock"></td>
+					<td><input type="number" class="form-control" name="stock[${tableBody.rows.length - 1}][]" min="0" placeholder="Stock"></td>
+					<td>
+						<button type="button" class="btn btn-danger btn-sm remove-color-row"><i class="bi bi-trash-fill remove-color-row"></i></button>
+					</td>
+				`;
+				tableBody.insertBefore(newRow, tableBody.lastElementChild);
+			});
+	
+			document.querySelector('#stockTable').addEventListener('click', function (e) {
+				if (e.target.classList.contains('remove-color-row')) {
+					const row = e.target.closest('tr');
+					row.remove();
+				}
+			});
+		}
+	</script>
 {% endblock %}

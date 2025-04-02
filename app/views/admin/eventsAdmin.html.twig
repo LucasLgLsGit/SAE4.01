@@ -8,7 +8,7 @@
 <div class="events-container">
 	<div class="container mt-5">
 		<div class="d-flex align-items-center mb-4">
-			<h2 class="fw-bold">Gestion des Événements</h2>
+			<h2 class="fw-bold">Gestion des événements</h2>
 			<button class="add-event-button ms-3" data-bs-toggle="modal" data-bs-target="#createEventModal">Ajouter un événement<i class="bi-create-event bi bi-plus-square"></i></button>
 		</div>
 		<table class="table table-striped">
@@ -35,8 +35,8 @@
 					<td class="ellipsis-td">{{ event.getDescription() }}</td>
 					<td>{{ event.getPrix()|number_format(2, ',', ' ') }}</td>
 					<td>
-						<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-						<button class="btn btn-danger btn-sm delete-event" data-event-id="{{ event.getId() }}"><i
+						<a href="#" class="btn btn-modifier btn-sm"><i class="bi bi-pencil-square"></i></a>
+						<button class="btn btn-supprimer btn-sm delete-event" data-event-id="{{ event.getId() }}"><i
 								class="bi bi-trash"></i></button>
 					</td>
 				</tr>

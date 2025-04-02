@@ -3,6 +3,8 @@
 require_once './app/core/Controller.php';
 require_once './app/repositories/EvenementRepository.php';
 require_once './app/repositories/ParticipationRepository.php';
+require_once './app/repositories/CommentaireRepository.php';
+require_once './app/repositories/UtilisateurRepository.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
 
@@ -33,8 +35,8 @@ class EvenementController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$eventService = new EvenementRepository();
-				$eventService->create($data);
+				$eventRepo = new EvenementRepository();
+				$eventRepo->create($data);
 				$this->redirectTo('evenements.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
@@ -56,8 +58,8 @@ class EvenementController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$eventService = new EvenementRepository();
-				$eventService->update($id, $data);
+				$eventRepo = new EvenementRepository();
+				$eventRepo->update($id, $data);
 				$this->redirectTo('evenements.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
@@ -81,6 +83,8 @@ class EvenementController extends Controller {
 	{
 		$isLoggedIn = $this->isLoggedIn();
 		$utilisateur = $this->getCurrentUser();
+		$isAdmin = $utilisateur && $utilisateur->isAdmin();
+
 
 		$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
@@ -95,6 +99,14 @@ class EvenementController extends Controller {
 			throw new Exception("Événement introuvable !");
 		}
 
+		$commentaireRepository = new CommentaireRepository();
+		$utilisateurRepository = new UtilisateurRepository();
+		$commentaires = $commentaireRepository->findByEventId($event->getId());
+
+		foreach ($commentaires as $commentaire) {
+			$commentaire->utilisateur = $utilisateurRepository->findById($commentaire->getId_user());
+		}
+
 		$isRegistered = false;
 		if ($isLoggedIn && $utilisateur) {
 			$participationRepo = new ParticipationRepository();
@@ -104,8 +116,10 @@ class EvenementController extends Controller {
 		$this->view('event.html.twig', [
 			'event' => $event, 
 			'isLoggedIn' => $isLoggedIn,
-			'utilisateur' => $utilisateur,
+			'isAdmin' => $isAdmin,
 			'isRegistered' => $isRegistered,
+			'utilisateur' => $utilisateur,
+			'commentaires' => $commentaires
 		]);
 	}
 }

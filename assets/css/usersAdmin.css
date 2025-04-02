@@ -11,3 +11,22 @@
 	margin-bottom:100px;
 	width: 100%;
 }
+
+.btn-modifier {
+	background-color: #030C43;
+	color: white;
+}
+
+.btn-modifier:hover {
+	background-color: #06178a;
+	color: white;
+}
+
+.btn-supprimer {
+	background-color: #a20c0c;
+	color: white;
+}
+.btn-supprimer:hover {
+	background-color: #d50707;
+	color: white;
+}
