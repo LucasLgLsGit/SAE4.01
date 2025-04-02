@@ -7,7 +7,10 @@
 {% block body %}
 <div class="news-container">
 	<div class="container mt-5">
-		<h2 class="mb-4">Gestion des Actualités</h2>
+		<div class="d-flex align-items-center mb-4">
+			<h2 class="fw-bold">Gestion des actualités</h2>
+			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createNewsModal">Ajouter une actualité<i class="bi-create-news bi bi-plus-square"></i></button>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -28,8 +31,16 @@
 					<td>{{ new.getDatePublication().format('d/m/Y H:i') }}</td>
 					<td>{{ new.getIdUser() }}</td>
 					<td>
-						<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-						<button class="btn btn-danger btn-sm delete-new" data-new-id="{{ new.getIdnew() }}"><i class="bi bi-trash"></i></button>
+						<a href="#" 
+							class="btn btn-primary btn-sm edit-news" 
+							data-new-id="{{ new.getIdArticle() }}" 
+							data-new-title="{{ new.getTitreArticle() }}" 
+							data-new-content="{{ new.getContenu() }}">
+							<i class="bi bi-pencil-square"></i>
+						</a>
+						<button class="btn btn-danger btn-sm delete-new" data-new-id="{{ new.getIdArticle() }}">
+							<i class="bi bi-trash"></i>
+						</button>
 					</td>
 				</tr>
 				{% endfor %}
@@ -38,4 +49,180 @@
 	</div>
 </div>
 
+<div class="modal fade" id="editNewsModal" tabindex="-1" aria-labelledby="editNewsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="editNewsModalLabel">Modifier l'actualité</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="editNewsForm">
+					<input type="hidden" id="editNewsId" name="id_article">
+					<div class="mb-3">
+						<label for="editNewsTitle" class="form-label">Titre</label>
+						<input type="text" class="form-control" id="editNewsTitle" name="titre" required>
+					</div>
+					<div class="mb-3">
+						<label for="editNewsContent" class="form-label">Contenu</label>
+						<textarea class="form-control" id="editNewsContent" name="contenu" rows="5" required></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-primary" id="saveNewsChanges">Enregistrer</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteNewsModal" tabindex="-1" aria-labelledby="deleteNewsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteNewsModalLabel">Confirmer la suppression</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Êtes-vous sûr de vouloir supprimer cette actualité ?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-danger" id="confirmDeleteNews">Supprimer</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="createNewsModal" tabindex="-1" aria-labelledby="createNewsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="createNewsModalLabel">Créer une nouvelle actualité</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="createNewsForm">
+					<div class="mb-3">
+						<label for="createNewsTitle" class="form-label">Titre</label>
+						<input type="text" class="form-control" id="createNewsTitle" name="titre" required>
+					</div>
+					<div class="mb-3">
+						<label for="createNewsContent" class="form-label">Contenu</label>
+						<textarea class="form-control" id="createNewsContent" name="contenu" rows="5"
+							required></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-primary" id="saveNewsButton">Créer</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const editNewsModal = new bootstrap.Modal(document.getElementById('editNewsModal'));
+		const deleteNewsModal = new bootstrap.Modal(document.getElementById('deleteNewsModal'));
+		const editNewsForm = document.getElementById('editNewsForm');
+		const saveNewsChangesButton = document.getElementById('saveNewsChanges');
+		const confirmDeleteNewsButton = document.getElementById('confirmDeleteNews');
+
+		let newsIdToDelete = null;
+
+		function setupEditNews() {
+			const editNewsButtons = document.querySelectorAll('.edit-news');
+
+			editNewsButtons.forEach(button => {
+				button.addEventListener('click', function (event) {
+					event.preventDefault();
+
+					const newsId = this.getAttribute('data-new-id');
+					const newsTitle = this.getAttribute('data-new-title');
+					const newsContent = this.getAttribute('data-new-content');
+
+					document.getElementById('editNewsId').value = newsId;
+					document.getElementById('editNewsTitle').value = newsTitle;
+					document.getElementById('editNewsContent').value = newsContent;
+
+					editNewsModal.show();
+				});
+			});
+
+			saveNewsChangesButton.addEventListener('click', function () {
+				const formData = new FormData(editNewsForm);
+
+				fetch('/news_update.php', {
+					method: 'POST',
+					body: formData,
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Erreur réseau');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						location.reload();
+					} else {
+						console.error(data.message || 'Une erreur est survenue.');
+					}
+				})
+				.catch(error => {
+					console.error('Erreur:', error);
+				});
+			});
+		}
+
+		function setupDeleteNews() {
+			const deleteNewsButtons = document.querySelectorAll('.delete-new');
+
+			deleteNewsButtons.forEach(button => {
+				button.addEventListener('click', function (event) {
+					event.preventDefault();
+
+					newsIdToDelete = this.getAttribute('data-new-id');
+
+					deleteNewsModal.show();
+				});
+			});
+
+			confirmDeleteNewsButton.addEventListener('click', function () {
+				if (newsIdToDelete) {
+					fetch('/news_delete.php', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+						body: `id_article=${newsIdToDelete}`,
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Erreur réseau');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.success) {
+							location.reload();
+						} else {
+							console.error(data.message || 'Une erreur est survenue.');
+						}
+					})
+					.catch(error => {
+						console.error('Erreur:', error);
+					});
+				}
+			});
+		}
+
+		setupEditNews();
+		setupDeleteNews();
+	});
+</script>
 {% endblock %}

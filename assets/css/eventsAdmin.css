@@ -1,5 +1,36 @@
 .events-container {
 	width: 100vw;
+	overflow-x: auto;
+	margin-bottom: 100px;
+	height: 80vh;
+	margin-bottom: 100px;
+}
+
+.container {
+	max-height: 70vh;
+	margin-bottom:100px;
+	width: 100%;
+}
+
+.add-event-button {
+	background-color: #030C43;
+	color: white;
+	font-weight: bold;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-left: 10px;
+}
+
+.add-event-button:hover {
+	background-color: #06178a;
+	color: white;
+}
+
+.bi-create-event {
+	margin-left: 10px;
 }
 
 .table .ellipsis-td {

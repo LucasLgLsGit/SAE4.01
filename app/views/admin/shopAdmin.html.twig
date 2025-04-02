@@ -7,7 +7,10 @@
 {% block body %}
 <div class="products-container">
 	<div class="container mt-5">
-		<h2 class="mb-4">Gestion des products</h2>
+		<div class="d-flex align-items-center mb-4">
+			<h2 class="fw-bold">Gestion des produits</h2>
+			<button class="add-products-button ms-3" data-bs-toggle="modal" data-bs-target="#createProductModal">Ajouter un produit<i class="bi-create-products bi bi-plus-square"></i></button>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -45,6 +48,71 @@
 				{% endfor %}
 			</tbody>
 		</table>
+	</div>
+</div>
+
+<div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="createProductModalLabel">Créer un nouveau produit</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="createProductForm">
+					<div class="mb-3">
+						<label for="productName" class="form-label">Nom du produit</label>
+						<input type="text" class="form-control" id="productName" name="nom" required>
+					</div>
+					<div class="mb-3">
+						<label for="productPrice" class="form-label">Prix (€)</label>
+						<input type="number" class="form-control" id="productPrice" name="prix" step="0.01" min="0" required>
+					</div>
+					<div class="mb-3">
+						<label for="productDescription" class="form-label">Description</label>
+						<textarea class="form-control" id="productDescription" name="description" rows="4" required></textarea>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Stock par tailles et couleurs</label>
+						<div class="table-responsive">
+							<table class="table table-bordered" id="stockTable">
+								<thead>
+									<tr>
+										<th>Couleurs / Tailles</th>
+										<th>S</th>
+										<th>M</th>
+										<th>L</th>
+										<th>XL</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<input type="color" class="form-control form-control-color" name="couleurs[]" value="#000000">
+										</td>
+										<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+										<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+										<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+										<td><input type="number" class="form-control" name="stock[0][]" min="0" placeholder="Stock"></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="d-flex justify-content-center">
+												<button type="button" class="btn btn-success btn-sm add-color-row">+</button>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-primary" id="saveProductButton">Créer</button>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}

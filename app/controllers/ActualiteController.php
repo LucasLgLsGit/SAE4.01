@@ -1,7 +1,7 @@
 <?php
 
 require_once './app/core/Controller.php';
-require_once './app/services/ActualiteService.php';
+require_once './app/repositories/ActualiteRepository.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
 
@@ -32,7 +32,7 @@ class ActualiteController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$newsService = new ActualiteService();
+				$newsService = new ActualiteRepository();
 				$newsService->create($data);
 				$this->redirectTo('actualites.php');
 			} catch (Exception $e) {
@@ -43,27 +43,47 @@ class ActualiteController extends Controller {
 		$this->view('/news/create.html.twig', ['errors' => $errors, 'data' => $data]);
 	}
 
-	public function update() {
-		$id = $this->getQueryParam('id_event');
+	public function update()
+	{
+		$id = $this->getPostParam('id_article');
+		$titre = $this->getPostParam('titre');
+		$contenu = $this->getPostParam('contenu');
 
-		if ($id === null) {
-			throw new Exception("L'identifiant actualité est requis !");
+		if (empty($id) || empty($titre) || empty($contenu)) {
+			echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
+			http_response_code(400);
+			return;
 		}
 
-		$data = $this->getAllPostParams();
-		$errors = [];
+		try {
+			$newsRepository = new ActualiteRepository();
+			$newsRepository->updateById($id, [
+				'titre' => $titre,
+				'contenu' => $contenu,
+			]);
+			echo json_encode(['success' => true, 'message' => 'Actualité mise à jour avec succès.']);
+		} catch (Exception $e) {
+			http_response_code(500);
+			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+		}
+}
 
-		if (!empty($data)) {
-			try {
-				$newsService = new ActualiteService();
-				$newsService->update($id, $data);
-				$this->redirectTo('actualites.php');
-			} catch (Exception $e) {
-				$errors = explode(', ', $e->getMessage());
-			}
+	public function delete()
+	{
+		$id = $this->getPostParam('id_article');
+
+		if (empty($id)) {
+			echo json_encode(['success' => false, 'message' => 'ID requis.']);
+			return;
 		}
 
-		$this->view('/news/update.html.twig', 'Modification d\'une actualité', ['errors' => $errors, 'data' => $data, 'id_event' => $id]);
+		try {
+			$newsRepository = new ActualiteRepository();
+			$newsRepository->deleteById($id);
+			echo json_encode(['success' => true, 'message' => 'Actualité supprimée avec succès.']);
+		} catch (Exception $e) {
+			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+		}
 	}
 
 	public function getLastActualites(int $limit = 10)

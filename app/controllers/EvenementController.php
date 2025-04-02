@@ -1,7 +1,7 @@
 <?php
 
 require_once './app/core/Controller.php';
-require_once './app/services/EvenementService.php';
+require_once './app/services/EvenementRepository.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
 
@@ -32,7 +32,7 @@ class EvenementController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$eventService = new EvenementService();
+				$eventService = new EvenementRepository();
 				$eventService->create($data);
 				$this->redirectTo('evenements.php');
 			} catch (Exception $e) {
@@ -55,7 +55,7 @@ class EvenementController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$eventService = new EvenementService();
+				$eventService = new EvenementRepository();
 				$eventService->update($id, $data);
 				$this->redirectTo('evenements.php');
 			} catch (Exception $e) {
@@ -78,6 +78,8 @@ class EvenementController extends Controller {
 
 	public function show()
 	{
+		$isLoggedIn = $this->isLoggedIn();
+
 		$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 		if (!$id) {
@@ -91,6 +93,6 @@ class EvenementController extends Controller {
 			throw new Exception("Événement introuvable !");
 		}
 
-		$this->view('event.html.twig', ['event' => $event]);
+		$this->view('event.html.twig', ['event' => $event, 'isLoggedIn' => $isLoggedIn]);
 	}
 }
