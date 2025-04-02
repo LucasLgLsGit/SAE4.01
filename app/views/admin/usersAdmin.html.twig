@@ -34,10 +34,10 @@
 						<input type="checkbox" class="toggle-perm" data-user-id="{{ user.getId() }}" data-perm="adherent" {% if user.isAdherent() %}checked{% endif %}>
 					</td>
 					<td>
-						<a href="#" class="btn btn-primary btn-sm edit-user" data-user-id="{{ user.getId() }}" data-user-nom="{{ user.getNom() }}" data-user-prenom="{{ user.getPrenom() }}" data-user-mail="{{ user.getMail() }}">
+						<a href="#" class="btn btn-modifier btn-sm edit-user" data-user-id="{{ user.getId() }}" data-user-nom="{{ user.getNom() }}" data-user-prenom="{{ user.getPrenom() }}" data-user-mail="{{ user.getMail() }}">
 							<i class="bi bi-pencil-square"></i>
 						</a>
-						<button class="btn btn-danger btn-sm delete-user" data-user-id="{{ user.getId() }}"><i class="bi bi-trash"></i></button>
+						<button class="btn btn-supprimer btn-sm delete-user" data-user-id="{{ user.getId() }}"><i class="bi bi-trash"></i></button>
 					</td>
 				</tr>
 				{% endfor %}

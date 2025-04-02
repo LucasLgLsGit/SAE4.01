@@ -32,13 +32,13 @@
 					<td>{{ new.getIdUser() }}</td>
 					<td>
 						<a href="#" 
-							class="btn btn-primary btn-sm edit-news" 
+							class="btn btn-modifier btn-sm edit-news" 
 							data-new-id="{{ new.getIdArticle() }}" 
 							data-new-title="{{ new.getTitreArticle() }}" 
 							data-new-content="{{ new.getContenu() }}">
 							<i class="bi bi-pencil-square"></i>
 						</a>
-						<button class="btn btn-danger btn-sm delete-new" data-new-id="{{ new.getIdArticle() }}">
+						<button class="btn btn-supprimer btn-sm delete-new mt-1" data-new-id="{{ new.getIdArticle() }}">
 							<i class="bi bi-trash"></i>
 						</button>
 					</td>

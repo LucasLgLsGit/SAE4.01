@@ -35,8 +35,8 @@
 					<td class="ellipsis-td">{{ event.getDescription() }}</td>
 					<td>{{ event.getPrix()|number_format(2, ',', ' ') }}</td>
 					<td>
-						<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-						<button class="btn btn-danger btn-sm delete-event" data-event-id="{{ event.getId() }}"><i
+						<a href="#" class="btn btn-modifier btn-sm"><i class="bi bi-pencil-square"></i></a>
+						<button class="btn btn-supprimer btn-sm delete-event" data-event-id="{{ event.getId() }}"><i
 								class="bi bi-trash"></i></button>
 					</td>
 				</tr>
