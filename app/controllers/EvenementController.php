@@ -3,6 +3,7 @@
 require_once './app/core/Controller.php';
 require_once './app/repositories/EvenementRepository.php';
 require_once './app/repositories/ParticipationRepository.php';
+require_once './app/repositories/CommentaireRepository.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
 
@@ -81,6 +82,8 @@ class EvenementController extends Controller {
 	{
 		$isLoggedIn = $this->isLoggedIn();
 		$utilisateur = $this->getCurrentUser();
+		$isAdmin = $utilisateur && $utilisateur->isAdmin();
+
 
 		$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
@@ -95,6 +98,9 @@ class EvenementController extends Controller {
 			throw new Exception("Événement introuvable !");
 		}
 
+		$commentaireRepository = new CommentaireRepository();
+		$commentaires = $commentaireRepository->findByEventId($event->getId());
+
 		$isRegistered = false;
 		if ($isLoggedIn && $utilisateur) {
 			$participationRepo = new ParticipationRepository();
@@ -104,8 +110,10 @@ class EvenementController extends Controller {
 		$this->view('event.html.twig', [
 			'event' => $event, 
 			'isLoggedIn' => $isLoggedIn,
-			'utilisateur' => $utilisateur,
+			'isAdmin' => $isAdmin,
 			'isRegistered' => $isRegistered,
+			'utilisateur' => $utilisateur,
+			'commentaires' => $commentaires
 		]);
 	}
 }
