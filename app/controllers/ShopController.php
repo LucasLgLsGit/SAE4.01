@@ -1,20 +1,20 @@
 <?php
 require_once './app/core/Controller.php';
-require_once './app/services/ProduitService.php';
+require_once './app/services/ProduitRepository.php';
 
 class ShopController extends Controller
 {
-    private ProduitService $produitService;
+    private ProduitRepository $ProduitRepository;
 
     public function __construct()
     {
-        $this->produitService = new ProduitService();
+        $this->ProduitRepository = new ProduitRepository();
     }
 
     public function index()
     {
         try {
-            $produits = $this->produitService->allProduits();
+            $produits = $this->ProduitRepository->allProduits();
 
             $produitsGroupes = [];
             foreach ($produits as $produit) {
@@ -52,7 +52,7 @@ class ShopController extends Controller
                 throw new Exception("Le titre du produit est requis !");
             }
 
-            $allProduits = $this->produitService->allProduits();
+            $allProduits = $this->ProduitRepository->allProduits();
             $produitsWithSameTitre = [];
             $representativeProduit = null;
 

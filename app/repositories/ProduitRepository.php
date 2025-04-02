@@ -18,29 +18,70 @@ class ProduitRepository {
 		return $produits;
 	}
 
-	public function findByTitre(string $titre): ?Produit
-	{	
-		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE LOWER(titre_produit) = LOWER(:titre_produit)');
-		$stmt->execute(['titre_produit' => $titre]);
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		return $row ? $this->createProduitFromRow($row) : null;
+	private function createProduitFromRow(array $row): Produit {
+		return new Produit(
+			$row['id_produit'],
+			$row['titre_produit'],
+			$row['description_produit'],
+			new DateTime($row['date_produit']),
+			$row['couleur'],
+			$row['taille'],
+			$row['stock'],
+			$row['prix'],
+			$row['id_user']
+		);
 	}
 
-	private function createProduitFromRow(array $row): Produit
-	{
-		return new Produit(	$row['id_produit'], 
-							$row['titre_produit'], 
-							$row['description_produit'], 
-							new DateTime($row['date_produit']), 
-							$row['couleur'], $row['taille'], 
-							$row['stock'], 
-							$row['prix'], 
-							$row['id_user']);
-	}
+	public function create(array $data): Produit {
+		$errors = [];
 
-	public function create(Produit $produit): bool {
-		$stmt = $this->pdo->prepare('INSERT INTO "produit" (titre_produit, description_produit, date_produit, couleur, taille, stock, prix, id_user) VALUES (:titre_produit, :description_produit, :date_produit, :couleur, :taille, :stock, :prix, :id_user)');
-		return $stmt->execute([
+		if (empty($data['nom_produit'])) {
+			$errors[] = "Le nom du produit est requis !";
+		}
+		if (empty($data['description_produit'])) {
+			$errors[] = "La description du produit est requise !";
+		}
+		if (empty($data['date_ajout'])) {
+			$errors[] = "La date d'ajout est requise !";
+		}
+		if (empty($data['couleur'])) {
+			$errors[] = "La couleur du produit est requise !";
+		}
+		if (empty($data['taille'])) {
+			$errors[] = "La taille du produit est requise !";
+		}
+		if (empty($data['stock'])) {
+			$errors[] = "Le stock du produit est requis !";
+		}
+		if (empty($data['prix'])) {
+			$errors[] = "Le prix du produit est requis !";
+		}
+		if (empty($data['id_user'])) {
+			$errors[] = "L'identifiant utilisateur (id_user) est requis !";
+		}
+
+		if (!empty($errors)) {
+			throw new Exception(implode(', ', $errors));
+		}
+
+		$produit = new Produit(
+			null,
+			$data['nom_produit'],
+			$data['description_produit'],
+			new DateTime($data['date_ajout']),
+			$data['couleur'],
+			$data['taille'],
+			(int) $data['stock'],
+			(float) $data['prix'],
+			(int) $data['id_user']
+		);
+
+		$stmt = $this->pdo->prepare('
+			INSERT INTO "produit" (titre_produit, description_produit, date_produit, couleur, taille, stock, prix, id_user) 
+			VALUES (:titre_produit, :description_produit, :date_produit, :couleur, :taille, :stock, :prix, :id_user)
+		');
+
+		$stmt->execute([
 			'titre_produit' => $produit->getTitre_produit(),
 			'description_produit' => $produit->getDescription_produit(),
 			'date_produit' => $produit->getDate_produit()->format('Y-m-d H:i:s'),
@@ -50,21 +91,91 @@ class ProduitRepository {
 			'prix' => $produit->getPrix(),
 			'id_user' => $produit->getId_user()
 		]);
+
+		return $produit;
 	}
 
-	public function update(Produit $produit): bool {
-		$stmt = $this->pdo->prepare('UPDATE "produit" SET titre_produit = :newtitre_produit, description_produit = :newdescription_produit, date_produit = :newdate_produit, couleur = :newcouleur, taille = :newtaille, stock = :newstock, prix = :newprix WHERE id_produit = :id_produit');
-		return $stmt->execute([
+	public function update(array $data): Produit {
+		$errors = [];
+
+		if (empty($data['id_produit'])) {
+			$errors[] = "L'identifiant du produit est requis !";
+		}
+		if (empty($data['nom_produit'])) {
+			$errors[] = "Le nom du produit est requis !";
+		}
+		if (empty($data['description_produit'])) {
+			$errors[] = "La description du produit est requise !";
+		}
+		if (empty($data['date_ajout'])) {
+			$errors[] = "La date d'ajout est requise !";
+		}
+		if (empty($data['couleur'])) {
+			$errors[] = "La couleur du produit est requise !";
+		}
+		if (empty($data['taille'])) {
+			$errors[] = "La taille du produit est requise !";
+		}
+		if (empty($data['stock'])) {
+			$errors[] = "Le stock du produit est requis !";
+		}
+		if (empty($data['prix'])) {
+			$errors[] = "Le prix du produit est requis !";
+		}
+		if (empty($data['id_user'])) {
+			$errors[] = "L'identifiant utilisateur (id_user) est requis !";
+		}
+
+		if (!empty($errors)) {
+			throw new Exception(implode(', ', $errors));
+		}
+
+		$produit = new Produit(
+			(int) $data['id_produit'],
+			$data['nom_produit'],
+			$data['description_produit'],
+			new DateTime($data['date_ajout']),
+			$data['couleur'],
+			$data['taille'],
+			(int) $data['stock'],
+			(float) $data['prix'],
+			(int) $data['id_user']
+		);
+
+		$stmt = $this->pdo->prepare('
+			UPDATE "produit" 
+			SET titre_produit = :titre_produit, 
+				description_produit = :description_produit, 
+				date_produit = :date_produit, 
+				couleur = :couleur, 
+				taille = :taille, 
+				stock = :stock, 
+				prix = :prix 
+			WHERE id_produit = :id_produit
+		');
+
+		$stmt->execute([
 			'id_produit' => $produit->getId_produit(),
-			'newtitre_produit' => $produit->getTitre_produit(),
-			'newdescription_produit' => $produit->getDescription_produit(),
-			'newdate_produit' => $produit->getDate_produit(),
-			'newcouleur' => $produit->getCouleur(),
-			'newtaille' => $produit->getTaille(),
-			'newstock' => $produit->getStock(),
-			'newprix' => $produit->getPrix()
+			'titre_produit' => $produit->getTitre_produit(),
+			'description_produit' => $produit->getDescription_produit(),
+			'date_produit' => $produit->getDate_produit()->format('Y-m-d H:i:s'),
+			'couleur' => $produit->getCouleur(),
+			'taille' => $produit->getTaille(),
+			'stock' => $produit->getStock(),
+			'prix' => $produit->getPrix()
 		]);
+
+		return $produit;
 	}
+
+	public function delete(int $id): bool {
+		$stmt = $this->pdo->prepare('DELETE FROM "produit" WHERE id_produit = :id_produit');
+		return $stmt->execute(['id_produit' => $id]);
+	}
+
+
+
+
 
 	public function findById(int $id): ?Produit {
 		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE id_produit = :id_produit');
@@ -76,8 +187,10 @@ class ProduitRepository {
 		return null;
 	}
 
-	public function delete(int $id): bool {
-		$stmt = $this->pdo->prepare('DELETE FROM "produit" WHERE id_produit = :id_produit');
-		return $stmt->execute(['id_produit' => $id]);
+	public function findByTitre(string $titre): ?Produit {
+		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE LOWER(titre_produit) = LOWER(:titre_produit)');
+		$stmt->execute(['titre_produit' => $titre]);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $row ? $this->createProduitFromRow($row) : null;
 	}
 }
