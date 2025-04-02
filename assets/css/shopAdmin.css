@@ -11,3 +11,24 @@
 	margin-bottom:100px;
 	width: 100%;
 }
+
+.add-products-button {
+	background-color: #030C43;
+	color: white;
+	font-weight: bold;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-left: 10px;
+}
+
+.add-products-button:hover {
+	background-color: #06178a;
+	color: white;
+}
+
+.bi-create-products {
+	margin-left: 10px;
+}
