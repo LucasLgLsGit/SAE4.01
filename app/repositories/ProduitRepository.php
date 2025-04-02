@@ -18,20 +18,6 @@ class ProduitRepository {
 		return $produits;
 	}
 
-	private function createProduitFromRow(array $row): Produit {
-		return new Produit(
-			$row['id_produit'],
-			$row['titre_produit'],
-			$row['description_produit'],
-			new DateTime($row['date_produit']),
-			$row['couleur'],
-			$row['taille'],
-			$row['stock'],
-			$row['prix'],
-			$row['id_user']
-		);
-	}
-
 	public function create(array $data): Produit {
 		$errors = [];
 
@@ -93,6 +79,20 @@ class ProduitRepository {
 		]);
 
 		return $produit;
+	}
+
+	private function createProduitFromRow(array $row): Produit {
+		return new Produit(
+			$row['id_produit'],
+			$row['titre_produit'],
+			$row['description_produit'],
+			new DateTime($row['date_produit']),
+			$row['couleur'],
+			$row['taille'],
+			$row['stock'],
+			$row['prix'],
+			$row['id_user']
+		);
 	}
 
 	public function update(array $data): Produit {
