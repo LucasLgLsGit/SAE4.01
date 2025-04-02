@@ -43,48 +43,69 @@
 		</table>
 	</div>
 </div>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<h5 class="modal-title" id="deleteUserModalLabel">Confirmer la suppression</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	  </div>
+	  <div class="modal-body">
+		Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+		<button type="button" class="btn btn-danger" id="confirmDeleteButton">Supprimer</button>
+	  </div>
+	</div>
+  </div>
+</div>
 {% endblock %}
 
 {% block javascript %}
 <script>
-	document.addEventListener('DOMContentLoaded', function () {
-		const deleteButtons = document.querySelectorAll('.delete-user');
+  document.addEventListener('DOMContentLoaded', function () {
+	const deleteButtons = document.querySelectorAll('.delete-user');
+	const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+	let userIdToDelete = null;
 
-		deleteButtons.forEach(button => {
-			button.addEventListener('click', function (event) {
-				event.preventDefault();
-
-				const userId = this.getAttribute('data-user-id');
-
-				if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
-					fetch('/user_delete.php', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-						body: `id_user=${userId}`, // Envoie l'ID utilisateur
-					})
-					.then(response => {
-						if (!response.ok) {
-							throw new Error('Erreur réseau');
-						}
-						return response.json();
-					})
-					.then(data => {
-						if (data.success) {
-							alert(data.message);
-							location.reload(); // Recharge la page pour mettre à jour la liste
-						} else {
-							alert(data.message || 'Une erreur est survenue.');
-						}
-					})
-					.catch(error => {
-						console.error('Erreur:', error);
-						alert('Une erreur est survenue. Veuillez réessayer plus tard.');
-					});
-				}
-			});
-		});
+	deleteButtons.forEach(button => {
+	  button.addEventListener('click', function (event) {
+		event.preventDefault();
+		userIdToDelete = this.getAttribute('data-user-id');
+		const deleteUserModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+		deleteUserModal.show();
+	  });
 	});
+
+	confirmDeleteButton.addEventListener('click', function () {
+	  if (userIdToDelete) {
+		fetch('/user_delete.php', {
+		  method: 'POST',
+		  headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		  },
+		  body: `id_user=${userIdToDelete}`,
+		})
+		.then(response => {
+		  if (!response.ok) {
+			throw new Error('Erreur réseau');
+		  }
+		  return response.json();
+		})
+		.then(data => {
+		  if (data.success) {
+			location.reload();
+		  } else {
+			console.error(data.message || 'Une erreur est survenue.');
+		  }
+		})
+		.catch(error => {
+		  console.error('Erreur:', error);
+		});
+	  }
+	});
+  });
 </script>
 {% endblock %}
