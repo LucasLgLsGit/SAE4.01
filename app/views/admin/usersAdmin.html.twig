@@ -203,5 +203,40 @@
 			});
 		});
 	});
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const togglePermCheckboxes = document.querySelectorAll('.toggle-perm');
+
+		togglePermCheckboxes.forEach(checkbox => {
+			checkbox.addEventListener('change', function () {
+				const userId = this.getAttribute('data-user-id');
+				const permissionType = this.getAttribute('data-perm');
+				const isChecked = this.checked;
+
+				fetch('/user_update_permission.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: `id_user=${userId}&permission=${permissionType}&value=${isChecked ? 1 : 0}`,
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Erreur réseau');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (!data.success) {
+						alert(data.message || 'Une erreur est survenue.');
+					}
+				})
+				.catch(error => {
+					console.error('Erreur:', error);
+					alert('Une erreur est survenue. Veuillez réessayer plus tard.');
+				});
+			});
+		});
+	});
 </script>
 {% endblock %}

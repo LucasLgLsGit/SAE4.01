@@ -41,14 +41,15 @@ class UtilisateurRepository {
 
 	public function updateById(int $id, array $data): void
 	{
-		$stmt = $this->pdo->prepare('UPDATE utilisateur SET nom = :nom, prenom = :prenom, mail = :mail WHERE id_user = :id_user');
+		$stmt = $this->pdo->prepare('UPDATE utilisateur SET nom = :nom, prenom = :prenom, mail = :mail, permission = :permission WHERE id_user = :id_user');
 		$stmt->execute([
 			'nom' => $data['nom'],
 			'prenom' => $data['prenom'],
 			'mail' => $data['mail'],
+			'permission' => $data['permission'] ?? $this->findById($id)->getPermission(),
 			'id_user' => $id,
 		]);
-	}
+}
 
 	public function deleteById(int $id): void
 	{

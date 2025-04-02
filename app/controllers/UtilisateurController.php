@@ -171,4 +171,54 @@ class UtilisateurController extends Controller {
 			]);
 		}
 	}
+
+	public function updatePermission()
+	{
+		$id = $this->getPostParam('id_user');
+		$permission = $this->getPostParam('permission');
+		$value = $this->getPostParam('value');
+
+		if (empty($id) || empty($permission) || !isset($value)) {
+			echo json_encode(['success' => false, 'message' => 'Paramètres manquants.']);
+			http_response_code(400);
+			return;
+		}
+
+		try {
+			$userRepository = new UtilisateurRepository();
+			$user = $userRepository->findById($id);
+
+			if (!$user) {
+				throw new Exception("Utilisateur non trouvé.");
+			}
+
+			if ($permission === 'admin') {
+				if ($value) {
+					$user->addPermission(IS_ADMIN);
+				} else {
+					$user->removePermission(IS_ADMIN);
+				}
+			} elseif ($permission === 'adherent') {
+				if ($value) {
+					$user->addPermission(IS_ADHERENT);
+				} else {
+					$user->removePermission(IS_ADHERENT);
+				}
+			} else {
+				throw new Exception("Type de permission non valide.");
+			}
+
+			$userRepository->updateById($id, [
+				'nom' => $user->getNom(),
+				'prenom' => $user->getPrenom(),
+				'mail' => $user->getMail(),
+				'permission' => $user->getPermission(),
+			]);
+
+			echo json_encode(['success' => true, 'message' => 'Permission mise à jour avec succès.']);
+		} catch (Exception $e) {
+			http_response_code(500);
+			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+		}
+	}
 }
