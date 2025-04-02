@@ -1,7 +1,7 @@
 <?php
 
 require_once './app/core/Controller.php';
-require_once './app/services/UtilisateurService.php';
+require_once './app/repositories/UtilisateurRepository.php';
 require_once './app/services/AuthService.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
@@ -37,8 +37,8 @@ class UtilisateurController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$userService = new UtilisateurService();
-				$userService->create($data);
+				$userRepo = new UtilisateurRepository();
+				$userRepo->create($data);
 				$this->redirectTo('index.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
@@ -111,8 +111,8 @@ class UtilisateurController extends Controller {
 		$isLoggedIn = $this->isLoggedIn();
 
 		try {
-			$userService = new UtilisateurService();
-			$userService->updateEmail($id, $newMail);
+			$userRepo = new UtilisateurRepository();
+			$userRepo->updateEmail($id, $newMail);
 			
 			$authService = new AuthService();
 			if ($authService->getUser()->getId() == $id) {
@@ -152,8 +152,8 @@ class UtilisateurController extends Controller {
 			
 
 
-			$userService = new UtilisateurService();
-			if ($userService->updateMdp($id, $newPassword)) {
+			$userRepo = new UtilisateurRepository();
+			if ($userRepo->updateMdp($id, $newPassword)) {
 				// Succès
 				$this->view('/user/profile.html.twig', [
 					'utilisateur' => (new AuthService())->getUser(),

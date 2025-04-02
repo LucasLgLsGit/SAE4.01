@@ -14,7 +14,7 @@ class ShopController extends Controller
     public function index()
     {
         try {
-            $produits = $this->ProduitRepository->allProduits();
+            $produits = $this->ProduitRepository->findAll();
 
             $produitsGroupes = [];
             foreach ($produits as $produit) {
@@ -52,7 +52,7 @@ class ShopController extends Controller
                 throw new Exception("Le titre du produit est requis !");
             }
 
-            $allProduits = $this->ProduitRepository->allProduits();
+            $allProduits = $this->ProduitRepository->findAll();
             $produitsWithSameTitre = [];
             $representativeProduit = null;
 
