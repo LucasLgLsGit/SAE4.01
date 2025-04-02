@@ -1,14 +1,14 @@
 <?php
 
-require_once '../services/CommandeService.php';
+require_once '../repositories/CommandeRepository.php';
 
 class CommandeController extends Controller
 {
-	private CommandeService $commandeService;
+	private CommandeRepository $CommandeRepository;
 
 	public function __construct()
 	{
-		$this->commandeService = new CommandeService();
+		$this->CommandeRepository = new CommandeRepository();
 	}
 
 	public function createCommande()
@@ -22,7 +22,7 @@ class CommandeController extends Controller
 					'numero_commande' => $_POST['numero_commande']
 				];
 
-				$this->commandeService->create($commandeData);
+				$this->CommandeRepository->create($commandeData);
 				$this->redirectTo('/commande/list'); 
 			} catch (Exception $e) {
 				http_response_code(400);
@@ -42,7 +42,7 @@ class CommandeController extends Controller
 					'numero_commande' => $_POST['numero_commande']
 				];
 
-				$this->commandeService->update($commandeData);
+				$this->CommandeRepository->update($commandeData);
 				$this->redirectTo('/commande/list');
 			} catch (Exception $e) {
 				http_response_code(400);
@@ -54,7 +54,7 @@ class CommandeController extends Controller
 	public function deleteCommande(int $id_user, int $id_produit)
 	{
 		try {
-			$this->commandeService->delete($id_user, $id_produit);
+			$this->CommandeRepository->delete($id_user, $id_produit);
 			$this->redirectTo('/commande/list');
 		} catch (Exception $e) {
 			http_response_code(400);
