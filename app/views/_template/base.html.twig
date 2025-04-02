@@ -97,109 +97,21 @@
 {% endif %}
 
 <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="cartModalLabel">Votre Panier</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<div class="container mt-5">
-					<div class="list-group">
-						<div class="list-group-item d-flex align-items-center">
-							<img src="/assets/images/bde.webp" alt="Produit 3" class="img-fluid me-3" style="width: auto; height: 100px;">
-							<div class="d-flex flex-column w-100">
-								<div class="d-flex justify-content-between align-items-center">
-									<h5 class="mb-1">Produit 1</h5>
-									<button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
-								</div>
-								<div class="d-flex gap-3 align-items-center mb-2">
-									<div class="d-flex align-items-center">
-										<span class="ms-2">Couleur </span>
-										<div class="color-swatch" style="width: 20px; height: 20px; background-color: #FF5733; border-radius: 50%; margin-left: 10px; border: 1px solid #ccc;"></div>
-									</div>
-									<span>Taille: M</span>
-								</div>
-								<div class="d-flex justify-content-between align-items-center">
-									<div class="d-flex align-items-center">
-										<button class="btn btn-outline-secondary btn-sm me-2">-</button>
-										<span>1</span>
-										<button class="btn btn-outline-secondary btn-sm ms-2">+</button>
-									</div>
-									<div class="price">
-										<p class="mb-0">€20.00</p>
-									</div>
-								</div>
-							</div>
-						</div>
-				
-						<div class="list-group-item d-flex align-items-center">
-							<img src="/assets/images/bde.webp" alt="Produit 3" class="img-fluid me-3" style="width: auto; height: 100px;">
-							<div class="d-flex flex-column w-100">
-								<div class="d-flex justify-content-between align-items-center">
-									<h5 class="mb-1">Produit 2</h5>
-									<button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
-								</div>
-								<div class="d-flex gap-3 align-items-center mb-2">
-									<div class="d-flex align-items-center">
-										<span class="ms-2">Couleur</span>
-										<div class="color-swatch" style="width: 20px; height: 20px; background-color: #33FF57; border-radius: 50%; margin-left: 10px; border: 1px solid #ccc;"></div>
-									</div>
-									<span>Taille: L</span>
-								</div>
-								<div class="d-flex justify-content-between align-items-center">
-									<div class="d-flex align-items-center">
-										<button class="btn btn-outline-secondary btn-sm me-2">-</button>
-										<span>2</span>
-										<button class="btn btn-outline-secondary btn-sm ms-2">+</button>
-									</div>
-									<div class="price">
-										<p class="mb-0">€30.00</p>
-									</div>
-								</div>
-							</div>
-						</div>
-				
-						<div class="list-group-item d-flex align-items-center">
-							<img src="/assets/images/bde.webp" alt="Produit 3" class="img-fluid me-3" style="width: auto; height: 100px;">
-							<div class="d-flex flex-column w-100">
-								<div class="d-flex justify-content-between align-items-center">
-									<h5 class="mb-1">Produit 3</h5>
-									<button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
-								</div>
-								<div class="d-flex gap-3 align-items-center mb-2">
-									<div class="d-flex align-items-center">
-										<span class="ms-2">Couleur</span>
-										<div class="color-swatch" style="width: 20px; height: 20px; background-color: #3357FF; border-radius: 50%; margin-left: 10px; border: 1px solid #ccc;"></div>
-									</div>
-									<span>Taille: S</span>
-								</div>
-								<div class="d-flex justify-content-between align-items-center">
-									<div class="d-flex align-items-center">
-										<button class="btn btn-outline-secondary btn-sm me-2">-</button>
-										<span>1</span>
-										<button class="btn btn-outline-secondary btn-sm ms-2">+</button>
-									</div>
-									<div class="price">
-										<p class="mb-0">€15.00</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				
-					<div class="d-flex justify-content-between mt-4">
-						<h4>Total :</h4>
-						<h4>€65.00</h4>
-					</div>
-				</div>
-				
-			</div>
-			<div class="modal-footer">
-				<a href="#" class="btn btn-primary">Commander</a>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartModalLabel">Votre Panier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Chargement...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <a href="/checkout.php" class="btn btn-primary">Commander</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 
