@@ -33,8 +33,8 @@ class EvenementController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$eventService = new EvenementRepository();
-				$eventService->create($data);
+				$eventRepo = new EvenementRepository();
+				$eventRepo->create($data);
 				$this->redirectTo('evenements.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
@@ -56,8 +56,8 @@ class EvenementController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$eventService = new EvenementRepository();
-				$eventService->update($id, $data);
+				$eventRepo = new EvenementRepository();
+				$eventRepo->update($id, $data);
 				$this->redirectTo('evenements.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
