@@ -112,7 +112,7 @@
             const form = document.getElementById('add-to-cart-form');
             const formData = new FormData(form);
 
-            fetch('/panier.php', {
+            fetch('/ajouter_panier.php', {
                 method: 'POST',
                 body: formData
             })
