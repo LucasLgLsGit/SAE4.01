@@ -1,6 +1,7 @@
 <?php
 
-require_once '../services/ParticipationService.php';
+require_once './app/services/ParticipationService.php';
+require_once './app/core/Controller.php';
 
 class ParticipationController extends Controller
 {
@@ -13,10 +14,19 @@ class ParticipationController extends Controller
 
 	public function createParticipation()
 	{
+		$this->participationService = new ParticipationService();
+
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			try {
+				$idEvent = $_POST['id_event'] ?? null;
+	
+				if (!$idEvent) {
+					throw new Exception("L'identifiant de l'événement est manquant !");
+				}
+	
 				$this->participationService->create($_POST);
-				$this->redirectTo('/evenements.php');
+	
+				$this->redirectTo("/event.php?id=" . $idEvent);
 			} catch (Exception $e) {
 
 				http_response_code(400);
@@ -45,13 +55,27 @@ class ParticipationController extends Controller
 
 	public function deleteParticipation(int $id_user, int $id_event)
 	{
-		try {
-			$this->participationService->delete($id_user, $id_event);
-			$this->redirectTo('/evenements.php');
-		} catch (Exception $e) {
-			http_response_code(400);
-			echo "Erreur : " . $e->getMessage();
-		}
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $idEvent = $_POST['id_event'] ?? null;
+                $idUser = $_POST['id_user'] ?? null;
+    
+                if (!$idEvent) {
+                    throw new Exception("L'identifiant de l'événement est manquant !");
+                }
+    
+                if (!$idUser) {
+                    throw new Exception("L'identifiant utilisateur est manquant !");
+                }
+    
+                $this->participationService->delete($idUser, $idEvent);
+    
+                $this->redirectTo("/event.php?id=" . $idEvent);
+            } catch (Exception $e) {
+                http_response_code(400);
+                echo "Erreur : " . $e->getMessage();
+            }
+        }
 	}
 }
 
