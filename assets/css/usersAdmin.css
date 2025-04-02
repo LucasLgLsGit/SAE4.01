@@ -1,13 +1,13 @@
 .users-container {
-    width: 100vw;
-    overflow-x: auto;
-    margin-bottom: 100px;
-    height: 80vh;
-    margin-bottom: 100px;
+	width: 100vw;
+	overflow-x: auto;
+	margin-bottom: 100px;
+	height: 80vh;
+	margin-bottom: 100px;
 }
 
 .container {
-    max-height: 70vh;
-    margin-bottom:100px;
-    width: 100%;
+	max-height: 70vh;
+	margin-bottom:100px;
+	width: 100%;
 }
