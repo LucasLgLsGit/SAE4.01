@@ -1,6 +1,6 @@
 <?php
 require_once './app/core/Controller.php';
-require_once './app/services/ProduitRepository.php';
+require_once './app/repositories/ProduitRepository.php';
 
 class ShopController extends Controller
 {
