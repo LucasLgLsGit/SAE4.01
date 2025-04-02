@@ -8,6 +8,16 @@
 <div class="users-container">
 	<div class="container mt-5">
 		<h2 class="mb-4 fw-bold">Gestion des utilisateurs</h2>
+		<div class="mb-3 d-flex gap-2">
+            <select class="form-select w-25" id="searchAttribute">
+                <option value="nom">Nom</option>
+                <option value="prenom">Prénom</option>
+                <option value="email">Email</option>
+                <option value="id">ID</option>
+            </select>
+            <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+			<button type="button" class="btn btn-research" id="resetSearch"><i class="bi bi-arrow-clockwise"></i></button>
+        </div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -272,9 +282,54 @@
 			});
 		}
 		
+		function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchAttribute = document.getElementById('searchAttribute');
+			const resetButton = document.getElementById('resetSearch');
+            const rows = document.querySelectorAll('.table tbody tr');
+
+            function filterRows() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                const attribute = searchAttribute.value;
+
+                const columnIndices = {
+                    'id': 0,    
+                    'nom': 1,  
+                    'prenom': 2,  
+                    'email': 3   
+                };
+
+                const columnIndex = columnIndices[attribute];
+
+                rows.forEach(row => {
+                    const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`); // +1 car nth-child commence à 1
+                    const cellText = cell.textContent.trim().toLowerCase();
+
+                    if (cellText.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+			function resetSearch() {
+				searchInput.value = '';
+				searchAttribute.value = 'nom'; // Réinitialise l'attribut de recherche à "Nom"
+				rows.forEach(row => {
+					row.style.display = ''; // Affiche toutes les lignes
+				});
+			}
+
+            searchInput.addEventListener('input', filterRows);
+            searchAttribute.addEventListener('change', filterRows);
+			resetButton.addEventListener('click', resetSearch);
+        }
+
 		setupDeleteUser();
 		setupEditUser();
 		setupTogglePermissions();
+		setupSearch();
 	});
 </script>
 {% endblock %}

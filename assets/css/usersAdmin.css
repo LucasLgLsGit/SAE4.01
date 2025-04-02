@@ -30,3 +30,13 @@
 	background-color: #d50707;
 	color: white;
 }
+
+.btn-research {
+	background-color: #030C43;
+	color: white;
+}
+
+.btn-research:hover {
+	background-color: #06178a;
+	color: white;
+}

@@ -11,6 +11,19 @@
 			<h2 class="fw-bold">Gestion des événements</h2>
 			<button class="add-event-button ms-3" data-bs-toggle="modal" data-bs-target="#createEventModal">Ajouter un événement<i class="bi-create-event bi bi-plus-square"></i></button>
 		</div>
+		<div class="mb-3 d-flex gap-2">
+            <select class="form-select w-25" id="searchAttribute">
+                <option value="id">ID</option>
+                <option value="titre">Titre</option>
+                <option value="date_debut">Date Début</option>
+                <option value="date_fin">Date Fin</option>
+                <option value="adresse">Adresse</option>
+                <option value="description">Description</option>
+                <option value="prix">Prix</option>
+            </select>
+            <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+            <button type="button" class="btn btn-research" id="resetSearch"><i class="bi bi-arrow-clockwise"></i></button>
+        </div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -91,4 +104,90 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchAttribute = document.getElementById('searchAttribute');
+            const resetButton = document.getElementById('resetSearch');
+            const rows = document.querySelectorAll('.table tbody tr');
+
+            function filterRows() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                const attribute = searchAttribute.value;
+
+                // Mappe les attributs aux indices des colonnes
+                const columnIndices = {
+                    'id': 0,          // ID
+                    'titre': 1,       // Titre
+                    'date_debut': 2,  // Date Début
+                    'date_fin': 3,    // Date Fin
+                    'adresse': 4,     // Adresse
+                    'description': 5, // Description
+                    'prix': 6         // Prix (€)
+                };
+
+                const columnIndex = columnIndices[attribute];
+
+                rows.forEach(row => {
+                    const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+                    let cellText = cell.textContent.trim().toLowerCase();
+
+                    // Gestion spéciale pour les dates (supprime les slashes)
+                    if (attribute === 'date_debut' || attribute === 'date_fin') {
+                        cellText = cellText.replace(/\//g, ''); // "02/04/2025" devient "02042025"
+                    }
+                    // Gestion spéciale pour le prix (supprime espaces et virgules)
+                    if (attribute === 'prix') {
+                        cellText = cellText.replace(/[\s,]/g, ''); // "12,34" devient "1234"
+                    }
+
+                    if (cellText.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            function resetSearch() {
+                searchInput.value = '';
+                searchAttribute.value = 'titre'; // Réinitialise à "Titre"
+                rows.forEach(row => {
+                    row.style.display = ''; // Affiche toutes les lignes
+                });
+            }
+
+            // Mise à jour du placeholder
+            function updatePlaceholder() {
+                const placeholders = {
+                    'id': 'Rechercher par ID...',
+                    'titre': 'Rechercher par titre...',
+                    'date_debut': 'Rechercher par date début (ex. 02042025)...',
+                    'date_fin': 'Rechercher par date fin (ex. 02042025)...',
+                    'adresse': 'Rechercher par adresse...',
+                    'description': 'Rechercher par description...',
+                    'prix': 'Rechercher par prix...'
+                };
+                searchInput.placeholder = placeholders[searchAttribute.value];
+            }
+
+            searchInput.addEventListener('input', filterRows);
+            searchAttribute.addEventListener('change', function () {
+                updatePlaceholder();
+                filterRows();
+            });
+            resetButton.addEventListener('click', resetSearch);
+
+            // Initialise le placeholder
+            updatePlaceholder();
+        }
+
+        // Appelle la fonction de recherche
+        setupSearch();
+    });
+</script>
 {% endblock %}

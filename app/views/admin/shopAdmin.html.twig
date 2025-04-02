@@ -11,6 +11,17 @@
 			<h2 class="fw-bold">Gestion des produits</h2>
 			<button class="add-products-button ms-3" data-bs-toggle="modal" data-bs-target="#createProductModal">Ajouter un produit<i class="bi-create-products bi bi-plus-square"></i></button>
 		</div>
+		<div class="mb-3 d-flex gap-2">
+			<select class="form-select w-25" id="searchAttribute">
+				<option value="nom">Nom</option>
+				<option value="stock">Stock</option>
+				<option value="prix">Prix</option>
+				<option value="id">ID</option>
+				<option value="taille">Taille</option> <!-- Nouvelle option -->
+			</select>
+			<input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+			<button type="button" class="btn btn-research" id="resetSearch"><i class="bi bi-arrow-clockwise"></i></button>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -135,6 +146,77 @@
 {% block javascript %}
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
+
+			function setupSearch() {
+				const searchInput = document.getElementById('searchInput');
+				const searchAttribute = document.getElementById('searchAttribute');
+				const resetButton = document.getElementById('resetSearch');
+				const rows = document.querySelectorAll('.table tbody tr');
+	
+				function filterRows() {
+					const searchTerm = searchInput.value.trim().toLowerCase();
+					const attribute = searchAttribute.value;
+	
+					const columnIndices = {
+						'id': 0,    // ID
+						'nom': 1,   // Titre
+						'stock': 6, // Stock
+						'prix': 7,  // Prix (€)
+						'taille': 5 // Taille (6ème colonne)
+					};
+	
+					const columnIndex = columnIndices[attribute];
+	
+					rows.forEach(row => {
+						const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+						let cellText = cell.textContent.trim().toLowerCase();
+	
+						// Gestion spéciale pour le prix
+						if (attribute === 'prix') {
+							cellText = cellText.replace(/[\s,]/g, ''); // "12,34" devient "1234"
+						}
+	
+						if (cellText.includes(searchTerm)) {
+							row.style.display = '';
+						} else {
+							row.style.display = 'none';
+						}
+					});
+				}
+	
+				function resetSearch() {
+					searchInput.value = '';
+					searchAttribute.value = 'nom'; // Réinitialise à "Nom"
+					rows.forEach(row => {
+						row.style.display = ''; // Affiche toutes les lignes
+					});
+				}
+	
+				// Mise à jour du placeholder en fonction de l'attribut
+				function updatePlaceholder() {
+					const placeholders = {
+						'id': 'Rechercher par ID...',
+						'nom': 'Rechercher par nom...',
+						'stock': 'Rechercher par stock...',
+						'prix': 'Rechercher par prix...',
+						'taille': 'Rechercher par taille...' // Nouveau placeholder
+					};
+					searchInput.placeholder = placeholders[searchAttribute.value];
+				}
+	
+				searchInput.addEventListener('input', filterRows);
+				searchAttribute.addEventListener('change', function () {
+					updatePlaceholder();
+					filterRows();
+				});
+				resetButton.addEventListener('click', resetSearch);
+	
+				// Initialise le placeholder au chargement
+				updatePlaceholder();
+			}
+
+
+			setupSearch();
 			addEventRow();
 			addEventRowReset();
 			addEventCreate();

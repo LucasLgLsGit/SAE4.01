@@ -11,6 +11,17 @@
 			<h2 class="fw-bold">Gestion des actualités</h2>
 			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createNewsModal">Ajouter une actualité<i class="bi-create-news bi bi-plus-square"></i></button>
 		</div>
+		<div class="mb-3 d-flex gap-2">
+            <select class="form-select w-25" id="searchAttribute">
+                <option value="id">ID</option>
+                <option value="titre">Titre</option>
+                <option value="contenu">Contenu</option>
+                <option value="date">Date de publication</option>
+                <option value="auteur">Auteur (ID)</option>
+            </select>
+            <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+            <button type="button" class="btn btn-research" id="resetSearch"><i class="bi bi-arrow-clockwise"></i></button>
+        </div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -284,9 +295,79 @@
 			});
 		}
 
+		function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchAttribute = document.getElementById('searchAttribute');
+            const resetButton = document.getElementById('resetSearch');
+            const rows = document.querySelectorAll('.table tbody tr');
+
+            function filterRows() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                const attribute = searchAttribute.value;
+
+                // Mappe les attributs aux indices des colonnes
+                const columnIndices = {
+                    'id': 0,      // ID
+                    'titre': 1,   // Titre
+                    'contenu': 2, // Contenu
+                    'date': 3,    // Date de publication
+                    'auteur': 4   // Auteur (ID)
+                };
+
+                const columnIndex = columnIndices[attribute];
+
+                rows.forEach(row => {
+                    const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+                    let cellText = cell.textContent.trim().toLowerCase();
+
+                    // Gestion spéciale pour la date (format d/m/Y H:i)
+                    if (attribute === 'date') {
+                        cellText = cellText.replace(/\//g, ''); // Supprime les slashes pour faciliter la recherche
+                    }
+
+                    if (cellText.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            function resetSearch() {
+                searchInput.value = '';
+                searchAttribute.value = 'titre'; // Réinitialise à "Titre"
+                rows.forEach(row => {
+                    row.style.display = ''; // Affiche toutes les lignes
+                });
+            }
+
+            // Mise à jour du placeholder
+            function updatePlaceholder() {
+                const placeholders = {
+                    'id': 'Rechercher par ID...',
+                    'titre': 'Rechercher par titre...',
+                    'contenu': 'Rechercher par contenu...',
+                    'date': 'Rechercher par date (ex. 02042025)...',
+                    'auteur': 'Rechercher par auteur (ID)...'
+                };
+                searchInput.placeholder = placeholders[searchAttribute.value];
+            }
+
+            searchInput.addEventListener('input', filterRows);
+            searchAttribute.addEventListener('change', function () {
+                updatePlaceholder();
+                filterRows();
+            });
+            resetButton.addEventListener('click', resetSearch);
+
+            // Initialise le placeholder
+            updatePlaceholder();
+        }
+
 		setupEditNews();
 		setupDeleteNews();
 		setupCreateNews();
+		setupSearch();
 	});
 </script>
 {% endblock %}
