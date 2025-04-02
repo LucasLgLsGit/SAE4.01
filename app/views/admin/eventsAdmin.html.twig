@@ -1,13 +1,16 @@
 {% extends '_template/base.html.twig' %}
 
 {% block css %}
-	<link rel="stylesheet" href="/assets/css/eventsAdmin.css">
+<link rel="stylesheet" href="/assets/css/eventsAdmin.css">
 {% endblock %}
 
 {% block body %}
 <div class="events-container">
 	<div class="container mt-5">
-		<h2 class="mb-4">Gestion des Événements</h2>
+		<div class="d-flex align-items-center mb-4">
+			<h2 class="fw-bold">Gestion des Événements</h2>
+			<button class="add-event-button ms-3" data-bs-toggle="modal" data-bs-target="#createEventModal">Ajouter un événement<i class="bi-create-event bi bi-plus-square"></i></button>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -33,12 +36,59 @@
 					<td>{{ event.getPrix()|number_format(2, ',', ' ') }}</td>
 					<td>
 						<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-						<button class="btn btn-danger btn-sm delete-event" data-event-id="{{ event.getId() }}"><i class="bi bi-trash"></i></button>
+						<button class="btn btn-danger btn-sm delete-event" data-event-id="{{ event.getId() }}"><i
+								class="bi bi-trash"></i></button>
 					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 		</table>
+	</div>
+</div>
+
+<div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="createEventModalLabel">Créer un nouvel événement</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="createEventForm">
+					<div class="mb-3">
+						<label for="eventTitle" class="form-label">Titre</label>
+						<input type="text" class="form-control" id="eventTitle" name="titre" required>
+					</div>
+					<div class="mb-3">
+						<label for="eventDateStart" class="form-label">Date Début</label>
+						<input type="datetime-local" class="form-control" id="eventDateStart" name="date_debut"
+							required>
+					</div>
+					<div class="mb-3">
+						<label for="eventDateEnd" class="form-label">Date Fin</label>
+						<input type="datetime-local" class="form-control" id="eventDateEnd" name="date_fin" required>
+					</div>
+					<div class="mb-3">
+						<label for="eventAddress" class="form-label">Adresse</label>
+						<input type="text" class="form-control" id="eventAddress" name="adresse" required>
+					</div>
+					<div class="mb-3">
+						<label for="eventDescription" class="form-label">Description</label>
+						<textarea class="form-control" id="eventDescription" name="description" rows="4"
+							required></textarea>
+					</div>
+					<div class="mb-3">
+						<label for="eventPrice" class="form-label">Prix (€)</label>
+						<input type="number" class="form-control" id="eventPrice" name="prix" step="0.01" min="0"
+							required>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-primary" id="saveEventButton">Créer</button>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}
