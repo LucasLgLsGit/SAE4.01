@@ -52,11 +52,13 @@ class ParticipationRepository {
 		return $row ? $this->createParticipationFromRow($row) : null;
 	}
 
-	public function delete(int $id_user, int $id_event): void {
+	public function delete(int $id_user, int $id_event): bool {
 		$stmt = $this->pdo->prepare('DELETE FROM "participation" WHERE id_user = :id_user AND id_event = :id_event');
-		$stmt->execute([
+		 return $stmt->execute([
 			'id_user' => $id_user,
 			'id_event' => $id_event
 		]);
 	}
+
+	
 }

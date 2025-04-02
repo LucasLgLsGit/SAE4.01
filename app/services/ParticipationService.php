@@ -1,7 +1,7 @@
 <?php
 
-require_once '../repositories/ParticipationRepository.php';
-require_once '../entities/Participation.php';
+require_once './app/repositories/ParticipationRepository.php';
+require_once './app/entities/Participation.php';
 
 class ParticipationService
 {
@@ -77,10 +77,18 @@ class ParticipationService
 	{
 		$participationRepo = new ParticipationRepository();
 
-		if (!$participationRepo->delete($id_user, $id_event)) {
-			throw new Exception("La suppression de la participation a échoué.");
+		$result = $participationRepo->delete($id_user, $id_event);
+
+		if (!$result) {
+			throw new Exception("Erreur : impossible de supprimer la participation avec l'utilisateur ID $id_user et l'événement ID $id_event.");
 		}
 
-		return true;
+		return $result;
+	}
+
+	public function isUserRegistered(int $idEvent, int $idUser): bool
+	{
+		$participationRepo = new ParticipationRepository();
+		return $participationRepo->findById($idEvent, $idUser);
 	}
 }
