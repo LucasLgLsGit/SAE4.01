@@ -40,7 +40,7 @@ class ActualiteController extends Controller {
 			}
 		}
 
-		$this->view('/news/create.html.twig', ['errors' => $errors, 'data' => $data]);
+		$this->view('/admin/newsAdmin.html.twig', ['errors' => $errors, 'data' => $data]);
 	}
 
 	public function update()
