@@ -82,6 +82,11 @@ class ShopController extends Controller
                 }
             }
 
+            usort($tailles, function ($a, $b) {
+                $order = ['XXS','XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+                return array_search($a, $order) - array_search($b, $order);
+            });
+
             $isLoggedIn = $this->isLoggedIn();
             $user = $this->getCurrentUser();
             $isAdmin = $user && $user->isAdmin();
