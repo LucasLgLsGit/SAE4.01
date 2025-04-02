@@ -1,0 +1,50 @@
+{% extends '_template/base.html.twig' %}
+
+{% block css %}
+	<link rel="stylesheet" href="/assets/css/shopAdmin.css">
+{% endblock %}
+
+{% block body %}
+<div class="products-container">
+	<div class="container mt-5">
+		<h2 class="mb-4">Gestion des products</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Titre</th>
+					<th>Description</th>
+					<th>Date d'ajout</th>
+					<th>Couleur</th>
+					<th>Taille</th>
+					<th>Stock</th>
+					<th>Prix (€)</th>
+					<th>Auteur (ID)</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for product in products %}
+				<tr>
+					<td>{{ product.getId_produit() }}</td>
+					<td>{{ product.getTitre_produit() }}</td>
+					<td class="ellipsis-td">{{ product.getDescription_produit() }}</td>
+					<td>{{ product.getDate_produit().format('d/m/Y H:i') }}</td>
+					<td>
+						<div style="width: 20px; height: 20px; background-color: #{{ product.getCouleur() }}; border: 1px solid #000; border-radius:100%;"></div>
+					</td>
+					<td>{{ product.getTaille() }}</td>
+					<td>{{ product.getStock() }}</td>
+					<td>{{ product.getPrix()|number_format(2, ',', ' ') }}</td>
+					<td>{{ product.getId_user() }}</td>
+					<td>
+						<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
+						<button class="btn btn-danger btn-sm delete-product" data-product-id="{{ product.getId_product() }}"><i class="bi bi-trash"></i></button>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
