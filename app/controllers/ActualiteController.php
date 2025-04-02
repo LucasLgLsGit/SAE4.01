@@ -1,7 +1,6 @@
 <?php
 
 require_once './app/core/Controller.php';
-require_once './app/services/ActualiteService.php';
 require_once './app/repositories/ActualiteRepository.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
@@ -33,7 +32,7 @@ class ActualiteController extends Controller {
 
 		if (!empty($data)) {
 			try {
-				$newsService = new ActualiteService();
+				$newsService = new ActualiteRepository();
 				$newsService->create($data);
 				$this->redirectTo('actualites.php');
 			} catch (Exception $e) {
