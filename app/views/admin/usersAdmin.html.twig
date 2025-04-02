@@ -44,3 +44,47 @@
 	</div>
 </div>
 {% endblock %}
+
+{% block javascript %}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const deleteButtons = document.querySelectorAll('.delete-user');
+
+		deleteButtons.forEach(button => {
+			button.addEventListener('click', function (event) {
+				event.preventDefault();
+
+				const userId = this.getAttribute('data-user-id');
+
+				if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+					fetch('/user_delete.php', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+						body: `id_user=${userId}`, // Envoie l'ID utilisateur
+					})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Erreur réseau');
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data.success) {
+							alert(data.message);
+							location.reload(); // Recharge la page pour mettre à jour la liste
+						} else {
+							alert(data.message || 'Une erreur est survenue.');
+						}
+					})
+					.catch(error => {
+						console.error('Erreur:', error);
+						alert('Une erreur est survenue. Veuillez réessayer plus tard.');
+					});
+				}
+			});
+		});
+	});
+</script>
+{% endblock %}

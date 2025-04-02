@@ -71,6 +71,31 @@ class UtilisateurController extends Controller {
 		$this->view('/user/profile.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
 	}
 
+	public function deleteUser()
+	{
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$id = filter_input(INPUT_POST, 'id_user', FILTER_VALIDATE_INT);
+
+			if ($id === null || $id === false) {
+				echo json_encode(['success' => false, 'message' => "L'identifiant utilisateur est requis !"]);
+				http_response_code(400);
+				return;
+			}
+
+			try {
+				$userRepository = new UtilisateurRepository();
+				$userRepository->deleteById($id); // Supprime l'utilisateur de la base de données
+				echo json_encode(['success' => true, 'message' => 'Utilisateur supprimé avec succès.']);
+			} catch (Exception $e) {
+				http_response_code(500);
+				echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+			}
+		} else {
+			http_response_code(405);
+			echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
+		}
+	}
+
 	public function updateMail() {
 		$id = $this->getPostParam('id_user');
 		$newMail = $this->getPostParam('new_mail');

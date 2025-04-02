@@ -51,6 +51,12 @@ class UtilisateurRepository {
 		]);
 	}
 
+	public function deleteById(int $id): void
+	{
+		$stmt = $this->pdo->prepare('DELETE FROM "utilisateur" WHERE id_user = :id_user');
+		$stmt->execute(['id_user' => $id]);
+	}
+
 	public function findById(int $id): ?Utilisateur {
 		$stmt = $this->pdo->prepare('SELECT * FROM "utilisateur" WHERE id_user = :id_user');
 		$stmt->execute(['id_user' => $id]);
