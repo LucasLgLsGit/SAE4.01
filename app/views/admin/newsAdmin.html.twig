@@ -7,7 +7,10 @@
 {% block body %}
 <div class="news-container">
 	<div class="container mt-5">
-		<h2 class="mb-4">Gestion des Actualités</h2>
+		<div class="d-flex align-items-center mb-4">
+			<h2 class="fw-bold">Gestion des actualités</h2>
+			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createNewsModal">Ajouter une actualité<i class="bi-create-news bi bi-plus-square"></i></button>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -90,6 +93,33 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div class="modal fade" id="createNewsModal" tabindex="-1" aria-labelledby="createNewsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createNewsModalLabel">Créer une nouvelle actualité</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createNewsForm">
+                    <div class="mb-3">
+                        <label for="createNewsTitle" class="form-label">Titre</label>
+                        <input type="text" class="form-control" id="createNewsTitle" name="titre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createNewsContent" class="form-label">Contenu</label>
+                        <textarea class="form-control" id="createNewsContent" name="contenu" rows="5" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="saveNewsButton">Créer</button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
