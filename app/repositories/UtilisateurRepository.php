@@ -58,7 +58,7 @@ class UtilisateurRepository {
 		if (!$success) {
 			throw new Exception("La création de l'utilisateur a échoué.");
 		}
-		$utilisateur->setId_user((int) $this->pdo->lastInsertId());
+		$utilisateur->setId((int) $this->pdo->lastInsertId());
 		return $utilisateur;
 	}
 

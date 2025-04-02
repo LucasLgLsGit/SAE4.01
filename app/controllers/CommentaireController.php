@@ -15,6 +15,7 @@ class CommentaireController extends Controller
     // Méthode pour créer un commentaire
     public function create()
     {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $data = [
@@ -42,6 +43,7 @@ class CommentaireController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $idCommentaire = $_POST['id_commentaire'] ?? null;
+                $idEvent = $_POST['id_event'] ?? null; // Récupération de l'ID event
 
                 if (!$idCommentaire) {
                     throw new Exception("L'identifiant du commentaire est requis !");
@@ -51,7 +53,7 @@ class CommentaireController extends Controller
                 $this->commentaireRepo->delete($idCommentaire);
 
                 // Redirection après succès
-                $this->redirectTo('/events.php');
+                $this->redirectTo("/event.php?id=" . $idEvent);
             } catch (Exception $e) {
                 http_response_code(400);
                 echo "Erreur : " . $e->getMessage();

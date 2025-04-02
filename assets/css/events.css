@@ -8,6 +8,7 @@
     margin-top: 0.5rem;
 }
 
+
 .event-title-underline::after {
     content: '';
     position: absolute;
