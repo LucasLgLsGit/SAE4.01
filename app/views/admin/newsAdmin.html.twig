@@ -38,4 +38,143 @@
 	</div>
 </div>
 
+<div class="modal fade" id="editNewsModal" tabindex="-1" aria-labelledby="editNewsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="editNewsModalLabel">Modifier l'actualité</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="editNewsForm">
+					<input type="hidden" id="editNewsId" name="id_news">
+					<div class="mb-3">
+						<label for="editNewsTitle" class="form-label">Titre</label>
+						<input type="text" class="form-control" id="editNewsTitle" name="titre" required>
+					</div>
+					<div class="mb-3">
+						<label for="editNewsContent" class="form-label">Contenu</label>
+						<textarea class="form-control" id="editNewsContent" name="contenu" rows="5" required></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-primary" id="saveNewsChanges">Enregistrer</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteNewsModal" tabindex="-1" aria-labelledby="deleteNewsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteNewsModalLabel">Confirmer la suppression</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Êtes-vous sûr de vouloir supprimer cette actualité ?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-danger" id="confirmDeleteNews">Supprimer</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const editNewsButtons = document.querySelectorAll('.btn-primary');
+		const deleteNewsButtons = document.querySelectorAll('.delete-new');
+		const editNewsModal = new bootstrap.Modal(document.getElementById('editNewsModal'));
+		const deleteNewsModal = new bootstrap.Modal(document.getElementById('deleteNewsModal'));
+		const editNewsForm = document.getElementById('editNewsForm');
+		const saveNewsChangesButton = document.getElementById('saveNewsChanges');
+		const confirmDeleteNewsButton = document.getElementById('confirmDeleteNews');
+
+		let newsIdToDelete = null;
+
+		editNewsButtons.forEach(button => {
+			button.addEventListener('click', function (event) {
+				event.preventDefault();
+
+				const newsId = this.getAttribute('data-new-id');
+				const newsTitle = this.getAttribute('data-new-title');
+				const newsContent = this.getAttribute('data-new-content');
+
+				document.getElementById('editNewsId').value = newsId;
+				document.getElementById('editNewsTitle').value = newsTitle;
+				document.getElementById('editNewsContent').value = newsContent;
+
+				editNewsModal.show();
+			});
+		});
+
+		saveNewsChangesButton.addEventListener('click', function () {
+			const formData = new FormData(editNewsForm);
+
+			fetch('/news_update.php', {
+				method: 'POST',
+				body: formData,
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Erreur réseau');
+				}
+				return response.json();
+			})
+			.then(data => {
+				if (data.success) {
+					location.reload();
+				} else {
+					alert(data.message || 'Une erreur est survenue.');
+				}
+			})
+			.catch(error => {
+				console.error('Erreur:', error);
+			});
+		});
+
+		deleteNewsButtons.forEach(button => {
+			button.addEventListener('click', function (event) {
+				event.preventDefault();
+
+				newsIdToDelete = this.getAttribute('data-new-id');
+				deleteNewsModal.show();
+			});
+		});
+
+		confirmDeleteNewsButton.addEventListener('click', function () {
+			if (newsIdToDelete) {
+				fetch('/news_delete.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: `id_news=${newsIdToDelete}`,
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Erreur réseau');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						location.reload();
+					} else {
+						alert(data.message || 'Une erreur est survenue.');
+					}
+				})
+				.catch(error => {
+					console.error('Erreur:', error);
+				});
+			}
+		});
+	});
+</script>
 {% endblock %}
