@@ -48,27 +48,31 @@ class UtilisateurController extends Controller {
 		$this->view('/user/signUp.html.twig', ['errors' => $errors, 'data' => $data]);
 	}
 
-	public function update() {
-		$id = $this->getQueryParam('id_user');
+	public function update()
+	{
+		$id = $this->getPostParam('id_user');
+		$nom = $this->getPostParam('nom');
+		$prenom = $this->getPostParam('prenom');
+		$mail = $this->getPostParam('mail');
 
-		if ($id === null) {
-			throw new Exception("L'identifiant utilisateur est requis !");
+		if (empty($id) || empty($nom) || empty($prenom) || empty($mail)) {
+			echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
+			http_response_code(400);
+			return;
 		}
 
-		$data = $this->getAllPostParams();
-		$errors = [];
-
-		if (!empty($data)) {
-			try {
-				$userService = new UtilisateurService();
-				$userService->update($id, $data);
-				$this->redirectTo('utilisateurs.php');
-			} catch (Exception $e) {
-				$errors = explode(', ', $e->getMessage());
-			}
+		try {
+			$userRepository = new UtilisateurRepository();
+			$userRepository->updateById($id, [
+				'nom' => $nom,
+				'prenom' => $prenom,
+				'mail' => $mail,
+			]);
+			echo json_encode(['success' => true, 'message' => 'Utilisateur mis à jour avec succès.']);
+		} catch (Exception $e) {
+			http_response_code(500);
+			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 		}
-
-		$this->view('/user/profile.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
 	}
 
 	public function deleteUser()

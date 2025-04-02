@@ -1,7 +1,7 @@
 {% extends '_template/base.html.twig' %}
 
 {% block css %}
-	<link rel="stylesheet" href="/assets/css/usersAdmin.css">
+<link rel="stylesheet" href="/assets/css/usersAdmin.css">
 {% endblock %}
 
 {% block body %}
@@ -34,7 +34,9 @@
 						<input type="checkbox" class="toggle-perm" data-user-id="{{ user.getId() }}" data-perm="adherent" {% if user.isAdherent() %}checked{% endif %}>
 					</td>
 					<td>
-						<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
+						<a href="#" class="btn btn-primary btn-sm edit-user" data-user-id="{{ user.getId() }}" data-user-nom="{{ user.getNom() }}" data-user-prenom="{{ user.getPrenom() }}" data-user-mail="{{ user.getMail() }}">
+							<i class="bi bi-pencil-square"></i>
+						</a>
 						<button class="btn btn-danger btn-sm delete-user" data-user-id="{{ user.getId() }}"><i class="bi bi-trash"></i></button>
 					</td>
 				</tr>
@@ -45,67 +47,161 @@
 </div>
 
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-	<div class="modal-content">
-	  <div class="modal-header">
-		<h5 class="modal-title" id="deleteUserModalLabel">Confirmer la suppression</h5>
-		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	  </div>
-	  <div class="modal-body">
-		Êtes-vous sûr de vouloir supprimer cet utilisateur ?
-	  </div>
-	  <div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-		<button type="button" class="btn btn-danger" id="confirmDeleteButton">Supprimer</button>
-	  </div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteUserModalLabel">Confirmer la suppression</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-danger" id="confirmDeleteButton">Supprimer</button>
+			</div>
+		</div>
 	</div>
-  </div>
+</div>
+
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="editUserForm">
+					<input type="hidden" id="editUserId" name="id_user">
+					<div class="mb-3">
+						<label for="editUserNom" class="form-label">Nom</label>
+						<input type="text" class="form-control" id="editUserNom" name="nom" required>
+					</div>
+					<div class="mb-3">
+						<label for="editUserPrenom" class="form-label">Prénom</label>
+						<input type="text" class="form-control" id="editUserPrenom" name="prenom" required>
+					</div>
+					<div class="mb-3">
+						<label for="editUserMail" class="form-label">Email</label>
+						<input type="email" class="form-control" id="editUserMail" name="mail" required>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" class="btn btn-primary" id="saveUserChanges">Enregistrer</button>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
 
 {% block javascript %}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-	const deleteButtons = document.querySelectorAll('.delete-user');
-	const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-	let userIdToDelete = null;
+	document.addEventListener('DOMContentLoaded', function ()
+	{
+		const deleteButtons = document.querySelectorAll('.delete-user');
+		const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+		let userIdToDelete = null;
 
-	deleteButtons.forEach(button => {
-	  button.addEventListener('click', function (event) {
-		event.preventDefault();
-		userIdToDelete = this.getAttribute('data-user-id');
-		const deleteUserModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
-		deleteUserModal.show();
-	  });
-	});
-
-	confirmDeleteButton.addEventListener('click', function () {
-	  if (userIdToDelete) {
-		fetch('/user_delete.php', {
-		  method: 'POST',
-		  headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-		  },
-		  body: `id_user=${userIdToDelete}`,
-		})
-		.then(response => {
-		  if (!response.ok) {
-			throw new Error('Erreur réseau');
-		  }
-		  return response.json();
-		})
-		.then(data => {
-		  if (data.success) {
-			location.reload();
-		  } else {
-			console.error(data.message || 'Une erreur est survenue.');
-		  }
-		})
-		.catch(error => {
-		  console.error('Erreur:', error);
+		deleteButtons.forEach(button =>
+		{
+			button.addEventListener('click', function (event)
+			{
+				event.preventDefault();
+				userIdToDelete = this.getAttribute('data-user-id');
+				const deleteUserModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+				deleteUserModal.show();
+			});
 		});
-	  }
+
+		confirmDeleteButton.addEventListener('click', function ()
+		{
+			if (userIdToDelete)
+			{
+				fetch('/user_delete.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: `id_user=${userIdToDelete}`,
+				})
+				.then(response =>
+				{
+					if (!response.ok)
+					{
+						throw new Error('Erreur réseau');
+					}
+					return response.json();
+				})
+				.then(data =>
+				{
+					if (data.success)
+					{
+						location.reload();
+					}
+					else
+					{
+						console.error(data.message || 'Une erreur est survenue.');
+					}
+				})
+				.catch(error =>
+				{
+					console.error('Erreur:', error);
+				});
+			}
+		});
 	});
-  });
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const editButtons = document.querySelectorAll('.edit-user');
+		const editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+		const editUserForm = document.getElementById('editUserForm');
+		const saveUserChangesButton = document.getElementById('saveUserChanges');
+
+		let userIdToEdit = null;
+
+		editButtons.forEach(button => {
+			button.addEventListener('click', function (event) {
+				event.preventDefault();
+
+				userIdToEdit = this.getAttribute('data-user-id');
+				document.getElementById('editUserId').value = userIdToEdit;
+				document.getElementById('editUserNom').value = this.getAttribute('data-user-nom');
+				document.getElementById('editUserPrenom').value = this.getAttribute('data-user-prenom');
+				document.getElementById('editUserMail').value = this.getAttribute('data-user-mail');
+
+				editUserModal.show();
+			});
+		});
+
+		saveUserChangesButton.addEventListener('click', function () {
+			const formData = new FormData(editUserForm);
+
+			fetch('/user_update.php', {
+				method: 'POST',
+				body: formData,
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Erreur réseau');
+				}
+				return response.json();
+			})
+			.then(data => {
+				if (data.success) {
+					alert(data.message);
+					location.reload();
+				} else {
+					alert(data.message || 'Une erreur est survenue.');
+				}
+			})
+			.catch(error => {
+				console.error('Erreur:', error);
+				alert('Une erreur est survenue. Veuillez réessayer plus tard.');
+			});
+		});
+	});
 </script>
 {% endblock %}
