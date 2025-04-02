@@ -48,27 +48,56 @@ class UtilisateurController extends Controller {
 		$this->view('/user/signUp.html.twig', ['errors' => $errors, 'data' => $data]);
 	}
 
-	public function update() {
-		$id = $this->getQueryParam('id_user');
+	public function update()
+	{
+		$id = $this->getPostParam('id_user');
+		$nom = $this->getPostParam('nom');
+		$prenom = $this->getPostParam('prenom');
+		$mail = $this->getPostParam('mail');
 
-		if ($id === null) {
-			throw new Exception("L'identifiant utilisateur est requis !");
+		if (empty($id) || empty($nom) || empty($prenom) || empty($mail)) {
+			echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
+			http_response_code(400);
+			return;
 		}
 
-		$data = $this->getAllPostParams();
-		$errors = [];
+		try {
+			$userRepository = new UtilisateurRepository();
+			$userRepository->updateById($id, [
+				'nom' => $nom,
+				'prenom' => $prenom,
+				'mail' => $mail,
+			]);
+			echo json_encode(['success' => true, 'message' => 'Utilisateur mis à jour avec succès.']);
+		} catch (Exception $e) {
+			http_response_code(500);
+			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+		}
+	}
 
-		if (!empty($data)) {
-			try {
-				$userService = new UtilisateurService();
-				$userService->update($id, $data);
-				$this->redirectTo('utilisateurs.php');
-			} catch (Exception $e) {
-				$errors = explode(', ', $e->getMessage());
+	public function deleteUser()
+	{
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$id = filter_input(INPUT_POST, 'id_user', FILTER_VALIDATE_INT);
+
+			if ($id === null || $id === false) {
+				echo json_encode(['success' => false, 'message' => "L'identifiant utilisateur est requis !"]);
+				http_response_code(400);
+				return;
 			}
-		}
 
-		$this->view('/user/profile.html.twig', 'Modification d\'un utilisateur', ['errors' => $errors, 'data' => $data, 'id_user' => $id]);
+			try {
+				$userRepository = new UtilisateurRepository();
+				$userRepository->deleteById($id); // Supprime l'utilisateur de la base de données
+				echo json_encode(['success' => true, 'message' => 'Utilisateur supprimé avec succès.']);
+			} catch (Exception $e) {
+				http_response_code(500);
+				echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+			}
+		} else {
+			http_response_code(405);
+			echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
+		}
 	}
 
 	public function updateMail() {
@@ -140,6 +169,56 @@ class UtilisateurController extends Controller {
 				'error' => $e->getMessage(),
 				'isLoggedIn' => $isLoggedIn
 			]);
+		}
+	}
+
+	public function updatePermission()
+	{
+		$id = $this->getPostParam('id_user');
+		$permission = $this->getPostParam('permission');
+		$value = $this->getPostParam('value');
+
+		if (empty($id) || empty($permission) || !isset($value)) {
+			echo json_encode(['success' => false, 'message' => 'Paramètres manquants.']);
+			http_response_code(400);
+			return;
+		}
+
+		try {
+			$userRepository = new UtilisateurRepository();
+			$user = $userRepository->findById($id);
+
+			if (!$user) {
+				throw new Exception("Utilisateur non trouvé.");
+			}
+
+			if ($permission === 'admin') {
+				if ($value) {
+					$user->addPermission(IS_ADMIN);
+				} else {
+					$user->removePermission(IS_ADMIN);
+				}
+			} elseif ($permission === 'adherent') {
+				if ($value) {
+					$user->addPermission(IS_ADHERENT);
+				} else {
+					$user->removePermission(IS_ADHERENT);
+				}
+			} else {
+				throw new Exception("Type de permission non valide.");
+			}
+
+			$userRepository->updateById($id, [
+				'nom' => $user->getNom(),
+				'prenom' => $user->getPrenom(),
+				'mail' => $user->getMail(),
+				'permission' => $user->getPermission(),
+			]);
+
+			echo json_encode(['success' => true, 'message' => 'Permission mise à jour avec succès.']);
+		} catch (Exception $e) {
+			http_response_code(500);
+			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 		}
 	}
 }

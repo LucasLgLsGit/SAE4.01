@@ -39,16 +39,22 @@ class UtilisateurRepository {
 		]);
 	}
 
-	public function update(Utilisateur $utilisateur): bool {
-		$stmt = $this->pdo->prepare('UPDATE "utilisateur" SET mail = :newmail, mdp = :newmdp, permission = :newpermission, nom = :newnom, prenom = :newprenom WHERE id_user = :id_user');
-		return $stmt->execute([
-			'id_user' => $utilisateur->getId(),
-			'newmail' => $utilisateur->getMail(),
-			'newmdp' => password_hash($utilisateur->getMdp(), PASSWORD_BCRYPT),
-			'newpermission' => $utilisateur->getPermission(),
-			'newnom' => $utilisateur->getNom(),
-			'newprenom' => $utilisateur->getPrenom()
+	public function updateById(int $id, array $data): void
+	{
+		$stmt = $this->pdo->prepare('UPDATE utilisateur SET nom = :nom, prenom = :prenom, mail = :mail, permission = :permission WHERE id_user = :id_user');
+		$stmt->execute([
+			'nom' => $data['nom'],
+			'prenom' => $data['prenom'],
+			'mail' => $data['mail'],
+			'permission' => $data['permission'] ?? $this->findById($id)->getPermission(),
+			'id_user' => $id,
 		]);
+}
+
+	public function deleteById(int $id): void
+	{
+		$stmt = $this->pdo->prepare('DELETE FROM "utilisateur" WHERE id_user = :id_user');
+		$stmt->execute(['id_user' => $id]);
 	}
 
 	public function findById(int $id): ?Utilisateur {
