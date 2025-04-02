@@ -38,11 +38,11 @@ class ActualiteRepository {
 
 	public function updateById(int $id, array $data): void
 	{
-		$stmt = $this->pdo->prepare('UPDATE news SET titre = :titre, contenu = :contenu WHERE id_news = :id_news');
+		$stmt = $this->pdo->prepare('UPDATE actualite SET titre_article = :titre, contenu = :contenu WHERE id_article = :id_article');
 		$stmt->execute([
 			'titre' => $data['titre'],
 			'contenu' => $data['contenu'],
-			'id_news' => $id,
+			'id_article' => $id,
 		]);
 	}
 
@@ -55,8 +55,8 @@ class ActualiteRepository {
 
 	public function deleteById(int $id): void
 	{
-		$stmt = $this->pdo->prepare('DELETE FROM news WHERE id_news = :id_news');
-		$stmt->execute(['id_news' => $id]);
+		$stmt = $this->pdo->prepare('DELETE FROM actualite WHERE id_article = :id_article');
+		$stmt->execute(['id_article' => $id]);
 	}
 
 	public function findLastActualites(int $limit = 10): array {

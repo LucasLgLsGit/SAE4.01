@@ -2,6 +2,7 @@
 
 require_once './app/core/Controller.php';
 require_once './app/services/ActualiteService.php';
+require_once './app/repositories/ActualiteRepository.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
 
@@ -45,7 +46,7 @@ class ActualiteController extends Controller {
 
 	public function update()
 	{
-		$id = $this->getPostParam('id_news');
+		$id = $this->getPostParam('id_article');
 		$titre = $this->getPostParam('titre');
 		$contenu = $this->getPostParam('contenu');
 
@@ -56,7 +57,7 @@ class ActualiteController extends Controller {
 		}
 
 		try {
-			$newsRepository = new NewsRepository();
+			$newsRepository = new ActualiteRepository();
 			$newsRepository->updateById($id, [
 				'titre' => $titre,
 				'contenu' => $contenu,
@@ -66,24 +67,22 @@ class ActualiteController extends Controller {
 			http_response_code(500);
 			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 		}
-	}
+}
 
 	public function delete()
 	{
-		$id = $this->getPostParam('id_news');
+		$id = $this->getPostParam('id_article');
 
 		if (empty($id)) {
 			echo json_encode(['success' => false, 'message' => 'ID requis.']);
-			http_response_code(400);
 			return;
 		}
 
 		try {
-			$newsRepository = new NewsRepository();
+			$newsRepository = new ActualiteRepository();
 			$newsRepository->deleteById($id);
 			echo json_encode(['success' => true, 'message' => 'Actualité supprimée avec succès.']);
 		} catch (Exception $e) {
-			http_response_code(500);
 			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 		}
 	}
