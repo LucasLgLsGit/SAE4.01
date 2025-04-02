@@ -35,6 +35,14 @@
 	font-weight: bold;
 	font-size: 1.2rem;
 }
+.btn-desinscrire {
+	background-color: #a20c0c;
+	color: white;
+}
+.btn-desinscrire:hover {
+	background-color: #d50707;
+	color: white;
+}
 .btn-more {
 	background-color: #030C43;
 	color: white;

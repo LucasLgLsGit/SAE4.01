@@ -4,6 +4,7 @@ require_once './app/core/Controller.php';
 require_once './app/repositories/EvenementRepository.php';
 require_once './app/repositories/ParticipationRepository.php';
 require_once './app/repositories/CommentaireRepository.php';
+require_once './app/repositories/UtilisateurRepository.php';
 require_once './app/trait/FormTrait.php';
 require_once './app/trait/AuthTrait.php';
 
@@ -99,7 +100,12 @@ class EvenementController extends Controller {
 		}
 
 		$commentaireRepository = new CommentaireRepository();
+		$utilisateurRepository = new UtilisateurRepository();
 		$commentaires = $commentaireRepository->findByEventId($event->getId());
+
+		foreach ($commentaires as $commentaire) {
+			$commentaire->utilisateur = $utilisateurRepository->findById($commentaire->getId_user());
+		}
 
 		$isRegistered = false;
 		if ($isLoggedIn && $utilisateur) {

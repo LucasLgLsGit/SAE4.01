@@ -55,7 +55,7 @@
 				<form method="post" action="/desinscription_event.php">
 					<input type="hidden" name="id_event" value="{{ event.getId() }}">
 					<input type="hidden" name="id_user" value="{{ utilisateur.getId() }}">
-					<button type="submit" class="btn btn-danger py-2">
+					<button type="submit" class="btn btn-desinscrire py-2">
 						Se désinscrire
 					</button>
 				</form>
@@ -72,11 +72,36 @@
                 <h4 class="mb-3">Laisser un commentaire</h4>
                 <form method="post" action="/ajout_commentaire.php">
                     <input type="hidden" name="id_event" value="{{ event.getId() }}">
+                    <input type="hidden" name="id_user" value="{{ utilisateur.getId() }}">
+					<input type="hidden" name="date_commentaire" value="{{ "now"|date("Y-m-d H:i:s") }}">
                     <div class="mb-3">
-                        <textarea class="form-control" name="commentaire" rows="3" required></textarea>
+                        <textarea class="form-control" name="texte" rows="4" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-more">Envoyer</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Affichage des commentaires -->
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="event-card p-4 mt-4">
+                <h4 class="mb-3">Commentaires</h4>
+                {% if commentaires is not empty %}
+                    <ul class="list-unstyled">
+                        {% for commentaire in commentaires %}
+                            <li class="mb-3 p-3 border rounded shadow-sm">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong>{{ [commentaire.utilisateur.prenom, commentaire.utilisateur.nom]|join(' ')|trim }}</strong>                                    <span class="text-muted small">{{ commentaire.getDate_commentaire()|date_fr("d F Y à H:i") }}</span>
+                                </div>
+                                <p class="mb-0">{{ commentaire.getTexte() }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Aucun commentaire pour le moment.</p>
+                {% endif %}
             </div>
         </div>
     </div>

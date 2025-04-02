@@ -1,7 +1,7 @@
 <?php 
 
 class Commentaire {
-	public function __construct(private int $id_commentaire,
+	public function __construct(private ?int $id_commentaire,
 	private string $texte,
 	private Datetime $date_commentaire,
 	private int $id_user,
