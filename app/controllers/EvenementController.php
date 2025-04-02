@@ -78,6 +78,8 @@ class EvenementController extends Controller {
 
 	public function show()
 	{
+		$isLoggedIn = $this->isLoggedIn();
+
 		$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 		if (!$id) {
@@ -91,6 +93,6 @@ class EvenementController extends Controller {
 			throw new Exception("Événement introuvable !");
 		}
 
-		$this->view('event.html.twig', ['event' => $event]);
+		$this->view('event.html.twig', ['event' => $event, 'isLoggedIn' => $isLoggedIn]);
 	}
 }

@@ -1,20 +1,73 @@
 {% extends '_template/base.html.twig' %}
 
 {% block css %}
-<link rel="stylesheet" href="/assets/css/event.css">
+<link rel="stylesheet" href="/assets/css/events.css">
 {% endblock %}
 
 {% block body %}
-<div class="event-container py-5">
-	<h2 class="text-center fw-bold">{{ event.getTitreEvent() }}</h2>
-	<p class="text-center text-muted">{{ event.getDateDebut()|date("d F Y à H:i") }} - {{ event.getAdresse() }}</p>
-	<div class="event-description mx-auto" style="max-width: 800px;">
-		<p>{{ event.getDescription() }}</p>
+<div class="events-container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">  
+            <div class="d-flex justify-content-between align-items-center mb-3 position-relative">
+                <h2 class="fw-bold mb-0">{{ event.getTitreEvent() }}</h2>
+                {% if event.getPrix() > 0 %}
+                    <span class="event-price">{{ event.getPrix()|number_format(2, ',', ' ') }} €</span>
+                {% else %}
+                    <span class="badge-free">GRATUIT</span>
+                {% endif %}
+            </div>
+
+            <!-- Ligne de séparation -->
+            <div class="border-bottom border-1 border-dark mb-4"></div>
+
+            <!-- Date et adresse -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center mb-2 mb-md-0">
+                    <i class="bi bi-calendar-event me-2"></i>
+                    <span>{{ event.getDateDebut()|date_fr("d F Y à H:i") }}</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    <span>{{ event.getAdresse() }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<!-- Description et bouton -->
+	<div class="row">
+		<div class="col-md-8 mx-auto"> 
+			<div class="event-card p-4 mb-4 d-flex justify-content-between align-items-center">
+				<div class="flex-grow-1 me-3 p-3 border rounded shadow">
+					<h4 class="mb-3">Description</h4>
+					<p class="mb-0">{{ event.getDescription() }}</p>
+				</div>
+				<form method="post" action="/inscription_event.php">
+					<input type="hidden" name="id_event" value="{{ event.getId() }}">
+					<input type="hidden" name="id_user" value="{{ app.user ? app.user.id : '' }}">
+					<button type="submit" class="btn btn-more py-2">
+						S'inscrire
+					</button>
+				</form>
+			</div>
+		</div>
 	</div>
-	{% if event.getPrix() > 0 %}
-		<p class="text-center fw-bold">Prix : {{ event.getPrix()|number_format(2, ',', ' ') }} €</p>
-	{% else %}
-		<p class="text-center fw-bold">Cet événement est gratuit.</p>
-	{% endif %}
+
+
+    <!-- Formulaire de commentaire -->
+    <div class="row">
+        <div class="col-md-8 mx-auto">  {# Ajout du conteneur centré #}
+            <div class="event-card p-4 mt-4">
+                <h4 class="mb-3">Laisser un commentaire</h4>
+                <form method="post" action="/ajout_commentaire.php">
+                    <input type="hidden" name="id_event" value="{{ event.getId() }}">
+                    <div class="mb-3">
+                        <textarea class="form-control" name="commentaire" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-more">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
