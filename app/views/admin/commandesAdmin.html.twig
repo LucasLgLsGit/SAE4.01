@@ -7,15 +7,15 @@
 {% block body %}
 <div class="commandes-container">
 	<div class="container mt-5">
-		<h1 class="text-center mb-4">Liste des Commandes</h1>
+		<h1 class="mb-4 fw-bold">Liste des commandes</h1>
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th>ID Utilisateur</th>
-						<th>ID Produit</th>
-						<th>Quantité</th>
-						<th>Numéro de Commande</th>
+						<th class="sortable" data-column="id_user">ID Utilisateur <i class="bi bi-sort-up"></i></th>
+						<th class="sortable" data-column="id_produit">ID Produit <i class="bi bi-sort-up"></i></th>
+						<th class="sortable" data-column="quantite">Quantité <i class="bi bi-sort-up"></i></th>
+						<th class="sortable" data-column="numero_commande">Numéro de Commande <i class="bi bi-sort-up"></i></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -36,139 +36,35 @@
 
 {% block javascript %}
 <script>
-	document.addEventListener('DOMContentLoaded', function () 
-	{
-		let sortOrder = {
-			id: 1,
-			titre: 1,
-			contenu: 1,
-			date: 1,
-			auteur: 1
-		};
-	
-		function sortTableByColumn(columnName, type) {
-			const rows = Array.from(document.querySelectorAll('table tbody tr'));
-			const columnIndices = {
-				id: 0,
-				titre: 1,
-				contenu: 2,
-				date: 3,
-				auteur: 4
-			};
-	
-			const columnIndex = columnIndices[columnName];
-	
-			const sortedRows = rows.sort((a, b) => {
-				const cellA = a.cells[columnIndex];
-				const cellB = b.cells[columnIndex];
-	
-				if (!cellA || !cellB) {
-					return 0; // Ignore les lignes qui n'ont pas la cellule correspondante
-				}
-	
-				const valueA = cellA.textContent.trim();
-				const valueB = cellB.textContent.trim();
-	
-				let comparison = 0;
-				if (type === 'number') {
-					comparison = parseFloat(valueA.replace(',', '.')) - parseFloat(valueB.replace(',', '.'));
-				} else if (type === 'date') {
-					comparison = new Date(valueA) - new Date(valueB);
+	document.addEventListener('DOMContentLoaded', function () {
+		const sortableHeaders = document.querySelectorAll('.sortable');
+		const rows = document.querySelectorAll('.table tbody tr');
+
+		function sortTableByColumn(columnIndex, ascending) {
+			const tbody = document.querySelector('.table tbody');
+			const rowsArray = Array.from(rows);
+
+			rowsArray.sort((a, b) => {
+				const aText = a.querySelectorAll('td')[columnIndex].textContent.trim().toLowerCase();
+				const bText = b.querySelectorAll('td')[columnIndex].textContent.trim().toLowerCase();
+
+				if (!isNaN(aText) && !isNaN(bText)) {
+					return ascending ? aText - bText : bText - aText;
 				} else {
-					comparison = valueA.localeCompare(valueB);
+					return ascending ? aText.localeCompare(bText) : bText.localeCompare(aText);
 				}
-	
-				return comparison * sortOrder[columnName];
 			});
-	
-			const tbody = document.querySelector('table tbody');
-			tbody.innerHTML = '';
-			tbody.append(...sortedRows);
-		}
-	
-		function setupSortableColumns() {
-			const headers = document.querySelectorAll('.sortable');
-			headers.forEach(header => {
-				header.addEventListener('click', function () {
-					const columnName = header.getAttribute('data-column');
-					const type = columnName === 'id' || columnName === 'auteur' ? 'number' : 
-								 columnName === 'date' ? 'date' : 'string';
-					sortOrder[columnName] = sortOrder[columnName] * -1;
-					sortTableByColumn(columnName, type);
-				});
-			});
+
+			rowsArray.forEach(row => tbody.appendChild(row));
 		}
 
-		function setupSearch() {
-			const searchInput = document.getElementById('searchInput');
-			const searchAttribute = document.getElementById('searchAttribute');
-			const resetButton = document.getElementById('resetSearch');
-			const rows = document.querySelectorAll('.table tbody tr');
-
-			function filterRows() {
-				const searchTerm = searchInput.value.trim().toLowerCase();
-				const attribute = searchAttribute.value;
-
-				// Mappe les attributs aux indices des colonnes
-				const columnIndices = {
-					'id': 0,      // ID
-					'titre': 1,   // Titre
-					'contenu': 2, // Contenu
-					'date': 3,    // Date de publication
-					'auteur': 4   // Auteur (ID)
-				};
-
-				const columnIndex = columnIndices[attribute];
-
-				rows.forEach(row => {
-					const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
-					let cellText = cell.textContent.trim().toLowerCase();
-
-					// Gestion spéciale pour la date (format d/m/Y H:i)
-					if (attribute === 'date') {
-						cellText = cellText.replace(/\//g, ''); // Supprime les slashes pour faciliter la recherche
-					}
-
-					if (cellText.includes(searchTerm)) {
-						row.style.display = '';
-					} else {
-						row.style.display = 'none';
-					}
-				});
-			}
-
-			function resetSearch() {
-				searchInput.value = '';
-				searchAttribute.value = 'titre'; // Réinitialise à "Titre"
-				rows.forEach(row => {
-					row.style.display = ''; // Affiche toutes les lignes
-				});
-			}
-
-			// Mise à jour du placeholder
-			function updatePlaceholder() {
-				const placeholders = {
-					'id': 'Rechercher par ID...',
-					'titre': 'Rechercher par titre...',
-					'contenu': 'Rechercher par contenu...',
-					'date': 'Rechercher par date (ex. 02042025)...',
-					'auteur': 'Rechercher par auteur (ID)...'
-				};
-				searchInput.placeholder = placeholders[searchAttribute.value];
-			}
-
-			searchInput.addEventListener('input', filterRows);
-			searchAttribute.addEventListener('change', function () {
-				updatePlaceholder();
-				filterRows();
+		sortableHeaders.forEach((header, index) => {
+			let ascending = true;
+			header.addEventListener('click', () => {
+				sortTableByColumn(index, ascending);
+				ascending = !ascending;
 			});
-			resetButton.addEventListener('click', resetSearch);
-
-			// Initialise le placeholder
-			updatePlaceholder();
-		}
-		setupSearch();
-		setupSortableColumns();
+		});
 	});
 </script>
 {% endblock %}
