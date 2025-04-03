@@ -13,11 +13,25 @@ class ParticipationRepository
 
 	public function findAll(): array 
 	{
-		$stmt = $this->pdo->query('SELECT * FROM "participation"');
+		$stmt = $this->pdo->query('
+			SELECT 
+				p.id_user,
+				u.nom AS user_nom,
+				u.prenom AS user_prenom,
+				p.id_event,
+				e.titre_event AS event_titre,
+				p.date_inscription AS date_participation
+			FROM 
+				Participation p
+			INNER JOIN 
+				Utilisateur u ON p.id_user = u.id_user
+			INNER JOIN 
+				Evenement e ON p.id_event = e.id_event
+		');
+
 		$participations = [];
-		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
-		{
-			$participations[] = $this->createParticipationFromRow($row);
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$participations[] = $row;
 		}
 		return $participations;
 	}

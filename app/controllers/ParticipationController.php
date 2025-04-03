@@ -12,6 +12,23 @@ class ParticipationController extends Controller
 		$this->participationRepository = new ParticipationRepository();
 	}
 
+	public function index()
+	{
+		$participations = $this->participationRepository->findAll();
+
+		$isLoggedIn = $this->isLoggedIn();
+		$user = $this->getCurrentUser();
+		$isAdmin = $user && $user->isAdmin();
+
+		$this->view('/admin/participationsAdmin.html.twig', [
+			'title' => 'Participation admin',
+			'participations' => $participations,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin,
+			'utilisateur' => $user
+		]);
+	}
+
 	public function createParticipation()
 	{
 		$this->participationRepository = new ParticipationRepository();
