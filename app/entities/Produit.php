@@ -9,7 +9,8 @@ class Produit {
 	private string $taille,
 	private int $stock,
 	private float $prix,
-	private int $id_user
+	private int $id_user,
+	private ?string $nom_image,
 
 	) {
 		$this->id_produit = $id_produit;
@@ -21,6 +22,7 @@ class Produit {
 		$this->stock = $stock;
 		$this->prix = $prix;
 		$this->id_user = $id_user;
+		$this->nom_image = $nom_image;
 	}
 
 	// Getters
@@ -51,6 +53,9 @@ class Produit {
 	public function getId_user(): int {
 		return $this->id_user;
 	}
+	public function getNom_image(): ?string {
+		return $this->nom_image;
+	}
 
 	// Setters
 	public function setId_produit(int $id_produit): void {
@@ -79,6 +84,9 @@ class Produit {
 	}
 	public function setId_user(int $id_user): void {
 		$this->id_user = $id_user;
+	}
+	public function setNom_image(?string $nom_image): void {
+		$this->nom_image = $nom_image;
 	}
 
 

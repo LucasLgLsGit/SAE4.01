@@ -34,7 +34,6 @@ CREATE TABLE Produit(
 CREATE TABLE Image(
 	id_image SERIAL,
 	nom_image VARCHAR(50) NOT NULL,
-	chemin_image VARCHAR(50) NOT NULL,
 	id_produit INT NOT NULL,
 	PRIMARY KEY(id_image),
 	FOREIGN KEY(id_produit) REFERENCES Produit(id_produit)

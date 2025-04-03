@@ -10,7 +10,7 @@ class ProduitRepository {
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT * FROM "produit"');
+		$stmt = $this->pdo->query('SELECT p.*, nom_image FROM "produit" p LEFT JOIN "image" i ON p.id_produit = i.id_produit');
 		$produits = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$produits[] = $this->createProduitFromRow($row);
@@ -80,7 +80,8 @@ class ProduitRepository {
 			$row['taille'],
 			$row['stock'],
 			$row['prix'],
-			$row['id_user']
+			$row['id_user'],
+			$row['nom_image'] ?? null
 		);
 	}
 

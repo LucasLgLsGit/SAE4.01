@@ -14,7 +14,7 @@
                 <a href="/detail.php?titre={{ produit.titre_produit | url_encode }}" class="text-decoration-none text-dark">
                     <div class="card h-100">
                         <div class="card-img-top d-flex justify-content-center align-items-center" style="height: 200px; background-color: #f8f9fa;">
-                            <img src="{{ produit.image_path }}" alt="{{ produit.titre_produit }}" class="img-fluid" style="max-height: 100%; max-width: 100%;">
+                            <img src="/assets/images/products/{{ produit.nom_image }}" alt="{{ produit.titre_produit }}" class="img-fluid" style="max-height: 100%; max-width: 100%;">
                         </div>
                         <div class="card-body text-center">
                             <h5 class="card-title">{{ produit.titre_produit }}</h5>
