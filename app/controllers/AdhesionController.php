@@ -49,6 +49,7 @@ class AdhesionController extends Controller
 			}
 		}
 		$this->view('index.html.twig', [
+			'title' => 'Accueil',
 			'data' => $data,
 			'isLoggedIn' => $this->isLoggedIn(),
 			'isAdmin' => $this->isAdmin()
