@@ -25,11 +25,11 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th>ID</th>
-					<th>Titre</th>
-					<th>Contenu</th>
-					<th>Date de publication</th>
-					<th>Auteur (ID)</th>
+					<th class="sortable" data-column="id">ID<i class="bi bi-sort-up"></i></th>
+					<th class="sortable" data-column="titre">Titre<i class="bi bi-sort-up"></i></th>
+					<th class="sortable" data-column="contenu">Contenu<i class="bi bi-sort-up"></i></th>
+					<th class="sortable" data-column="date">Date de publication<i class="bi bi-sort-up"></i></th>
+					<th class="sortable" data-column="auteur">Auteur (ID)<i class="bi bi-sort-up"></i></th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -149,6 +149,67 @@
 <script>
 	document.addEventListener('DOMContentLoaded', function () 
 	{
+		let sortOrder = {
+			id: 1,
+			titre: 1,
+			contenu: 1,
+			date: 1,
+			auteur: 1
+		};
+	
+		function sortTableByColumn(columnName, type) {
+			const rows = Array.from(document.querySelectorAll('table tbody tr'));
+			const columnIndices = {
+				id: 0,
+				titre: 1,
+				contenu: 2,
+				date: 3,
+				auteur: 4
+			};
+	
+			const columnIndex = columnIndices[columnName];
+	
+			const sortedRows = rows.sort((a, b) => {
+				const cellA = a.cells[columnIndex];
+				const cellB = b.cells[columnIndex];
+	
+				if (!cellA || !cellB) {
+					return 0; // Ignore les lignes qui n'ont pas la cellule correspondante
+				}
+	
+				const valueA = cellA.textContent.trim();
+				const valueB = cellB.textContent.trim();
+	
+				let comparison = 0;
+				if (type === 'number') {
+					comparison = parseFloat(valueA.replace(',', '.')) - parseFloat(valueB.replace(',', '.'));
+				} else if (type === 'date') {
+					comparison = new Date(valueA) - new Date(valueB);
+				} else {
+					comparison = valueA.localeCompare(valueB);
+				}
+	
+				return comparison * sortOrder[columnName];
+			});
+	
+			const tbody = document.querySelector('table tbody');
+			tbody.innerHTML = '';
+			tbody.append(...sortedRows);
+		}
+	
+		function setupSortableColumns() {
+			const headers = document.querySelectorAll('.sortable');
+			headers.forEach(header => {
+				header.addEventListener('click', function () {
+					const columnName = header.getAttribute('data-column');
+					const type = columnName === 'id' || columnName === 'auteur' ? 'number' : 
+								 columnName === 'date' ? 'date' : 'string';
+					sortOrder[columnName] = sortOrder[columnName] * -1;
+					sortTableByColumn(columnName, type);
+				});
+			});
+		}
+
 		function setupSearch() {
 			const searchInput = document.getElementById('searchInput');
 			const searchAttribute = document.getElementById('searchAttribute');
@@ -218,6 +279,7 @@
 			updatePlaceholder();
 		}
 		setupSearch();
+		setupSortableColumns();
 	});
 </script>
 {% endblock %}
