@@ -67,7 +67,11 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="button" id="add-to-cart-button" class="btn btn-ajouter-panier btn-primary w-100">Ajouter au panier</button>
+                    {% if isLoggedIn %}
+                        <button type="button" id="add-to-cart-button" class="btn btn-ajouter-panier btn-primary w-100">Ajouter au panier</button>
+                    {% else %}
+                        <a href="/login.php" class="btn btn-ajouter-panier w-100">Se connecter</a>
+                    {% endif %}
                 </form>
             </div>
         </div>
