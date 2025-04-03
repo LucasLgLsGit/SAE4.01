@@ -20,6 +20,7 @@ class ActualiteController extends Controller {
 		$isAdmin = $user && $user->isAdmin();
 
 		$this->view('/news/index.html.twig', [
+			'title' => 'Actualités',
 			'actualites' => $actualites,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin
@@ -40,7 +41,7 @@ class ActualiteController extends Controller {
 			}
 		}
 
-		$this->view('/admin/newsAdmin.html.twig', ['errors' => $errors, 'data' => $data]);
+		$this->view('/admin/newsAdmin.html.twig', ['title' => 'Actus admin','errors' => $errors, 'data' => $data]);
 	}
 
 	public function update()
