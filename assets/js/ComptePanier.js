@@ -2,84 +2,101 @@ document.addEventListener('DOMContentLoaded', function()
 {
 	updateCartItemCount();
 
-	const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-	popoverTriggerList.forEach(popoverTriggerEl => 
-	{
-		new bootstrap.Popover(popoverTriggerEl, 
-		{
-			html: true
-		});
-	});
-
 	const cartModal = document.getElementById('cartModal');
 	if (cartModal) 
 	{
-		cartModal.addEventListener('show.bs.modal', function() 
-		{
-			updateCartModal();
-		});
+		cartModal.addEventListener('show.bs.modal', updateCartModal);
 	}
 });
 
 function updateCartModal() 
 {
+	const modalBody = document.querySelector('#cartModal .modal-body');
+	const cartTotalElement = document.getElementById('cart-total');
+	const checkoutButton = document.getElementById('checkout-button');
+	const isAdherent = document.getElementById('cartModal').dataset.adherent === 'true';
+
+	modalBody.innerHTML = `
+		<div class="text-center my-4">
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">Chargement...</span>
+			</div>
+			<p>Chargement du panier...</p>
+		</div>
+	`;
+
 	fetch('/contenu_panier.php')
 		.then(response => response.json())
 		.then(data => 
 		{
-			const modalBody = document.querySelector('#cartModal .modal-body');
-			const cartTotalElement = document.querySelector('#cart-total');
-
-			if (Object.keys(data).length === 0) 
+			if (!data || Object.keys(data).length === 0) 
 			{
-				modalBody.innerHTML = '<p>Votre panier est vide.</p>';
+				modalBody.innerHTML = '<p class="text-center py-4">Votre panier est vide</p>';
 				cartTotalElement.textContent = '0.00 €';
+				checkoutButton.disabled = true;
+				return;
+			}
+
+			let html = '<div class="list-group">';
+			let total = 0;
+
+			for (const [key, item] of Object.entries(data)) 
+			{
+				const itemTotal = (item.prix || 0) * (item.quantite || 1);
+				total += itemTotal;
+
+				html += `
+					<div class="list-group-item">
+						<div class="d-flex align-items-center">
+							<img src="/assets/images/bde.webp" alt="${item.titre_produit || 'Produit'}" class="img-thumbnail me-3" style="width:80px;height:80px;object-fit:cover;">
+							<div class="flex-grow-1">
+								<div class="d-flex justify-content-between">
+									<h6 class="mb-1">${item.titre_produit || 'Produit'}</h6>
+									<button class="btn btn-sm btn-danger" onclick="updateCart('${key}', 0)">
+										<i class="bi bi-trash"></i>
+									</button>
+								</div>
+								<div class="d-flex flex-wrap gap-3 my-2">
+									<small>Taille: ${item.taille || 'N/A'}</small>
+									<small>Couleur: <span class="d-inline-block" style="width:15px;height:15px;background-color:#${item.couleur || '000'};border-radius:50%;"></span></small>
+								</div>
+								<div class="d-flex justify-content-between align-items-center">
+									<div class="btn-group">
+										<button class="btn btn-sm btn-outline-secondary" onclick="updateCart('${key}', ${(item.quantite || 1) - 1})">-</button>
+										<span class="px-2">${item.quantite || 1}</span>
+										<button class="btn btn-sm btn-outline-secondary" onclick="updateCart('${key}', ${(item.quantite || 1) + 1})">+</button>
+									</div>
+									<strong>${itemTotal.toFixed(2)} €</strong>
+								</div>
+							</div>
+						</div>
+					</div>`;
+			}
+
+			html += '</div>';
+			modalBody.innerHTML = html;
+
+			if (isAdherent) 
+			{
+				const totalReduit = total * 0.9;
+				cartTotalElement.innerHTML = `
+					<span class="text-decoration-line-through text-muted me-2">${total.toFixed(2)} €</span>
+					<span class="text-success fw-bold">${totalReduit.toFixed(2)} €</span>
+					<small class="text-success">(-10%)</small>
+				`;
 			} 
 			else 
 			{
-				let html = '<div class="list-group">';
-				let total = 0;
-
-				for (const [key, item] of Object.entries(data)) 
-				{
-					const couleur = '#' + item.couleur || '#000';
-					const prix = item.prix;
-					const quantite = item.quantite || 0;
-					total += quantite * prix;
-
-					html += `
-						<div class="list-group-item d-flex align-items-center">
-							<img src="/assets/images/bde.webp" alt="Produit ${item.titre_produit || 'inconnu'}" class="img-fluid me-3" style="width: auto; height: 100px;">
-							<div class="d-flex flex-column w-100">
-								<div class="d-flex justify-content-between align-items-center">
-									<h5 class="mb-1">${item.titre_produit || 'Produit inconnu'}</h5>
-									<button class="btn btn-danger btn-sm" onclick="updateCart('${key}', 0)"><i class="bi bi-trash"></i></button>
-								</div>
-								<div class="d-flex gap-3 align-items-center mb-2" style="align-items: center;">
-									<span>Taille : ${item.taille || 'N/A'}</span>
-									<span style="display: flex; align-items: center;">Couleur :&nbsp;&nbsp;<div style="width: 20px; height: 20px; background-color: ${couleur}; border-radius: 50%; display: inline-block;"></div></span>
-								</div>
-								<div class="d-flex justify-content-between align-items-center">
-									<div class="d-flex align-items-center">
-										<button class="btn btn-outline-secondary btn-sm me-2" onclick="updateCart('${key}', ${quantite - 1})">-</button>
-										<span>${quantite}</span>
-										<button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateCart('${key}', ${quantite + 1})">+</button>
-									</div>
-									<span>${(quantite * prix).toFixed(2)} €</span>
-								</div>
-							</div>
-						</div>`;
-				}
-				html += '</div>';
-				modalBody.innerHTML = html;
 				cartTotalElement.textContent = `${total.toFixed(2)} €`;
 			}
-			updateCartItemCount(data);
+
+			checkoutButton.disabled = false;
 		})
 		.catch(error => 
 		{
-			console.error('Erreur dans updateCartModal:', error);
-			document.querySelector('#cartModal .modal-body').innerHTML = '<p>Erreur de chargement.</p>';
+			console.error('Erreur:', error);
+			modalBody.innerHTML = '<p class="text-danger text-center py-4">Erreur de chargement du panier</p>';
+			checkoutButton.disabled = true;
 		});
 }
 
