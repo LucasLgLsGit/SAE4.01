@@ -7,16 +7,16 @@
 {% block body %}
 <div class="container-participations">
 	<div class="container mt-5">
-		<h1 class="text-center mb-4">Gestion des Participations</h1>
+		<h2 class="mb-4 fw-bold">Gestion des participations</h2>
 
 		<div class="table-responsive">
-			<table class="table table-bordered table-striped">
-				<thead class="table-dark">
+			<table class="table table-striped">
+				<thead>
 					<tr>
-						<th>ID</th>
-						<th>Nom de l'Événement</th>
-						<th>Utilisateur</th>
-						<th>Date de Participation</th>
+						<th class="sortable" data-column="id_user">ID Utilisateur <i class="bi bi-sort-up"></i></th>
+						<th class="sortable" data-column="event_titre">Nom de l'Événement <i class="bi bi-sort-up"></i></th>
+						<th class="sortable" data-column="user_nom">Utilisateur <i class="bi bi-sort-up"></i></th>
+						<th class="sortable" data-column="date_participation">Date de Participation <i class="bi bi-sort-up"></i></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -29,7 +29,7 @@
 					</tr>
 					{% else %}
 					<tr>
-						<td colspan="5" class="text-center">Aucune participation trouvée.</td>
+						<td colspan="4" class="text-center">Aucune participation trouvée.</td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -40,4 +40,37 @@
 {% endblock %}
 
 {% block javascript %}
+<script>
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const rows = document.querySelectorAll('.table tbody tr');
+		const sortableHeaders = document.querySelectorAll('.sortable');
+
+		function sortTableByColumn(columnIndex, ascending) {
+			const tbody = document.querySelector('.table tbody');
+			const rowsArray = Array.from(rows);
+
+			rowsArray.sort((a, b) => {
+				const aText = a.querySelectorAll('td')[columnIndex].textContent.trim().toLowerCase();
+				const bText = b.querySelectorAll('td')[columnIndex].textContent.trim().toLowerCase();
+
+				if (!isNaN(aText) && !isNaN(bText)) {
+					return ascending ? aText - bText : bText - aText;
+				} else {
+					return ascending ? aText.localeCompare(bText) : bText.localeCompare(aText);
+				}
+			});
+
+			rowsArray.forEach(row => tbody.appendChild(row));
+		}
+
+		sortableHeaders.forEach((header, index) => {
+			let ascending = true;
+			header.addEventListener('click', () => {
+				sortTableByColumn(index, ascending);
+				ascending = !ascending;
+			});
+		});
+	});
+</script>
 {% endblock %}
