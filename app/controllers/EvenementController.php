@@ -10,116 +10,151 @@ require_once './app/trait/AuthTrait.php';
 
 class EvenementController extends Controller {
 
-	use FormTrait;
-	use AuthTrait;
+    use FormTrait;
+    use AuthTrait;
 
-	public function index()
-	{
-		$repository = new EvenementRepository();
-		$evenements = $repository->findAll();
+    public function index()
+    {
+        $repository = new EvenementRepository();
+        $evenements = $repository->findAll();
 
-		$isLoggedIn = $this->isLoggedIn();
-		$user = $this->getCurrentUser();
-		$isAdmin = $user && $user->isAdmin();
+        $isLoggedIn = $this->isLoggedIn();
+        $user = $this->getCurrentUser();
+        $isAdmin = $user && $user->isAdmin();
 
-		$this->view('/event/index.html.twig', [
-			'evenements' => $evenements,
-			'isLoggedIn' => $isLoggedIn,
-			'isAdmin' => $isAdmin
-		]);
-	}
+        $this->view('/admin/eventsAdmin.html.twig', [
+            'evenements' => $evenements,
+            'isLoggedIn' => $isLoggedIn,
+            'isAdmin' => $isAdmin,
+			'user' => $user
+        ]);
+    }
 
-	public function create() {
-		$data = $this->getAllPostParams();
-		$errors = [];
+    public function create() {
+        $data = $this->getAllPostParams();
+        $errors = [];
 
-		if (!empty($data)) {
-			try {
-				$eventRepo = new EvenementRepository();
-				$eventRepo->create($data);
-				$this->redirectTo('evenements.php');
-			} catch (Exception $e) {
-				$errors = explode(', ', $e->getMessage());
-			}
-		}
+        if (!empty($data)) {
+            try {
+                $eventRepo = new EvenementRepository();
+                $eventRepo->create($data);
+                $this->redirectTo('events_admin.php');
+            } catch (Exception $e) {
+                $errors = explode(', ', $e->getMessage());
+            }
+        }
 
-		$this->view('/event/create.html.twig', ['errors' => $errors, 'data' => $data]);
-	}
+        $this->view('/admin/eventsAdmin.html.twig', ['errors' => $errors, 'data' => $data]);
+    }
 
-	public function update() {
-		$id = $this->getQueryParam('id_event');
-
+    public function update() {
+		$id = $this->getPostParam('id_event');
+	
 		if ($id === null) {
-			throw new Exception("L'identifiant évenement est requis !");
+			throw new Exception("L'identifiant événement est requis !");
 		}
-
+	
 		$data = $this->getAllPostParams();
 		$errors = [];
-
+	
+		$eventRepo = new EvenementRepository();
+		$user = $this->getCurrentUser(); 
+	
+		if (!$user) {
+			throw new Exception("Vous devez être connecté pour modifier un événement !");
+		}
+	
 		if (!empty($data)) {
 			try {
-				$eventRepo = new EvenementRepository();
-				$eventRepo->update($id, $data);
-				$this->redirectTo('evenements.php');
+				$evenement = $eventRepo->findById($id);
+				if (!$evenement) {
+					throw new Exception("Événement introuvable !");
+				}
+	
+				$evenement->setTitreEvent($data['titre']);
+				$evenement->setDateDebut(new DateTime($data['date_debut']));
+				$evenement->setDateFin(new DateTime($data['date_fin']));
+				$evenement->setAdresse($data['adresse']);
+				$evenement->setDescription($data['description']);
+				$evenement->setPrix((float)$data['prix']);
+				$evenement->setIdUser($user->getId()); 
+	
+				$eventRepo->update($evenement);
+				$this->redirectTo('events_admin.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
 			}
 		}
-
-		$this->view('/event/update.html.twig', 'Modification d\'un évenement', ['errors' => $errors, 'data' => $data, 'id_event' => $id]);
+	
+		$this->view('admin/eventsAdmin.html.twig', ['errors' => $errors, 'data' => $data, 'id_event' => $id]);
 	}
 
-	public function getUpcomingEvents() {
-		$repository = new EvenementRepository();
-		return $repository->findUpcomingEvents(3);
-	}
+    public function delete() {
+        $id = $this->getPostParam('id_event');
 
-	public function getAllUpcomingEvents() {
-		$repository = new EvenementRepository();
-		return $repository->findUpcomingEvents(); 
-	}
+        if ($id === null) {
+            throw new Exception("L'identifiant de l'événement est requis !");
+        }
 
-	public function show()
-	{
-		$isLoggedIn = $this->isLoggedIn();
-		$utilisateur = $this->getCurrentUser();
-		$isAdmin = $utilisateur && $utilisateur->isAdmin();
+        try {
+            $eventRepo = new EvenementRepository();
+            $eventRepo->delete($id);
+            $this->redirectTo('events_admin.php');
+        } catch (Exception $e) {
+            $this->redirectTo('events_admin.php?error=' . urlencode($e->getMessage()));
+        }
+    }
 
+    public function getUpcomingEvents() {
+        $repository = new EvenementRepository();
+        return $repository->findUpcomingEvents(3);
+    }
 
-		$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    public function getAllUpcomingEvents() {
+        $repository = new EvenementRepository();
+        return $repository->findUpcomingEvents(); 
+    }
 
-		if (!$id) {
-			throw new Exception("Identifiant de l'événement invalide !");
-		}
+    public function show()
+    {
+        $isLoggedIn = $this->isLoggedIn();
+        $utilisateur = $this->getCurrentUser();
+        $isAdmin = $utilisateur && $utilisateur->isAdmin();
 
-		$repository = new EvenementRepository();
-		$event = $repository->findById($id);
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-		if (!$event) {
-			throw new Exception("Événement introuvable !");
-		}
+        if (!$id) {
+            throw new Exception("Identifiant de l'événement invalide !");
+        }
 
-		$commentaireRepository = new CommentaireRepository();
-		$utilisateurRepository = new UtilisateurRepository();
-		$commentaires = $commentaireRepository->findByEventId($event->getId());
+        $repository = new EvenementRepository();
+        $event = $repository->findById($id);
 
-		foreach ($commentaires as $commentaire) {
-			$commentaire->utilisateur = $utilisateurRepository->findById($commentaire->getId_user());
-		}
+        if (!$event) {
+            throw new Exception("Événement introuvable !");
+        }
 
-		$isRegistered = false;
-		if ($isLoggedIn && $utilisateur) {
-			$participationRepo = new ParticipationRepository();
-			$isRegistered = $participationRepo->findById($utilisateur->getId(), $id) !== null;
-		}
+        $commentaireRepository = new CommentaireRepository();
+        $utilisateurRepository = new UtilisateurRepository();
+        $commentaires = $commentaireRepository->findByEventId($event->getId());
 
-		$this->view('event.html.twig', [
-			'event' => $event, 
-			'isLoggedIn' => $isLoggedIn,
-			'isAdmin' => $isAdmin,
-			'isRegistered' => $isRegistered,
-			'utilisateur' => $utilisateur,
-			'commentaires' => $commentaires
-		]);
-	}
+        foreach ($commentaires as $commentaire) {
+            $commentaire->utilisateur = $utilisateurRepository->findById($commentaire->getId_user());
+        }
+
+        $isRegistered = false;
+        if ($isLoggedIn && $utilisateur) {
+            $participationRepo = new ParticipationRepository();
+            $isRegistered = $participationRepo->findById($utilisateur->getId(), $id) !== null;
+        }
+
+        $this->view('event.html.twig', [
+            'event' => $event, 
+            'isLoggedIn' => $isLoggedIn,
+            'isAdmin' => $isAdmin,
+            'isRegistered' => $isRegistered,
+            'utilisateur' => $utilisateur,
+            'commentaires' => $commentaires
+        ]);
+    }
 }
