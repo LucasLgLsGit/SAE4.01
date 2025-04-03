@@ -22,6 +22,7 @@ class ShopAdminController extends Controller
 		
 		if($isAdmin) {
 			$this->view('/admin/shopAdmin.html.twig', [
+				'title' => 'Produits admin',
 				'products' => $products,
 				'isLoggedIn' => $isLoggedIn,
 				'isAdmin' => $isAdmin,
@@ -29,6 +30,7 @@ class ShopAdminController extends Controller
 			]);
 		} else {
 			$this->view('index.html.twig', [
+				'title' => 'Accueil',
 				'isLoggedIn' => $isLoggedIn,
 				'isAdmin' => $isAdmin
 			]);
@@ -49,6 +51,6 @@ class ShopAdminController extends Controller
 			}
 		}
 
-		$this->view('/admin/shopAdmin.html.twig', ['errors' => $errors, 'data' => $data]);
+		$this->view('/admin/shopAdmin.html.twig', ['errors' => $errors, 'data' => $data, 'title' => 'Création d\'un produit']);
 	}
 }

@@ -58,12 +58,11 @@
 		</div>	
 
 		<div class="ms-auto d-none d-lg-flex align-items-center gap-3">
-			<button id="theme-toggle">🌙 Mode Sombre</button>
+			<button id="theme-toggle">🌙</button>
 			{% if isLoggedIn %}
-			<!-- Version desktop -->
 			<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
 				<i class="bi bi-cart3 fs-4"></i>
-				<span class="badge bg-danger cart-item-count">0</span> <!-- Changé id en class -->
+				<span class="badge bg-danger cart-item-count">0</span>
 			</a>
 				<a class="profil-button d-flex align-items-center gap-2" href="/profile.php">
 					<i class="bi bi-person-circle"></i> Profil
@@ -164,7 +163,7 @@
 		if (currentTheme) {
 			document.documentElement.setAttribute("data-theme", currentTheme);
 			if (currentTheme === "dark") {
-				toggleButton.textContent = "☀️ Mode Clair";
+				toggleButton.textContent = "☀️";
 			}
 		}
 	
@@ -173,11 +172,11 @@
 			if (theme === "dark") {
 				document.documentElement.setAttribute("data-theme", "light");
 				localStorage.setItem("theme", "light");
-				toggleButton.textContent = "🌙 Mode Sombre";
+				toggleButton.textContent = "🌙";
 			} else {
 				document.documentElement.setAttribute("data-theme", "dark");
 				localStorage.setItem("theme", "dark");
-				toggleButton.textContent = "☀️ Mode Clair";
+				toggleButton.textContent = "☀️";
 			}
 		});
 	});

@@ -11,6 +11,7 @@ class FaqController extends Controller
 		$isAdmin = $user && $user->isAdmin();
 
 		$this->view('FAQ.html.twig', [
+			'title' => 'FAQ',
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin
 		]);

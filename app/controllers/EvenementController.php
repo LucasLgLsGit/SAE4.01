@@ -22,13 +22,14 @@ class EvenementController extends Controller {
         $user = $this->getCurrentUser();
         $isAdmin = $user && $user->isAdmin();
 
-        $this->view('/admin/eventsAdmin.html.twig', [
-            'evenements' => $evenements,
-            'isLoggedIn' => $isLoggedIn,
-            'isAdmin' => $isAdmin,
+		$this->view('/event/index.html.twig', [
+			'title' => 'Événements',
+			'evenements' => $evenements,
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin,
 			'user' => $user
-        ]);
-    }
+		]);
+	}
 
     public function create() {
         $data = $this->getAllPostParams();
@@ -51,12 +52,8 @@ class EvenementController extends Controller {
             }
         }
 
-        $this->view('/admin/eventsAdmin.html.twig', [
-				'errors' => $errors, 
-				'data' => $data,
-				'user' => $user
-			]);
-    }
+		$this->view('/event/create.html.twig', ['errors' => $errors, 'data' => $data, 'title' => 'Création d\'un évenement']);
+	}
 
     public function update() {
 		$id = $this->getPostParam('id_event');
@@ -95,30 +92,9 @@ class EvenementController extends Controller {
 				$errors = explode(', ', $e->getMessage());
 			}
 		}
-	
-		$this->view('admin/eventsAdmin.html.twig', [
-				'errors' => $errors, 
-				'data' => $data, 
-				'id_event' => $id,
-				'user' => $user
-			]);
+
+		$this->view('/event/update.html.twig', 'Modification d\'un évenement', ['title'=> 'Modification evenement','errors' => $errors, 'data' => $data, 'id_event' => $id]);
 	}
-
-    public function delete() {
-        $id = $this->getPostParam('id_event');
-
-        if ($id === null) {
-            throw new Exception("L'identifiant de l'événement est requis !");
-        }
-
-        try {
-            $eventRepo = new EvenementRepository();
-            $eventRepo->delete($id);
-            $this->redirectTo('events_admin.php');
-        } catch (Exception $e) {
-            $this->redirectTo('events_admin.php?error=' . urlencode($e->getMessage()));
-        }
-    }
 
     public function getUpcomingEvents() {
         $repository = new EvenementRepository();
@@ -163,13 +139,14 @@ class EvenementController extends Controller {
             $isRegistered = $participationRepo->findById($utilisateur->getId(), $id) !== null;
         }
 
-        $this->view('event.html.twig', [
-            'event' => $event, 
-            'isLoggedIn' => $isLoggedIn,
-            'isAdmin' => $isAdmin,
-            'isRegistered' => $isRegistered,
-            'utilisateur' => $utilisateur,
-            'commentaires' => $commentaires
-        ]);
-    }
+		$this->view('event.html.twig', [
+			'title' => 'Événement',
+			'event' => $event, 
+			'isLoggedIn' => $isLoggedIn,
+			'isAdmin' => $isAdmin,
+			'isRegistered' => $isRegistered,
+			'utilisateur' => $utilisateur,
+			'commentaires' => $commentaires
+		]);
+	}
 }

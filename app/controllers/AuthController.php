@@ -35,6 +35,7 @@ class AuthController extends Controller {
 			}
 		}
 
+		$data['title'] = 'Connexion';
 		$this->view('/user/login.html.twig', $data);
 	}
 

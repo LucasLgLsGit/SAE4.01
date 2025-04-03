@@ -18,12 +18,14 @@ class UserAdminController extends Controller
 		
 		if($isAdmin) {
 			$this->view('/admin/usersAdmin.html.twig', [
+				'title' => 'Utilisateurs admin',
 				'users' => $users,
 				'isLoggedIn' => $isLoggedIn,
 				'isAdmin' => $isAdmin
 			]);
 		} else {
 			$this->view('index.html.twig', [
+				'title' => 'Accueil',
 				'isLoggedIn' => $isLoggedIn,
 				'isAdmin' => $isAdmin
 			]);

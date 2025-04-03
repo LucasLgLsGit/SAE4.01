@@ -25,6 +25,7 @@ class UtilisateurController extends Controller {
 		}
 
 		$this->view('/user/profile.html.twig', [
+			'title' => 'Mon profil',
 			'utilisateur' => $utilisateur,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin
@@ -45,7 +46,7 @@ class UtilisateurController extends Controller {
 			}
 		}
 
-		$this->view('/user/signUp.html.twig', ['errors' => $errors, 'data' => $data]);
+		$this->view('/user/signUp.html.twig', ['errors' => $errors, 'data' => $data, 'title' => 'Inscription']);
 	}
 
 	public function update()
@@ -123,12 +124,14 @@ class UtilisateurController extends Controller {
 			
 
 			$this->view('/user/profile.html.twig', [
+				'title' => 'Mon profil',
                 'utilisateur' => $authService->getUser(),
                 'success' => 'Email modifié avec succès',
 				'isLoggedIn' => $isLoggedIn
             ]);
 		} catch (Exception $e) {
 			$this->view('/user/profile.html.twig', [
+				'title' => 'Mon profil',
 				'errors' => [$e->getMessage()],
 				'utilisateur' => (new AuthService())->getUser(),
 				'isLoggedIn' => $isLoggedIn
@@ -156,6 +159,7 @@ class UtilisateurController extends Controller {
 			if ($userRepo->updateMdp($id, $newPassword)) {
 				// Succès
 				$this->view('/user/profile.html.twig', [
+					'title' => 'Mon profil',
 					'utilisateur' => (new AuthService())->getUser(),
 					'success' => 'Mot de passe modifié avec succès',
 					'isLoggedIn' => $isLoggedIn
@@ -165,6 +169,7 @@ class UtilisateurController extends Controller {
 			
 		} catch (Exception $e) {
 			$this->view('/user/profile.html.twig', [
+				'title' => 'Mon profil',
 				'utilisateur' => (new AuthService())->getUser(),
 				'error' => $e->getMessage(),
 				'isLoggedIn' => $isLoggedIn
