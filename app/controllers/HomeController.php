@@ -29,6 +29,7 @@ class HomeController extends Controller
 		$nombreAdherents = $utilisateurRepo->countAdherents();
 
 		$this->view('index.html.twig', [
+			'title' => 'Accueil',
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin,
 			'upcomingEvents' => $upcomingEvents,
