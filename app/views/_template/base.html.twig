@@ -15,7 +15,8 @@
 	<!-- FontAwesome -->
 	<script src="https://kit.fontawesome.com/1038d5e71f.js" crossorigin="anonymous"></script>
 	<title>{{ title|default('') }}</title>
-	{% block css %}{% endblock %}
+	{% block css %}
+	{% endblock %}
 </head>
 <body>
 
@@ -35,17 +36,25 @@
 						<img src="/assets/images/bde.webp" alt="logoBDE" height="50">
 					</a>
 				</li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/contact.php' %}active{% endif %}" href="/contact.php">Contact</a></li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/events.php' or current_url starts with '/event.php'%}active{% endif %}" href="/events.php">Événements</a></li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/shop.php' or current_url starts with '/detail.php' %}active{% endif %}" href="/shop.php">Boutique</a></li>
-				<li class="nav-item"><a class="nav-link page {% if current_url == '/faq.php' %}active{% endif %}" href="/faq.php">FAQ</a></li>
+				<li class="nav-item">
+					<a class="nav-link page {% if current_url == '/contact.php' %}active{% endif %}" href="/contact.php">Contact</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link page {% if current_url == '/events.php' or current_url starts with '/event.php'%}active{% endif %}" href="/events.php">Événements</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link page {% if current_url == '/shop.php' or current_url starts with '/detail.php' %}active{% endif %}" href="/shop.php">Boutique</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link page {% if current_url == '/faq.php' %}active{% endif %}" href="/faq.php">FAQ</a>
+				</li>
 
 				<li class="nav-item d-lg-none">
 					{% if isLoggedIn %}
-					<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
-						<i class="bi bi-cart3 fs-4"></i>
-						<span class="badge bg-danger cart-item-count">0</span>
-					</a>
+						<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+							<i class="bi bi-cart3 fs-4"></i>
+							<span class="badge bg-danger cart-item-count">0</span>
+						</a>
 						<a class="nav-link nav-link-button profil-button" href="/users.php">
 							<i class="bi bi-person-circle"></i> Profil
 						</a>
@@ -55,15 +64,15 @@
 					{% endif %}
 				</li>
 			</ul>
-		</div>	
+		</div>    
 
 		<div class="ms-auto d-none d-lg-flex align-items-center gap-3">
 			<button id="theme-toggle">🌙</button>
 			{% if isLoggedIn %}
-			<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
-				<i class="bi bi-cart3 fs-4"></i>
-				<span class="badge bg-danger cart-item-count">0</span>
-			</a>
+				<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+					<i class="bi bi-cart3 fs-4"></i>
+					<span class="badge bg-danger cart-item-count">0</span>
+				</a>
 				<a class="profil-button d-flex align-items-center gap-2" href="/users.php">
 					<i class="bi bi-person-circle"></i> Profil
 				</a>
@@ -76,65 +85,73 @@
 </nav>
 
 {% if isAdmin %}
-<nav class="navbar navbar-expand-lg bg-dark text-white second-nav">
-	<div class="container-fluid">
-		<ul class="navbar-nav d-flex flex-row align-items-center gap-3 w-100 justify-content-center">
-			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/shop_admin.php' %}active{% endif %}" href="/shop_admin.php">Boutique</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/news_admin.php' %}active{% endif %}" href="/news_admin.php">Actualités</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/events_admin.php' %}active{% endif %}" href="/events_admin.php">Evenements</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/faqs_admin.php' %}active{% endif %}" href="/faqs_admin.php">FAQ</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/users_admin.php' %}active{% endif %}" href="/users_admin.php">Utilisateurs</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/orders_admin.php' %}active{% endif %}" href="/orders_admin.php">Commandes</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link second-nav-link page text-white {% if current_url == '/participations_admin.php' %}active{% endif %}" href="/participations_admin.php">Participation</a>
-			</li>
-		</ul>
-	</div>
-</nav>
+	<nav class="navbar navbar-expand-lg bg-dark text-white second-nav">
+		<div class="container-fluid">
+			<ul class="navbar-nav d-flex flex-row align-items-center gap-3 w-100 justify-content-center">
+				<li class="nav-item">
+					<a class="nav-link second-nav-link page text-white {% if current_url == '/shop_admin.php' %}active{% endif %}" href="/shop_admin.php">Boutique</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link second-nav-link page text-white {% if current_url == '/news_admin.php' %}active{% endif %}" href="/news_admin.php">Actualités</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link second-nav-link page text-white {% if current_url == '/events_admin.php' %}active{% endif %}" href="/events_admin.php">Evenements</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link second-nav-link page text-white {% if current_url == '/faqs_admin.php' %}active{% endif %}" href="/faqs_admin.php">FAQ</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link second-nav-link page text-white {% if current_url == '/users_admin.php' %}active{% endif %}" href="/users_admin.php">Utilisateurs</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link second-nav-link page text-white {% if current_url == '/orders_admin.php' %}active{% endif %}" href="/orders_admin.php">Commandes</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link second-nav-link page text-white {% if current_url == '/participations_admin.php' %}active{% endif %}" href="/participations_admin.php">Participation</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
 {% endif %}
 
 <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cartModalLabel">Votre Panier</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Chargement...</p>
-            </div>
-            <div class="modal-footer">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="cartModalLabel">Votre Panier</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Chargement...</p>
+			</div>
+			<div class="modal-footer">
 				<div class="me-auto">
-					<strong>Total : </strong><span id="cart-total">0.00 €</span>
+					<strong>Total : </strong>
+					{% if isAdherent is defined and isAdherent %}
+						{% set totalReduit = cartTotal * 0.9 %}
+						<span class="text-muted text-decoration-line-through me-2">{{ cartTotal|number_format(2, ',', ' ') }} €</span>
+						<span id="cart-total" class="text-success fw-bold">{{ totalReduit|number_format(2, ',', ' ') }} €</span>
+						<small class="text-success">(-10% adhérent)</small>
+					{% else %}
+						<span id="cart-total">{{ cartTotal|number_format(2, ',', ' ') }} €</span>
+					{% endif %}
 				</div>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <form action="/commande.php" method="POST" class="d-inline">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+				<form action="/commande.php" method="POST" class="d-inline">
 					<input type="hidden" name="id_user" value="{{ user.id }}"> 
 					<input type="hidden" name="id_produit" value="{{ produit.id }}"> 
 					<input type="hidden" name="quantite" value="{{ produit.quantite }}"> 
 					<input type="hidden" name="numero_commande" value="{{ numero_commande }}">
 					<button type="submit" class="btn btn-primary">Commander</button>
 				</form>
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 </div>
 
-
 <div class="container mt-5 p-0 w-100 mx-0">
-	{% block body %}{% endblock %}
+	{% block body %}
+	{% endblock %}
 </div>
 
 <footer class="text-center text-lg-start mt-5 py-3">
@@ -157,41 +174,49 @@
 	</div>
 </footer>
 
-
 <!-- Pour gérer le Popover, inclure le script JS de Bootstrap -->
 <script>
 	// Activer le popover au chargement de la page avec html activé
-	document.addEventListener('DOMContentLoaded', function () {
+	document.addEventListener('DOMContentLoaded', function () 
+	{
 		const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
 
 		// Parcourir tous les éléments qui ont le data-bs-toggle="popover"
-		[...popoverTriggerList].forEach(popoverTriggerEl => {
+		[...popoverTriggerList].forEach(popoverTriggerEl => 
+		{
 			// Initialiser le popover pour chaque élément et activer l'option html: true
-			new bootstrap.Popover(popoverTriggerEl, {
+			new bootstrap.Popover(popoverTriggerEl, 
+			{
 				html: true  // Permet l'interprétation du HTML dans le contenu du popover
 			});
 		});
 	});
 
-
-	document.addEventListener("DOMContentLoaded", () => {
+	document.addEventListener("DOMContentLoaded", () => 
+	{
 		const toggleButton = document.getElementById("theme-toggle");
 		const currentTheme = localStorage.getItem("theme");
-	
-		if (currentTheme) {
+
+		if (currentTheme) 
+		{
 			document.documentElement.setAttribute("data-theme", currentTheme);
-			if (currentTheme === "dark") {
+			if (currentTheme === "dark") 
+			{
 				toggleButton.textContent = "☀️";
 			}
 		}
-	
-		toggleButton.addEventListener("click", () => {
+
+		toggleButton.addEventListener("click", () => 
+		{
 			let theme = document.documentElement.getAttribute("data-theme");
-			if (theme === "dark") {
+			if (theme === "dark") 
+			{
 				document.documentElement.setAttribute("data-theme", "light");
 				localStorage.setItem("theme", "light");
 				toggleButton.textContent = "🌙";
-			} else {
+			} 
+			else 
+			{
 				document.documentElement.setAttribute("data-theme", "dark");
 				localStorage.setItem("theme", "dark");
 				toggleButton.textContent = "☀️";
@@ -207,6 +232,7 @@
 		
 <script src="/assets/js/ComptePanier.js"></script>
 
-{% block javascript %}{% endblock %}
+{% block javascript %}
+{% endblock %}
 </body>
 </html>

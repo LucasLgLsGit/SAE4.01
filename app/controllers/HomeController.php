@@ -5,7 +5,6 @@ require_once './app/services/AuthService.php';
 require_once './app/controllers/EvenementController.php';
 require_once './app/controllers/ActualiteController.php';
 
-
 class HomeController extends Controller
 {
 	public function index()
@@ -13,6 +12,7 @@ class HomeController extends Controller
 		$isLoggedIn = $this->isLoggedIn();
 		$user = $this->getCurrentUser();
 		$isAdmin = $user && $user->isAdmin();
+		$isAdherent = $user && $user->isAdherent();
 
 		$evenementController = new EvenementController();
 		$upcomingEvents = $evenementController->getUpcomingEvents();
@@ -32,6 +32,7 @@ class HomeController extends Controller
 			'title' => 'Accueil',
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin,
+			'isAdherent' => $isAdherent,
 			'upcomingEvents' => $upcomingEvents,
 			'lastActualites' => $lastActualites,
 			'nombreMembres' => $nombreMembres,
