@@ -58,19 +58,35 @@
                            data-event-prix="{{ event.getPrix() }}">
                             <i class="bi bi-pencil-square"></i>
                         </a>
-                        <form method="post" action="/events_admin.php?action=delete" style="display: inline;">
-                            <input type="hidden" name="id_event" value="{{ event.getId() }}">
-                            <button type="submit" class="btn btn-supprimer btn-sm" 
-                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
+						<button class="btn btn-supprimer btn-sm delete-event" data-bs-toggle="modal" data-bs-target="#deleteEventModal" data-event-id="{{ event.getId() }}" onclick="document.getElementById('deleteEventId').value = '{{ event.getId() }}';"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Modal Suppression -->
+<div class="modal fade" id="deleteEventModal" tabindex="-1" aria-labelledby="deleteEventModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form action="/events_admin.php?action=delete" method="POST">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteEventModalLabel">Confirmer la suppression</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Êtes-vous sûr de vouloir supprimer cet Événement ?
+					<input type="hidden" name="id_event" id="deleteEventId">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-danger">Supprimer</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <!-- Modal Création -->
