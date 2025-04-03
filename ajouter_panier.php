@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['panier'][$panierKey] = [
             'id_produit' => $id_produit,
             'titre_produit' => $titre_produit,
+            'prix' => $produit->getPrix(),
             'taille' => $taille,
             'couleur' => $couleur,
             'quantite' => $quantite

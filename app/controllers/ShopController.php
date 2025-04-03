@@ -72,9 +72,9 @@ class ShopController extends Controller
 
             $imageRepository = new ImageRepository();
             $images = $imageRepository->findByProduitId($representativeProduit->getId_Produit());
-            if (empty($images)) {
-                throw new Exception("Aucune image trouvée pour le produit !");
-            }
+            // if (empty($images)) {
+            //     throw new Exception("Aucune image trouvée pour le produit !");
+            // }
 
             $tailles = [];
             $couleurs = [];

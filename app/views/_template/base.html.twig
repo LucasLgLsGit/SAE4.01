@@ -107,6 +107,9 @@
                 <p>Chargement...</p>
             </div>
             <div class="modal-footer">
+				<div class="me-auto">
+					<strong>Total : </strong><span id="cart-total">0.00 €</span>
+				</div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 <form action="/commande.php" method="POST" class="d-inline">
 					<input type="hidden" name="id_user" value="{{ user.id }}"> 
