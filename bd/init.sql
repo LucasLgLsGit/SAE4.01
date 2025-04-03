@@ -15,6 +15,7 @@ CREATE TABLE Utilisateur(
 	permission INT NOT NULL,
 	nom VARCHAR(50) NOT NULL,
 	prenom VARCHAR(50) NOT NULL,
+	boolean newsletter NOT NULL,
 	PRIMARY KEY(id_user)
 );
 
