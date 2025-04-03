@@ -75,7 +75,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="editNewsForm">
+				<form id="editNewsForm" action="news_update.php" method="POST">
 					<input type="hidden" id="editNewsId" name="id_article">
 					<div class="mb-3">
 						<label for="editNewsTitle" class="form-label">Titre</label>
@@ -89,7 +89,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-primary" id="saveNewsChanges">Enregistrer</button>
+				<button type="submit" class="btn btn-primary" form="editNewsForm">Enregistrer</button>
 			</div>
 		</div>
 	</div>

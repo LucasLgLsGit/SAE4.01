@@ -56,17 +56,12 @@ class ActualiteController extends Controller {
 			return;
 		}
 
-		try {
-			$newsRepository = new ActualiteRepository();
-			$newsRepository->updateById($id, [
-				'titre' => $titre,
-				'contenu' => $contenu,
-			]);
-			echo json_encode(['success' => true, 'message' => 'Actualité mise à jour avec succès.']);
-		} catch (Exception $e) {
-			http_response_code(500);
-			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-		}
+		$newsRepository = new ActualiteRepository();
+		$newsRepository->updateById($id, [
+			'titre' => $titre,
+			'contenu' => $contenu,
+		]);
+		$this->redirectTo('news_admin.php');
 }
 
 	public function delete()
