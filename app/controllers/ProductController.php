@@ -72,14 +72,12 @@ class ProductController extends Controller
                                 'error' => $_FILES['images']['error'][$key]
                             ];
                             $this->imageController->createImage($file, $firstProductId);
-                            echo "Image créée pour le produit ID $firstProductId\n";
                         }
                     }
                 }
 
                 $this->redirectTo('/products_admin.php');
             } catch (Exception $e) {
-                prettyDump($e->getMessage(), 'Exception');
                 $this->view('/admin/shopAdmin.html.twig', [
                     'errors' => explode(', ', $e->getMessage()),
                     'data' => $data,
@@ -102,6 +100,7 @@ class ProductController extends Controller
                     throw new Exception("L'identifiant du produit est requis !");
                 }
     
+                // Appel au repository pour supprimer le produit
                 $this->produitRepo->delete($idProduit);
     
                 $this->redirectTo('/products_admin.php');
