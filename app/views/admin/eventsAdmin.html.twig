@@ -6,12 +6,12 @@
 
 {% block body %}
 <div class="events-container">
-	<div class="container mt-5">
-		<div class="d-flex align-items-center mb-4">
-			<h2 class="fw-bold">Gestion des événements</h2>
-			<button class="add-event-button ms-3" data-bs-toggle="modal" data-bs-target="#createEventModal">Ajouter un événement<i class="bi-create-event bi bi-plus-square"></i></button>
-		</div>
-		<div class="mb-3 d-flex gap-2">
+    <div class="container mt-5">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="fw-bold">Gestion des événements</h2>
+            <button class="add-event-button ms-3" data-bs-toggle="modal" data-bs-target="#createEventModal">Ajouter un événement<i class="bi-create-event bi bi-plus-square"></i></button>
+        </div>
+        <div class="mb-3 d-flex gap-2">
             <select class="form-select w-25" id="searchAttribute">
                 <option value="id">ID</option>
                 <option value="titre">Titre</option>
@@ -24,170 +24,261 @@
             <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
             <button type="button" class="btn btn-research" id="resetSearch"><i class="bi bi-arrow-clockwise"></i></button>
         </div>
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Titre</th>
-					<th>Date Début</th>
-					<th>Date Fin</th>
-					<th>Adresse</th>
-					<th>Description</th>
-					<th>Prix (€)</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for event in events %}
-				<tr>
-					<td>{{ event.getId() }}</td>
-					<td>{{ event.getTitreEvent() }}</td>
-					<td class="ellipsis-td">{{ event.getDateDebut().format('d/m/Y H:i') }}</td>
-					<td class="ellipsis-td">{{ event.getDateFin().format('d/m/Y H:i') }}</td>
-					<td class="ellipsis-td">{{ event.getAdresse() }}</td>
-					<td class="ellipsis-td">{{ event.getDescription() }}</td>
-					<td>{{ event.getPrix()|number_format(2, ',', ' ') }}</td>
-					<td>
-						<a href="#" class="btn btn-modifier btn-sm"><i class="bi bi-pencil-square"></i></a>
-						<button class="btn btn-supprimer btn-sm delete-event" data-event-id="{{ event.getId() }}"><i
-								class="bi bi-trash"></i></button>
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Adresse</th>
+                    <th>Description</th>
+                    <th>Prix (€)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.getId() }}</td>
+                    <td>{{ event.getTitreEvent() }}</td>
+                    <td class="ellipsis-td">{{ event.getDateDebut().format('d/m/Y H:i') }}</td>
+                    <td class="ellipsis-td">{{ event.getDateFin().format('d/m/Y H:i') }}</td>
+                    <td class="ellipsis-td">{{ event.getAdresse() }}</td>
+                    <td class="ellipsis-td">{{ event.getDescription() }}</td>
+                    <td>{{ event.getPrix()|number_format(2, ',', ' ') }}</td>
+                    <td>
+                        <a href="#" class="btn btn-modifier btn-sm edit-event" 
+                           data-event-id="{{ event.getId() }}"
+                           data-event-titre="{{ event.getTitreEvent() }}"
+                           data-event-date-debut="{{ event.getDateDebut().format('Y-m-d\\TH:i') }}"
+                           data-event-date-fin="{{ event.getDateFin().format('Y-m-d\\TH:i') }}"
+                           data-event-adresse="{{ event.getAdresse() }}"
+                           data-event-description="{{ event.getDescription() }}"
+                           data-event-prix="{{ event.getPrix() }}">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <form method="post" action="/events_admin.php?action=delete" style="display: inline;">
+                            <input type="hidden" name="id_event" value="{{ event.getId() }}">
+                            <button type="submit" class="btn btn-supprimer btn-sm" 
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
+<!-- Modal Création -->
 <div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="createEventModalLabel">Créer un nouvel événement</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="createEventForm">
-					<div class="mb-3">
-						<label for="eventTitle" class="form-label">Titre</label>
-						<input type="text" class="form-control" id="eventTitle" name="titre" required>
-					</div>
-					<div class="mb-3">
-						<label for="eventDateStart" class="form-label">Date Début</label>
-						<input type="datetime-local" class="form-control" id="eventDateStart" name="date_debut"
-							required>
-					</div>
-					<div class="mb-3">
-						<label for="eventDateEnd" class="form-label">Date Fin</label>
-						<input type="datetime-local" class="form-control" id="eventDateEnd" name="date_fin" required>
-					</div>
-					<div class="mb-3">
-						<label for="eventAddress" class="form-label">Adresse</label>
-						<input type="text" class="form-control" id="eventAddress" name="adresse" required>
-					</div>
-					<div class="mb-3">
-						<label for="eventDescription" class="form-label">Description</label>
-						<textarea class="form-control" id="eventDescription" name="description" rows="4"
-							required></textarea>
-					</div>
-					<div class="mb-3">
-						<label for="eventPrice" class="form-label">Prix (€)</label>
-						<input type="number" class="form-control" id="eventPrice" name="prix" step="0.01" min="0"
-							required>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-primary" id="saveEventButton">Créer</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createEventModalLabel">Créer un nouvel événement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/events_admin.php?action=create" id="createEventForm">
+                    <input type="hidden" name="id_user" value="{{ user.getId() }}"> 
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Titre</label>
+                        <input type="text" class="form-control" id="eventTitle" name="titre_event" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDateStart" class="form-label">Date Début</label>
+                        <input type="datetime-local" class="form-control" id="eventDateStart" name="date_debut" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDateEnd" class="form-label">Date Fin</label>
+                        <input type="datetime-local" class="form-control" id="eventDateEnd" name="date_fin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventAddress" class="form-label">Adresse</label>
+                        <input type="text" class="form-control" id="eventAddress" name="adresse" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="eventDescription" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventPrice" class="form-label">Prix (€)</label>
+                        <input type="number" class="form-control" id="eventPrice" name="prix" step="0.01" min="0" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Créer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edition -->
+<div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEventModalLabel">Modifier l'événement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/events_admin.php?action=update" id="editEventForm">
+                    <input type="hidden" id="editEventId" name="id_event">
+                    <input type="hidden" name="id_user" value="{{ user.getId() }}"> 
+                    <div class="mb-3">
+                        <label for="editEventTitle" class="form-label">Titre</label>
+                        <input type="text" class="form-control" id="editEventTitle" name="titre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEventDateStart" class="form-label">Date Début</label>
+                        <input type="datetime-local" class="form-control" id="editEventDateStart" name="date_debut" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEventDateEnd" class="form-label">Date Fin</label>
+                        <input type="datetime-local" class="form-control" id="editEventDateEnd" name="date_fin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEventAddress" class="form-label">Adresse</label>
+                        <input type="text" class="form-control" id="editEventAddress" name="adresse" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEventDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editEventDescription" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEventPrice" class="form-label">Prix (€)</label>
+                        <input type="number" class="form-control" id="editEventPrice" name="prix" step="0.01" min="0" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block javascript %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            const searchAttribute = document.getElementById('searchAttribute');
-            const resetButton = document.getElementById('resetSearch');
-            const rows = document.querySelectorAll('.table tbody tr');
+document.addEventListener('DOMContentLoaded', function () {
+    function setupSearch() {
+        const searchInput = document.getElementById('searchInput');
+        const searchAttribute = document.getElementById('searchAttribute');
+        const resetButton = document.getElementById('resetSearch');
+        const rows = document.querySelectorAll('.table tbody tr');
 
-            function filterRows() {
-                const searchTerm = searchInput.value.trim().toLowerCase();
-                const attribute = searchAttribute.value;
+        function filterRows() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const attribute = searchAttribute.value;
 
-                // Mappe les attributs aux indices des colonnes
-                const columnIndices = {
-                    'id': 0,          // ID
-                    'titre': 1,       // Titre
-                    'date_debut': 2,  // Date Début
-                    'date_fin': 3,    // Date Fin
-                    'adresse': 4,     // Adresse
-                    'description': 5, // Description
-                    'prix': 6         // Prix (€)
-                };
+            const columnIndices = {
+                'id': 0,
+                'titre': 1,
+                'date_debut': 2,
+                'date_fin': 3,
+                'adresse': 4,
+                'description': 5,
+                'prix': 6
+            };
 
-                const columnIndex = columnIndices[attribute];
+            const columnIndex = columnIndices[attribute];
 
-                rows.forEach(row => {
-                    const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
-                    let cellText = cell.textContent.trim().toLowerCase();
+            rows.forEach(row => {
+                const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+                let cellText = cell.textContent.trim().toLowerCase();
 
-                    // Gestion spéciale pour les dates (supprime les slashes)
-                    if (attribute === 'date_debut' || attribute === 'date_fin') {
-                        cellText = cellText.replace(/\//g, ''); // "02/04/2025" devient "02042025"
-                    }
-                    // Gestion spéciale pour le prix (supprime espaces et virgules)
-                    if (attribute === 'prix') {
-                        cellText = cellText.replace(/[\s,]/g, ''); // "12,34" devient "1234"
-                    }
+                if (attribute === 'date_debut' || attribute === 'date_fin') {
+                    cellText = cellText.replace(/\//g, '');
+                }
+                if (attribute === 'prix') {
+                    cellText = cellText.replace(/[\s,]/g, '');
+                }
 
-                    if (cellText.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-
-            function resetSearch() {
-                searchInput.value = '';
-                searchAttribute.value = 'titre'; // Réinitialise à "Titre"
-                rows.forEach(row => {
-                    row.style.display = ''; // Affiche toutes les lignes
-                });
-            }
-
-            // Mise à jour du placeholder
-            function updatePlaceholder() {
-                const placeholders = {
-                    'id': 'Rechercher par ID...',
-                    'titre': 'Rechercher par titre...',
-                    'date_debut': 'Rechercher par date début (ex. 02042025)...',
-                    'date_fin': 'Rechercher par date fin (ex. 02042025)...',
-                    'adresse': 'Rechercher par adresse...',
-                    'description': 'Rechercher par description...',
-                    'prix': 'Rechercher par prix...'
-                };
-                searchInput.placeholder = placeholders[searchAttribute.value];
-            }
-
-            searchInput.addEventListener('input', filterRows);
-            searchAttribute.addEventListener('change', function () {
-                updatePlaceholder();
-                filterRows();
+                if (cellText.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
-            resetButton.addEventListener('click', resetSearch);
-
-            // Initialise le placeholder
-            updatePlaceholder();
         }
 
-        // Appelle la fonction de recherche
-        setupSearch();
-    });
+        function resetSearch() {
+            searchInput.value = '';
+            searchAttribute.value = 'titre';
+            rows.forEach(row => {
+                row.style.display = '';
+            });
+        }
+
+        function updatePlaceholder() {
+            const placeholders = {
+                'id': 'Rechercher par ID...',
+                'titre': 'Rechercher par titre...',
+                'date_debut': 'Rechercher par date début (ex. 02042025)...',
+                'date_fin': 'Rechercher par date fin (ex. 02042025)...',
+                'adresse': 'Rechercher par adresse...',
+                'description': 'Rechercher par description...',
+                'prix': 'Rechercher par prix...'
+            };
+            searchInput.placeholder = placeholders[searchAttribute.value];
+        }
+
+        searchInput.addEventListener('input', filterRows);
+        searchAttribute.addEventListener('change', function () {
+            updatePlaceholder();
+            filterRows();
+        });
+        resetButton.addEventListener('click', resetSearch);
+        updatePlaceholder();
+    }
+
+    function setupEditEvent() {
+        const editButtons = document.querySelectorAll('.edit-event');
+        const editEventModal = new bootstrap.Modal(document.getElementById('editEventModal'));
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                document.getElementById('editEventId').value = this.getAttribute('data-event-id');
+                document.getElementById('editEventTitle').value = this.getAttribute('data-event-titre');
+                document.getElementById('editEventDateStart').value = this.getAttribute('data-event-date-debut');
+                document.getElementById('editEventDateEnd').value = this.getAttribute('data-event-date-fin');
+                document.getElementById('editEventAddress').value = this.getAttribute('data-event-adresse');
+                document.getElementById('editEventDescription').value = this.getAttribute('data-event-description');
+                document.getElementById('editEventPrice').value = this.getAttribute('data-event-prix');
+
+                editEventModal.show();
+            });
+        });
+    }
+
+    // Gestion de la modale de création
+    function setupCreateEvent() {
+        const createButton = document.querySelector('.add-event-button');
+        const createEventModal = new bootstrap.Modal(document.getElementById('createEventModal'));
+        const createEventForm = document.getElementById('createEventForm');
+
+        createButton.addEventListener('click', function (event) {
+            createEventForm.reset();
+
+            const now = new Date().toISOString().slice(0, 16); 
+            document.getElementById('eventDateStart').value = now;
+
+            createEventModal.show();
+        });
+    }
+
+    setupSearch();
+    setupEditEvent();
+    setupCreateEvent();
+});
 </script>
 {% endblock %}

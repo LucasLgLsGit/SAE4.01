@@ -20,6 +20,7 @@ class ActualiteController extends Controller {
 		$isAdmin = $user && $user->isAdmin();
 
 		$this->view('/news/index.html.twig', [
+			'title' => 'Actualités',
 			'actualites' => $actualites,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin
@@ -34,13 +35,12 @@ class ActualiteController extends Controller {
 			try {
 				$newsRepo = new ActualiteRepository();
 				$newsRepo->create($data);
-				$this->redirectTo('actualites.php');
+				$this->redirectTo('news_admin.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
 			}
 		}
 
-		$this->view('/admin/newsAdmin.html.twig', ['errors' => $errors, 'data' => $data]);
 	}
 
 	public function update()
@@ -50,22 +50,17 @@ class ActualiteController extends Controller {
 		$contenu = $this->getPostParam('contenu');
 
 		if (empty($id) || empty($titre) || empty($contenu)) {
-			echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
-			http_response_code(400);
+			throw new Exception('Tous les champs sont requis.');
+			$this->redirectTo('news_admin.php');
 			return;
 		}
 
-		try {
-			$newsRepository = new ActualiteRepository();
-			$newsRepository->updateById($id, [
-				'titre' => $titre,
-				'contenu' => $contenu,
-			]);
-			echo json_encode(['success' => true, 'message' => 'Actualité mise à jour avec succès.']);
-		} catch (Exception $e) {
-			http_response_code(500);
-			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-		}
+		$newsRepository = new ActualiteRepository();
+		$newsRepository->updateById($id, [
+			'titre' => $titre,
+			'contenu' => $contenu,
+		]);
+		$this->redirectTo('news_admin.php');
 }
 
 	public function delete()
@@ -73,17 +68,14 @@ class ActualiteController extends Controller {
 		$id = $this->getPostParam('id_article');
 
 		if (empty($id)) {
-			echo json_encode(['success' => false, 'message' => 'ID requis.']);
+			throw new Exception('L\'ID de l\'actualité est requis.');
+			$this->redirectTo('news_admin.php');
 			return;
 		}
 
-		try {
-			$newsRepository = new ActualiteRepository();
-			$newsRepository->deleteById($id);
-			echo json_encode(['success' => true, 'message' => 'Actualité supprimée avec succès.']);
-		} catch (Exception $e) {
-			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-		}
+		$newsRepository = new ActualiteRepository();
+		$newsRepository->deleteById($id);
+		$this->redirectTo('news_admin.php');
 	}
 
 	public function getLastActualites(int $limit = 10)

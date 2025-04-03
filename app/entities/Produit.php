@@ -1,7 +1,8 @@
 <?php
 class Produit { 
 
-	public function __construct(private int $id_produit,
+	public function __construct(
+	private ?int $id_produit,
 	private string $titre_produit,
 	private string $description_produit,
 	private Datetime $date_produit,

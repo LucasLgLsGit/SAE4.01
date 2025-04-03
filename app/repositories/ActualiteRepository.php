@@ -34,10 +34,6 @@ class ActualiteRepository
 		{
 			$errors[] = "Le contenu de l'article est requis !";
 		}
-		if (empty($data['date_publication']))
-		{
-			$errors[] = "La date de publication est requise !";
-		}
 		if (empty($data['id_user']))
 		{
 			$errors[] = "L'identifiant utilisateur (id_user) est requis !";
@@ -52,7 +48,7 @@ class ActualiteRepository
 			null,
 			$data['titre_article'],
 			$data['contenu'],
-			new DateTime($data['date_publication']),
+			new DateTime(),
 			(int) $data['id_user']
 		);
 
@@ -63,6 +59,9 @@ class ActualiteRepository
 			':date_publication' => $actualite->getDatePublication()->format('Y-m-d H:i:s'),
 			':id_user' => $actualite->getIdUser()
 		]);
+
+		$actualite->setIdArticle($this->pdo->lastInsertId());
+		return $actualite;
 	}
 
 	private function createActualiteFromRow(array $row): Actualite

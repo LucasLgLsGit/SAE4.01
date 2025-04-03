@@ -27,6 +27,7 @@ class EventController extends Controller
 		krsort($eventsByYear);
 
 		$this->view('events.html.twig', [
+			'title' => 'Événements',
 			'eventsByYear' => $eventsByYear,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin

@@ -4,7 +4,7 @@ Class Actualite
 {
 
 	public function __construct(
-		private int $id_article,
+		private ?int $id_article,
 		private string $titre_article,
 		private string $contenu,
 		private DateTime $date_publication,

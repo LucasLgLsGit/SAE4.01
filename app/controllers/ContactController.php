@@ -49,6 +49,7 @@ class ContactController extends Controller
 		}
 
 		$this->view('contact.html.twig', [
+			'title' => 'Contact',
 			'data' => $data,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin

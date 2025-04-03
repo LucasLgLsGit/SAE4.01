@@ -76,18 +76,22 @@
 						{{ success }}
 					</div>
 				{% endif %}
-				<h5 class="modal-title" id="createProductModalLabel">Créer un nouveau produit</h5>
+				<h5 class="modal-title d-flex align-items-center" id="createProductModalLabel">
+					<span>Créer un nouveau produit</span>
+				</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<form id="createProductForm">
-					<div class="mb-3">
-						<label for="productName" class="form-label">Nom du produit</label>
-						<input type="text" class="form-control" id="productName" name="nom" required>
-					</div>
-					<div class="mb-3">
-						<label for="productPrice" class="form-label">Prix (€)</label>
-						<input type="number" class="form-control" id="productPrice" name="prix" step="0.01" min="0" required>
+					<div class="mb-3 d-flex align-items-center gap-3">
+						<div>
+							<label for="productName" class="form-label">Nom du produit</label>
+							<input type="text" class="form-control" id="productName" name="nom" required>
+						</div>
+						<div>
+							<label for="productPrice" class="form-label">Prix</label>
+							<input type="number" class="form-control w-auto" id="productPrice" name="prix" step="0.01" min="0" placeholder="Prix (€)" required>
+						</div>
 					</div>
 					<div class="mb-3">
 						<label for="productDescription" class="form-label">Description</label>
@@ -131,12 +135,20 @@
 						</div>
 					</div>
 				</form>
+				<div class="mb-3 d-flex align-items-center gap-3">
+					<div>
+						<label for="imageInput0" class="form-label">Image principale (obligatoire) :</label>
+						<input class="form-control image-input" type="file" id="imageInput0" name="images[]" accept="image/*" required>
+					</div>
+					<div id="previewContainer0" class="mt-2"></div>
+				</div>
+				<div id="additionalImagesContainer"></div>
+				<button type="button" class="btn btn-success btn-sm mt-2" id="addImageButton">Ajouter une autre image</button>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 				<button type="button" class="btn btn-warning" id="resetProductButton">Réinitialiser</button>
 				<button type="button" class="btn btn-primary" id="saveProductButton">Créer</button>
-
 			</div>
 		</div>
 	</div>
@@ -145,6 +157,75 @@
 
 {% block javascript %}
 	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			let imageCounter = 1;
+		
+			function handleImagePreview(input, previewContainerId) {
+				const previewContainer = document.getElementById(previewContainerId);
+				previewContainer.innerHTML = '';
+		
+				const file = input.files[0];
+				if (file) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						const img = document.createElement('img');
+						img.src = e.target.result;
+						img.style.width = '100px';
+						img.style.marginTop = '10px';
+						img.style.borderRadius = '5px';
+						img.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.2)';
+						previewContainer.appendChild(img);
+					};
+					reader.readAsDataURL(file);
+				}
+			}
+		
+			document.getElementById('imageInput0').addEventListener('change', function () {
+				handleImagePreview(this, 'previewContainer0');
+			});
+		
+			document.getElementById('addImageButton').addEventListener('click', function () {
+				const additionalImagesContainer = document.getElementById('additionalImagesContainer');
+		
+				const newImageDiv = document.createElement('div');
+				newImageDiv.classList.add('mb-3', 'd-flex', 'align-items-center', 'gap-3');
+		
+				const newImageInputId = `imageInput${imageCounter}`;
+				const newPreviewContainerId = `previewContainer${imageCounter}`;
+		
+				newImageDiv.innerHTML = `
+					<button type="button" class="btn btn-danger btn-sm remove-image-button">
+						<i class="bi bi-trash"></i>
+					</button>
+					<div>
+						<input class="form-control image-input" type="file" id="${newImageInputId}" name="images[]" accept="image/*">
+					</div>
+					<div id="${newPreviewContainerId}" class="mt-2"></div>
+				`;
+		
+				if(imageCounter == 1)
+					additionalImagesContainer.innerHTML = '<h5 class="complementary-images">Images supplémentaires (facultatif) :</h5>';
+
+				additionalImagesContainer.appendChild(newImageDiv);
+		
+				document.getElementById(newImageInputId).addEventListener('change', function () {
+					handleImagePreview(this, newPreviewContainerId);
+				});
+		
+				newImageDiv.querySelector('.remove-image-button').addEventListener('click', function () {
+					newImageDiv.remove();
+					if (additionalImagesContainer.querySelectorAll('.image-input').length === 0) {
+						const complementaryImagesTitle = document.querySelector('.complementary-images');
+						if (complementaryImagesTitle) {
+							complementaryImagesTitle.remove();
+						}
+					}
+					imageCounter--;
+				});
+				imageCounter++;
+			});
+		});
+
 		document.addEventListener('DOMContentLoaded', function () {
 
 			function setupSearch() {

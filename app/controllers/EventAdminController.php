@@ -18,12 +18,14 @@ class EventAdminController extends Controller
 		
 		if($isAdmin) {
 			$this->view('/admin/eventsAdmin.html.twig', [
+				'title' => 'Événements admin',
 				'events' => $events,
 				'isLoggedIn' => $isLoggedIn,
 				'isAdmin' => $isAdmin
 			]);
 		} else {
 			$this->view('index.html.twig', [
+				'title' => 'Accueil',
 				'isLoggedIn' => $isLoggedIn,
 				'isAdmin' => $isAdmin
 			]);

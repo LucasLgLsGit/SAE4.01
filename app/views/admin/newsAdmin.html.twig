@@ -9,7 +9,7 @@
 	<div class="container mt-5">
 		<div class="d-flex align-items-center mb-4">
 			<h2 class="fw-bold">Gestion des actualités</h2>
-			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createNewsModal">Ajouter une actualité<i class="bi-create-news bi bi-plus-square"></i></button>
+			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createNewsModal" onclick="document.getElementById('createNewsForm').reset();">Ajouter une actualité<i class="bi-create-news bi bi-plus-square"></i></button>
 		</div>
 		<div class="mb-3 d-flex gap-2">
 			<select class="form-select w-25" id="searchAttribute">
@@ -44,12 +44,19 @@
 					<td>
 						<a href="#" 
 							class="btn btn-modifier btn-sm edit-news" 
+							data-bs-toggle="modal" 
+							data-bs-target="#editNewsModal" 
 							data-new-id="{{ new.getIdArticle() }}" 
 							data-new-title="{{ new.getTitreArticle() }}" 
-							data-new-content="{{ new.getContenu() }}">
+							data-new-content="{{ new.getContenu() }}" 
+							onclick="
+								document.getElementById('editNewsId').value = '{{ new.getIdArticle() }}';
+								document.getElementById('editNewsTitle').value = '{{ new.getTitreArticle() }}';
+								document.getElementById('editNewsContent').value = '{{ new.getContenu() }}';
+							">
 							<i class="bi bi-pencil-square"></i>
 						</a>
-						<button class="btn btn-supprimer btn-sm delete-new mt-1" data-new-id="{{ new.getIdArticle() }}">
+						<button class="btn btn-supprimer btn-sm delete-new mt-1" data-bs-toggle="modal" data-bs-target="#deleteNewsModal" data-new-id="{{ new.getIdArticle() }}" onclick="document.getElementById('deleteNewsId').value = '{{ new.getIdArticle() }}';">
 							<i class="bi bi-trash"></i>
 						</button>
 					</td>
@@ -68,7 +75,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="editNewsForm">
+				<form id="editNewsForm" action="news_update.php" method="POST">
 					<input type="hidden" id="editNewsId" name="id_article">
 					<div class="mb-3">
 						<label for="editNewsTitle" class="form-label">Titre</label>
@@ -82,7 +89,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-primary" id="saveNewsChanges">Enregistrer</button>
+				<button type="submit" class="btn btn-primary" form="editNewsForm">Enregistrer</button>
 			</div>
 		</div>
 	</div>
@@ -91,17 +98,20 @@
 <div class="modal fade" id="deleteNewsModal" tabindex="-1" aria-labelledby="deleteNewsModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="deleteNewsModalLabel">Confirmer la suppression</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				Êtes-vous sûr de vouloir supprimer cette actualité ?
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-danger" id="confirmDeleteNews">Supprimer</button>
-			</div>
+			<form action="news_delete.php" method="POST">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteNewsModalLabel">Confirmer la suppression</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Êtes-vous sûr de vouloir supprimer cette actualité ?
+					<input type="hidden" name="id_article" id="deleteNewsId">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-danger">Supprimer</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -114,11 +124,11 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="createNewsForm">
-					<input type="hidden" id="createNewsUserId" name="id_user" value="{{ utilisateur.getId() }}">
+				<form id="createNewsForm" action="news_create.php" method="POST">
+					<input type="hidden" id="createNewsUserId" name="id_user" value="{{ utilisateur.getId()}}">
 					<div class="mb-3">
 						<label for="createNewsTitle" class="form-label">Titre</label>
-						<input type="text" class="form-control" id="createNewsTitle" name="titre" required>
+						<input type="text" class="form-control" id="createNewsTitle" name="titre_article" required>
 					</div>
 					<div class="mb-3">
 						<label for="createNewsContent" class="form-label">Contenu</label>
@@ -128,7 +138,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-primary" id="saveNewsButton">Créer</button>
+				<button type="submit" class="btn btn-primary" form="createNewsForm">Créer</button>
 			</div>
 		</div>
 	</div>
@@ -139,150 +149,6 @@
 <script>
 	document.addEventListener('DOMContentLoaded', function () 
 	{
-		const editNewsModal = new bootstrap.Modal(document.getElementById('editNewsModal'));
-		const deleteNewsModal = new bootstrap.Modal(document.getElementById('deleteNewsModal'));
-		const createNewsModal = new bootstrap.Modal(document.getElementById('createNewsModal'));
-
-		const editNewsForm = document.getElementById('editNewsForm');
-		const createNewsForm = document.getElementById('createNewsForm');
-
-		const saveNewsChangesButton = document.getElementById('saveNewsChanges');
-		const saveNewsButton = document.getElementById('saveNewsButton');
-		const confirmDeleteNewsButton = document.getElementById('confirmDeleteNews');
-
-		let newsIdToDelete = null;
-
-		function setupEditNews() 
-		{
-			const editNewsButtons = document.querySelectorAll('.edit-news');
-
-			editNewsButtons.forEach(button => 
-			{
-				button.addEventListener('click', function (event) 
-				{
-					event.preventDefault();
-
-					const newsId = this.getAttribute('data-new-id');
-					const newsTitle = this.getAttribute('data-new-title');
-					const newsContent = this.getAttribute('data-new-content');
-
-					document.getElementById('editNewsId').value = newsId;
-					document.getElementById('editNewsTitle').value = newsTitle;
-					document.getElementById('editNewsContent').value = newsContent;
-
-					editNewsModal.show();
-				});
-			});
-
-			saveNewsChangesButton.addEventListener('click', function () 
-			{
-				const formData = new FormData(editNewsForm);
-
-				fetch('/news_update.php', 
-				{
-					method: 'POST',
-					body: formData,
-				})
-				.then(response => 
-				{
-					if (response.ok) 
-					{
-						location.reload();
-					} 
-					else 
-					{
-						throw new Error('Erreur lors de la mise à jour');
-					}
-				})
-				.catch(error => 
-				{
-					console.error('Erreur:', error);
-				});
-			});
-		}
-
-		function setupDeleteNews() 
-		{
-			const deleteNewsButtons = document.querySelectorAll('.delete-new');
-
-			deleteNewsButtons.forEach(button => 
-			{
-				button.addEventListener('click', function (event) 
-				{
-					event.preventDefault();
-
-					newsIdToDelete = this.getAttribute('data-new-id');
-
-					deleteNewsModal.show();
-				});
-			});
-
-			confirmDeleteNewsButton.addEventListener('click', function () 
-			{
-				if (newsIdToDelete) 
-				{
-					fetch('/news_delete.php', 
-					{
-						method: 'POST',
-						headers: 
-						{
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-						body: `id_article=${newsIdToDelete}`,
-					})
-					.then(response => 
-					{
-						if (response.ok) 
-						{
-							location.reload();
-						} 
-						else 
-						{
-							throw new Error('Erreur lors de la suppression');
-						}
-					})
-					.catch(error => 
-					{
-						console.error('Erreur:', error);
-					});
-				}
-			});
-		}
-
-		function setupCreateNews() 
-		{
-			saveNewsButton.addEventListener('click', function () 
-			{
-				const formData = new FormData(createNewsForm);
-
-				const now = new Date();
-				const formattedDate = now.toISOString().slice(0, 19).replace('T', ' ');
-				formData.append('date_publication', formattedDate);
-
-				fetch('/news_create.php', 
-				{
-					method: 'POST',
-					body: formData,
-				})
-				.then(response => 
-				{
-					if (response.ok) 
-					{
-						createNewsModal.hide();
-						location.reload();
-					} 
-					else 
-					{
-						throw new Error('Erreur lors de la création');
-					}
-				})
-				.catch(error => 
-				{
-					console.error('Erreur:', error);
-				});
-			});
-		}
-
 		function setupSearch() {
 			const searchInput = document.getElementById('searchInput');
 			const searchAttribute = document.getElementById('searchAttribute');
@@ -351,10 +217,6 @@
 			// Initialise le placeholder
 			updatePlaceholder();
 		}
-
-		setupEditNews();
-		setupDeleteNews();
-		setupCreateNews();
 		setupSearch();
 	});
 </script>

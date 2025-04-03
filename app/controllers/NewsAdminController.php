@@ -18,12 +18,15 @@ class NewsAdminController extends Controller
 		
 		if($isAdmin) {
 			$this->view('/admin/newsAdmin.html.twig', [
+				'title' => 'Actus admin',
 				'news' => $news,
 				'isLoggedIn' => $isLoggedIn,
-				'isAdmin' => $isAdmin
+				'isAdmin' => $isAdmin,
+				'utilisateur' => $user
 			]);
 		} else {
-			$this->view('actusAdmin.html.twig', [
+			$this->view('index.html.twig', [
+				'title' => 'Accueil',
 				'isLoggedIn' => $isLoggedIn,
 				'isAdmin' => $isAdmin
 			]);
