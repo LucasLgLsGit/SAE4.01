@@ -14,9 +14,6 @@ class EvenementController extends Controller
 	use FormTrait;
 	use AuthTrait;
 
-	use FormTrait;
-	use AuthTrait;
-
 	public function index()
 	{
 		setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'french');
