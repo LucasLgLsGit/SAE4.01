@@ -75,7 +75,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="editNewsForm" action="news_update.php" method="POST">
+				<form id="editNewsForm" action="news_admin.php?action=update" method="POST">
 					<input type="hidden" id="editNewsId" name="id_article">
 					<div class="mb-3">
 						<label for="editNewsTitle" class="form-label">Titre</label>
@@ -98,7 +98,7 @@
 <div class="modal fade" id="deleteNewsModal" tabindex="-1" aria-labelledby="deleteNewsModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form action="news_delete.php" method="POST">
+			<form action="news_admin.php?action=delete" method="POST">
 				<div class="modal-header">
 					<h5 class="modal-title" id="deleteNewsModalLabel">Confirmer la suppression</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -124,7 +124,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="createNewsForm" action="news_create.php" method="POST">
+				<form id="createNewsForm" action="news_admin.php?action=create" method="POST">
 					<input type="hidden" id="createNewsUserId" name="id_user" value="{{ utilisateur.getId()}}">
 					<div class="mb-3">
 						<label for="createNewsTitle" class="form-label">Titre</label>
