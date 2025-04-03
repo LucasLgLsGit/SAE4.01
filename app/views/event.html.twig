@@ -48,9 +48,15 @@
 					<input type="hidden" name="id_event" value="{{ event.getId() }}">
 					<input type="hidden" name="id_user" value="{{ utilisateur.getId() }}">
 					<input type="hidden" name="date_inscription" value="{{ "now"|date("Y-m-d H:i:s") }}">
-					<button type="submit" class="btn btn-more py-2">
-						S'inscrire
-					</button>
+					{% if isLoggedIn %}
+						<button type="submit" class="btn btn-more py-2">
+							S'inscrire
+						</button>
+					{% else %}
+						<a href="/login.php" class="btn btn-more py-2">
+							Se connecter
+						</a>
+					{% endif %}
 				</form>
 				{% if isRegistered %}
 				<form method="post" action="/desinscription_event.php">

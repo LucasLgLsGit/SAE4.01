@@ -87,7 +87,7 @@ class ProduitRepository {
 			$data['stock'],
 			$data['prix'],
 			$data['id_user'],
-			null
+			$data['nom_image'] ?? ''
 		);
 	}
 
