@@ -17,7 +17,7 @@
 				<option value="stock">Stock</option>
 				<option value="prix">Prix</option>
 				<option value="id">ID</option>
-				<option value="taille">Taille</option> <!-- Nouvelle option -->
+				<option value="taille">Taille</option>
 			</select>
 			<input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
 			<button type="button" class="btn btn-research" id="resetSearch"><i class="bi bi-arrow-clockwise"></i></button>
@@ -82,7 +82,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="createProductForm">
+				<form id="createProductForm" method="POST" enctype="multipart/form-data" action="/products_admin.php?action=createProduct">
 					<div class="mb-3 d-flex align-items-center gap-3">
 						<div>
 							<label for="productName" class="form-label">Nom du produit</label>
@@ -126,7 +126,7 @@
 									<tr>
 										<td>
 											<div class="d-flex justify-content-center">
-												<button type="button" class="btn btn-success btn-sm add-color-row"><i class="bi bi-plus-square"></i></button>
+												<button type="submit" class="btn btn-success btn-sm add-color-row"><i class="bi bi-plus-square"></i></button>
 											</div>
 										</td>
 									</tr>
@@ -134,22 +134,22 @@
 							</table>
 						</div>
 					</div>
-				</form>
-				<div class="mb-3 d-flex align-items-center gap-3">
-					<div>
-						<label for="imageInput0" class="form-label">Image principale (obligatoire) :</label>
-						<input class="form-control image-input" type="file" id="imageInput0" name="images[]" accept="image/*" required>
+					<div class="mb-3 d-flex align-items-center gap-3">
+						<div>
+							<label for="imageInput0" class="form-label">Image principale (obligatoire) :</label>
+							<input class="form-control image-input" type="file" id="imageInput0" name="images[]" accept="image/*">
+						</div>
+						<div id="previewContainer0" class="mt-2"></div>
 					</div>
-					<div id="previewContainer0" class="mt-2"></div>
+					<div id="additionalImagesContainer"></div>
+					<button type="button" class="btn btn-success btn-sm mt-2" id="addImageButton">Ajouter une autre image</button>
 				</div>
-				<div id="additionalImagesContainer"></div>
-				<button type="button" class="btn btn-success btn-sm mt-2" id="addImageButton">Ajouter une autre image</button>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-warning" id="resetProductButton">Réinitialiser</button>
-				<button type="button" class="btn btn-primary" id="saveProductButton">Créer</button>
-			</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="btn btn-warning" id="resetProductButton">Réinitialiser</button>
+					<button type="submit" class="btn btn-primary" id="saveProductButton">Créer</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

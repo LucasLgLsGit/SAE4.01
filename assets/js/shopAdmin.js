@@ -209,81 +209,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	setupSearch();
 	addEventRow();
 	addEventRowReset();
-	addEventCreate();
 });
 
-function addEventCreate() {
-	const saveButton = document.getElementById('saveProductButton');
-	const createProductForm = document.getElementById('createProductForm');
-
-	saveButton.addEventListener('click', function () {
-		const name = document.getElementById('productName').value;
-		const price = document.getElementById('productPrice').value;
-		const description = document.getElementById('productDescription').value;
-		const stockTableBody = document.querySelector('#stockTable tbody');
-		const rows = stockTableBody.querySelectorAll('tr');
-
-		const products = [];
-
-		rows.forEach((row) => {
-			const colorInput = row.querySelector('input[type="color"]');
-			const stockInputs = row.querySelectorAll('input[type="number"]');
-			const sizes = Array.from(stockInputs).map(input => ({
-				taille: input.name.match(/\[(.*?)\]/)[1],
-				stock: input.value
-			}));
-
-			sizes.forEach(size => {
-				products.push({
-					titre_produit: name,
-					description_produit: description,
-					date_produit: new Date().toISOString(),
-					couleur: colorInput.value,
-					taille: size.taille,
-					stock: size.stock,
-					prix: 2,
-					id_user: 4
-				});
-			});
-		});
-
-		for (let i = 0; i < products.length; i++) {
-			if (products[i].stock === '') {
-				products[i].stock = 0;
-			}
-		}
-
-		// Parcours les products et fais une requete pour chaque produir
-		products.forEach(product => {
-			console.log(JSON.stringify(product));
-			fetch('/insert_product.php', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(product)
-			})
-				.then(response => {
-					console.log(response)
-					if (!response.ok) {
-						throw new Error('Erreur lors de l\'insertion');
-					}
-					return response.json();
-				})
-				.then(data => {
-					if (data.success) {
-						alert('Produit(s) ajouté(s) avec succès !');
-						location.reload();
-					} else {
-						alert('Erreur : ' + data.message);
-					}
-				})
-				.catch(error => {
-					console.error('Erreur :', error);
-				});
-		});
-	});
-}
 
 function addEventRowReset() {
 	const resetButton = document.getElementById('resetProductButton');

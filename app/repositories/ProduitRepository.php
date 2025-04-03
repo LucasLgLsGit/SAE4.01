@@ -40,6 +40,7 @@ class ProduitRepository {
 			throw new Exception(implode(', ', $errors));
 		}
 	
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$stmt = $this->pdo->prepare('
 			INSERT INTO produit (titre_produit, description_produit, date_produit, couleur, taille, stock, prix, id_user)
 			VALUES (:titre_produit, :description_produit, :date_produit, :couleur, :taille, :stock, :prix, :id_user)
@@ -49,9 +50,9 @@ class ProduitRepository {
 		$stmt->bindValue(':date_produit', $data['date_produit']);
 		$stmt->bindValue(':couleur', $data['couleur']);
 		$stmt->bindValue(':taille', $data['taille']);
-		$stmt->bindValue(':stock', $data['stock']);
-		$stmt->bindValue(':prix', (float) $data['prix'], PDO::PARAM_STR);
-		$stmt->bindValue(':id_user', $data['id_user']);
+		$stmt->bindValue(':stock', $data['stock'], PDO::PARAM_INT);
+		$stmt->bindValue(':prix', $data['prix'], PDO::PARAM_STR);
+		$stmt->bindValue(':id_user', $data['id_user'],PDO::PARAM_INT);
 	
 		if (!$stmt->execute()) {
 			throw new Exception("Erreur lors de l'insertion dans la base de données.");
@@ -59,14 +60,14 @@ class ProduitRepository {
 	
 		return new Produit(
 			$this->pdo->lastInsertId(),
-			$data['nom_produit'],
+			$data['titre_produit'],
 			$data['description_produit'],
-			new DateTime(),
-			'',
-			'',
+			new DateTime($data['date_produit']),
+			$data['couleur'],
+			$data['taille'],
 			$data['stock'],
 			$data['prix'],
-			0
+			$data['id_user']
 		);
 	}
 

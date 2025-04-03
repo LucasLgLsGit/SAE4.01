@@ -3,7 +3,10 @@
 trait FormTrait {
 
 	// Nettoie l'entrée utilisateur pour éviter les failles XSS
-	private function sanitizeInput(string $input): string {
+	private function sanitizeInput($input) {
+		if (is_array($input)) {
+			return array_map([$this, 'sanitizeInput'], $input);
+		}
 		return htmlspecialchars(strip_tags(trim($input)));
 	}
 
