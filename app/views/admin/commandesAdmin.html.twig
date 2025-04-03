@@ -1,33 +1,35 @@
 {% extends '_template/base.html.twig' %}
 
 {% block css %}
-<link rel="stylesheet" href="/assets/css/newsAdmin.css">
+<link rel="stylesheet" href="/assets/css/commandeAdmin.css">
 {% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-	<h1 class="text-center mb-4">Liste des Commandes</h1>
-	<div class="table-responsive">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>ID Utilisateur</th>
-					<th>ID Produit</th>
-					<th>Quantité</th>
-					<th>Numéro de Commande</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for commande in commandes %}
-				<tr>
-					<td>{{ commande.getIdUser() }}</td>
-					<td>{{ commande.getIdProduit() }}</td>
-					<td>{{ commande.getQuantite() }}</td>
-					<td>{{ commande.getNumeroCommande() }}</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+<div class="commandes-container">
+	<div class="container mt-5">
+		<h1 class="text-center mb-4">Liste des Commandes</h1>
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID Utilisateur</th>
+						<th>ID Produit</th>
+						<th>Quantité</th>
+						<th>Numéro de Commande</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for commande in commandes %}
+					<tr>
+						<td>{{ commande.getIdUser() }}</td>
+						<td>{{ commande.getIdProduit() }}</td>
+						<td>{{ commande.getQuantite() }}</td>
+						<td>{{ commande.getNumeroCommande() }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 {% endblock %}
