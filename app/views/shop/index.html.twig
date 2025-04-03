@@ -13,6 +13,7 @@
 			<div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
 				<a href="/detail.php?titre={{ produit.titre_produit | url_encode }}" class="text-decoration-none text-dark">
 					<div class="card h-100">
+						<div>{{produit.nom_image ? null : 20}}</div>
 						<div class="card-img-top d-flex justify-content-center align-items-center" style="height: 200px; background-color: #f8f9fa;">
 							<img src="/assets/images/products/{{ produit.nom_image }}" alt="{{ produit.titre_produit }}" class="img-fluid" style="max-height: 100%; max-width: 100%;">
 						</div>
