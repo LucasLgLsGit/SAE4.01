@@ -17,7 +17,6 @@
 						<th>Nom de l'Événement</th>
 						<th>Utilisateur</th>
 						<th>Date de Participation</th>
-						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -27,11 +26,6 @@
 						<td>{{ participation.event_titre }}</td>
 						<td>{{ participation.user_nom }} {{ participation.user_prenom }}</td>
 						<td>{{ participation.date_participation|date('d/m/Y H:i') }}</td>
-						<td>
-							<button class="btn btn-danger btn-sm delete-participation" data-id="{{ participation.id_user }}">
-								<i class="bi bi-trash"></i> 
-							</button>
-						</td>
 					</tr>
 					{% else %}
 					<tr>
