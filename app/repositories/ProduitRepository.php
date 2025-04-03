@@ -21,8 +21,8 @@ class ProduitRepository {
 	public function create(array $data): Produit {
 		$errors = [];
 	
-		if (empty($data['nom_produit'])) {
-			$errors[] = "Le nom du produit est requis !";
+		if (empty($data['titre_produit'])) {
+			$errors[] = "Le titre du produit est requis !";
 		}
 		if (empty($data['description_produit'])) {
 			$errors[] = "La description du produit est requise !";
