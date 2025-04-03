@@ -188,15 +188,19 @@ footer {
 	color: var(--footer-social-text);
 }
 
+.second-nav {
+	background-color: var(--secondary-color) !important;
+}
+
 .second-nav-link.page {
-	color: var(--secondary-color);
+	color: var(--primary-color) !important;
 	width: max-content;
 	position: relative;
 }
 
 .second-nav-link.page:hover::after {
 	content: '';
-	background-color: var(--text-color);
+	background-color: var(--primary-color) !important;
 	height: 2px;
 	position: absolute;
 	border-radius: 20px;
@@ -207,7 +211,7 @@ footer {
 
 .second-nav-link.page.active::after {
 	content: '';
-	background-color: var(--text-color);
+	background-color: var(--primary-color) !important;
 	height: 2px;
 	position: absolute;
 	border-radius: 20px;
