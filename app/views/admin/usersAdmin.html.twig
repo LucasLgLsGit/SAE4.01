@@ -64,7 +64,7 @@
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form action="user_delete.php" method="POST">
+			<form action="users.php?action=deleteUser" method="POST">
 				<div class="modal-header">
 					<h5 class="modal-title" id="deleteUserModalLabel">Confirmer la suppression</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -108,7 +108,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="editUserForm" action="user_update.php" method="POST">
+				<form id="editUserForm" action="users.php?action=update" method="POST">
 					<input type="hidden" id="editUserId" name="id_user">
 					<div class="mb-3">
 						<label for="editUserNom" class="form-label">Nom</label>
@@ -211,7 +211,7 @@
 				if (pendingPermissionChange) {
 					const { userId, permissionType, isChecked } = pendingPermissionChange;
 
-					fetch('/user_update_permission.php', {
+					fetch('/users.php?action=updatePermission', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded',

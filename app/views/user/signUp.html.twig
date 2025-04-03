@@ -7,7 +7,7 @@
 {% block body %}
 <div class="sign-up-container">
 
-	<form method="POST" action="user_create.php" class="container p-4 border rounded shadow mt-4" style="max-width: 500px;">
+	<form method="POST" action="users.php?action=create" class="container p-4 border rounded shadow mt-4" style="max-width: 500px;">
 		{% if errors %}
 			<div class="alert alert-danger text-center" role="alert">
 				<ul class="mb-0">
