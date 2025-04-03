@@ -21,8 +21,8 @@ class ProduitRepository {
 	public function create(array $data): Produit {
 		$errors = [];
 	
-		if (empty($data['nom_produit'])) {
-			$errors[] = "Le nom du produit est requis !";
+		if (empty($data['titre_produit'])) {
+			$errors[] = "Le titre du produit est requis !";
 		}
 		if (empty($data['description_produit'])) {
 			$errors[] = "La description du produit est requise !";
@@ -165,10 +165,6 @@ class ProduitRepository {
 		$stmt = $this->pdo->prepare('DELETE FROM "produit" WHERE id_produit = :id_produit');
 		return $stmt->execute(['id_produit' => $id]);
 	}
-
-
-
-
 
 	public function findById(int $id): ?Produit {
 		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE id_produit = :id_produit');

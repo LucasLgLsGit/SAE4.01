@@ -1,51 +1,59 @@
-/* Table styles */
-.container-participations {
+.container-participations
+{
 	width: 100vw;
+	overflow-x: auto;
+	margin-bottom: 100px;
+	height: 80vh;
 }
 
-.table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 20px;
+.container 
+{
+	max-height: 70vh;
+	margin-bottom: 100px;
+	width: 100%;
 }
 
-.table th, .table td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px;
+.table .ellipsis-td 
+{
+	max-width: 150px;
+	height: auto;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 0.9rem;
 }
 
-.table th {
-    background-color: #030C43;
-    color: white;
-    font-weight: bold;
+.btn-research 
+{
+	background-color: #030C43;
+	color: white;
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f9f9f9;
+.btn-research:hover 
+{
+	background-color: #06178a;
+	color: white;
 }
 
-.table-striped tbody tr:nth-of-type(even) {
-    background-color: #e9ecef;
+.sortable 
+{
+	cursor: pointer;
 }
 
-.table-bordered th, .table-bordered td {
-    border: 1px solid #dee2e6;
+@media screen and (max-width: 768px) 
+{
+	.table .ellipsis-td 
+	{
+		max-width: 20px;
+		text-overflow: ellipsis;
+	}
 }
 
-.btn {
-    border-radius: 5px;
-    font-size: 14px;
-    padding: 5px 10px;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-    color: white;
+@media screen and (max-width: 480px) 
+{
+	.table .ellipsis-td 
+	{
+		max-width: 20px;
+		text-overflow: ellipsis;
+	}
 }

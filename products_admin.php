@@ -11,6 +11,9 @@ switch ($action) {
 	case 'createProduct':
 		$productController->createProduct();
 		break;
+	case 'deleteProduct';
+		$productController->deleteProduct();
+		break;
 	default:
 		$shopAdminController->index();
 		break;
