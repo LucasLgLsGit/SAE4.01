@@ -85,3 +85,7 @@
 		text-overflow: ellipsis;
 	}
 }
+
+.sortable {
+	cursor: pointer;
+}
