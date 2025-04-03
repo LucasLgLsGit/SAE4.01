@@ -19,3 +19,13 @@
     transform: scale(1.3);
     border: 2.5px solid #706c6c;
 }
+
+.btn-ajouter-panier {
+	background-color: #030C43;
+	color: white;
+}
+
+.btn-ajouter-panier:hover {
+	background-color: #06178a;
+	color: white;
+}
