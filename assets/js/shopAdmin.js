@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const cellB = b.cells[columnIndex];
 
             if (!cellA || !cellB) {
-                return 0; // Ignore les lignes qui n'ont pas la cellule correspondante
+                return 0;
             }
 
             const valueA = cellA.textContent.trim();
@@ -148,11 +148,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			const attribute = searchAttribute.value;
 
 			const columnIndices = {
-				'id': 0,    // ID
-				'nom': 1,   // Titre
-				'stock': 6, // Stock
-				'prix': 7,  // Prix (€)
-				'taille': 5 // Taille (6ème colonne)
+				'id': 0,  
+				'nom': 1,  
+				'stock': 6, 
+				'prix': 7,  
+				'taille': 5 
 			};
 
 			const columnIndex = columnIndices[attribute];
@@ -161,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
 				let cellText = cell.textContent.trim().toLowerCase();
 
-				// Gestion spéciale pour le prix
 				if (attribute === 'prix') {
 					cellText = cellText.replace(/[\s,]/g, ''); // "12,34" devient "1234"
 				}
@@ -176,20 +175,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		function resetSearch() {
 			searchInput.value = '';
-			searchAttribute.value = 'nom'; // Réinitialise à "Nom"
+			searchAttribute.value = 'nom'; 
 			rows.forEach(row => {
-				row.style.display = ''; // Affiche toutes les lignes
+				row.style.display = '';
 			});
 		}
 
-		// Mise à jour du placeholder en fonction de l'attribut
+		
 		function updatePlaceholder() {
 			const placeholders = {
 				'id': 'Rechercher par ID...',
 				'nom': 'Rechercher par nom...',
 				'stock': 'Rechercher par stock...',
 				'prix': 'Rechercher par prix...',
-				'taille': 'Rechercher par taille...' // Nouveau placeholder
+				'taille': 'Rechercher par taille...' 
 			};
 			searchInput.placeholder = placeholders[searchAttribute.value];
 		}
@@ -201,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 		resetButton.addEventListener('click', resetSearch);
 
-		// Initialise le placeholder au chargement
 		updatePlaceholder();
 	}
 
@@ -270,4 +268,49 @@ function addEventRow() {
 			row.remove();
 		}
 	});
+
+	const editButtons = document.querySelectorAll('.edit-product');
+    console.log('Nombre de boutons trouvés :', editButtons.length);
+
+    if (editButtons.length === 0) {
+        console.error('Aucun bouton .edit-product trouvé. Vérifiez le HTML.');
+    }
+
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            console.log('Clic sur Modifier détecté pour ID :', this.getAttribute('data-product-id'));
+
+            const productData = {
+                id: this.getAttribute('data-product-id'),
+                nom: this.getAttribute('data-product-name'),
+                description: this.getAttribute('data-product-description'),
+                prix: this.getAttribute('data-product-price'),
+                couleur: this.getAttribute('data-product-color'),
+                taille: this.getAttribute('data-product-size'),
+                stock: this.getAttribute('data-product-stock')
+            };
+
+            console.log('Données du produit récupérées :', productData);
+
+            document.getElementById('modifProductId').value = productData.id || '';
+            document.getElementById('modifProductName').value = productData.nom || '';
+            document.getElementById('modifProductDescription').value = productData.description || '';
+            document.getElementById('modifProductPrice').value = productData.prix || '';
+            document.getElementById('modifProductColor').value = productData.couleur || '#000000';
+            document.getElementById('modifProductSize').value = productData.taille || 'S';
+            document.getElementById('modifProductStock').value = productData.stock || '0';
+
+            console.log('Valeur de modifProductName après remplissage :', document.getElementById('modifProductName').value);
+
+            const modalElement = document.getElementById('modifProductModal');
+            if (modalElement) {
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                console.log('Modal ouvert');
+            } else {
+                console.error('Modal #modifProductModal introuvable');
+            }
+        });
+    });
 }

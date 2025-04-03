@@ -1,3 +1,3 @@
 <?php
-require_once './app/controllers/EventController.php';
-(new EventController())->index();
+require_once './app/controllers/EvenementController.php';
+(new EvenementController())->index();

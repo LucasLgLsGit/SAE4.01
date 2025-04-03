@@ -104,80 +104,78 @@ class ProduitRepository {
 		);
 	}
 
-	public function update(array $data): Produit {
-		$errors = [];
+	public function update(array $data): Produit
+    {
+        $errors = [];
+        if (empty($data['id_produit'])) {
+            $errors[] = "L'identifiant du produit est requis !";
+        }
 
-		if (empty($data['id_produit'])) {
-			$errors[] = "L'identifiant du produit est requis !";
-		}
-		if (empty($data['nom_produit'])) {
-			$errors[] = "Le nom du produit est requis !";
-		}
-		if (empty($data['description_produit'])) {
-			$errors[] = "La description du produit est requise !";
-		}
-		if (empty($data['date_ajout'])) {
-			$errors[] = "La date d'ajout est requise !";
-		}
-		if (empty($data['couleur'])) {
-			$errors[] = "La couleur du produit est requise !";
-		}
-		if (empty($data['taille'])) {
-			$errors[] = "La taille du produit est requise !";
-		}
-		if (empty($data['stock'])) {
-			$errors[] = "Le stock du produit est requis !";
-		}
-		if (empty($data['prix'])) {
-			$errors[] = "Le prix du produit est requis !";
-		}
-		if (empty($data['id_user'])) {
-			$errors[] = "L'identifiant utilisateur (id_user) est requis !";
-		}
+        if (!empty($errors)) {
+            throw new Exception(implode(', ', $errors));
+        }
 
-		if (!empty($errors)) {
-			throw new Exception(implode(', ', $errors));
-		}
+        $stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE id_produit = :id_produit');
+        $stmt->execute(['id_produit' => $data['id_produit']]);
+        $currentProduct = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		$data['date_produit'] = (new DateTime($data['date_produit']))->format('Y-m-d H:i:s');
+        if (!$currentProduct) {
+            throw new Exception("Produit avec l'ID {$data['id_produit']} non trouvé.");
+        }
 
-		$produit = new Produit(
-			(int) $data['id_produit'],
-			$data['nom_produit'],
-			$data['description_produit'],
-			new DateTime($data['date_ajout']),
-			$data['couleur'],
-			$data['taille'],
-			(int) $data['stock'],
-			(float) $data['prix'],
-			(int) $data['id_user']
-		);
+        $updatedData = [
+            'id_produit' => (int) $data['id_produit'],
+            'titre_produit' => $data['titre_produit'] ?? $currentProduct['titre_produit'],
+            'description_produit' => $data['description_produit'] ?? $currentProduct['description_produit'],
+            'date_produit' => $currentProduct['date_produit'], // On conserve la date existante
+            'couleur' => $data['couleur'] ?? $currentProduct['couleur'],
+            'taille' => $data['taille'] ?? $currentProduct['taille'],
+            'stock' => isset($data['stock']) ? (int) $data['stock'] : $currentProduct['stock'],
+            'prix' => isset($data['prix']) ? (float) $data['prix'] : $currentProduct['prix'],
+            'id_user' => $currentProduct['id_user'] // On conserve l'id_user existant
+        ];
 
-		$stmt = $this->pdo->prepare('
-			UPDATE "produit" 
-			SET titre_produit = :titre_produit, 
-				description_produit = :description_produit, 
-				date_produit = :date_produit, 
-				couleur = :couleur, 
-				taille = :taille, 
-				stock = :stock, 
-				prix = :prix 
-			WHERE id_produit = :id_produit
-		');
+        $stmt = $this->pdo->prepare('
+            UPDATE "produit" 
+            SET titre_produit = :titre_produit, 
+                description_produit = :description_produit, 
+                date_produit = :date_produit, 
+                couleur = :couleur, 
+                taille = :taille, 
+                stock = :stock, 
+                prix = :prix,
+                id_user = :id_user
+            WHERE id_produit = :id_produit
+        ');
 
-		$stmt->execute([
-			'id_produit' => $produit->getId_produit(),
-			'titre_produit' => $produit->getTitre_produit(),
-			'description_produit' => $produit->getDescription_produit(),
-			'date_produit' => $produit->getDate_produit()->format('Y-m-d H:i:s'),
-			'couleur' => $produit->getCouleur(),
-			'taille' => $produit->getTaille(),
-			'stock' => $produit->getStock(),
-			'prix' => $produit->getPrix()
-		]);
+        $success = $stmt->execute([
+            'id_produit' => $updatedData['id_produit'],
+            'titre_produit' => $updatedData['titre_produit'],
+            'description_produit' => $updatedData['description_produit'],
+            'date_produit' => $updatedData['date_produit'],
+            'couleur' => $updatedData['couleur'],
+            'taille' => $updatedData['taille'],
+            'stock' => $updatedData['stock'],
+            'prix' => $updatedData['prix'],
+            'id_user' => $updatedData['id_user']
+        ]);
 
-		return $produit;
-	}
+        if (!$success) {
+            throw new Exception("Échec de la mise à jour du produit.");
+        }
+
+        return new Produit(
+            $updatedData['id_produit'],
+            $updatedData['titre_produit'],
+            $updatedData['description_produit'],
+            new DateTime($updatedData['date_produit']),
+            $updatedData['couleur'],
+            $updatedData['taille'],
+            $updatedData['stock'],
+            $updatedData['prix'],
+            $updatedData['id_user']
+        );
+    }
 
 	public function delete(int $id): bool {
 		$stmt = $this->pdo->prepare('DELETE FROM "produit" WHERE id_produit = :id_produit');

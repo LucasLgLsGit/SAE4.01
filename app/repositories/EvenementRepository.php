@@ -20,46 +20,46 @@ class EvenementRepository {
 
 	public function create(array $data): Evenement {
 		$errors = [];
-	
+
 		// Validation des champs obligatoires
 		if (empty($data['titre_event'])) $errors[] = "Le titre de l'événement est requis !";
 		if (empty($data['adresse'])) $errors[] = "L'adresse est requise !";
 		if (empty($data['description'])) $errors[] = "La description est requise !";
 		if (!isset($data['prix']) || $data['prix'] < 0) $errors[] = "Le prix doit être un nombre positif !";
 		if (empty($data['id_user'])) $errors[] = "L'identifiant utilisateur est requis !";
-	
+
 		// Gestion des dates
-		$dateDebut = new DateTime($data['date_debut'] ?? 'now');
+		$dateDebut = isset($data['date_debut']) ? new DateTime($data['date_debut']) : null;
 		$dateFin = isset($data['date_fin']) ? new DateTime($data['date_fin']) : null;
-	
+
 		// Validation de la date de fin
 		if ($dateFin && $dateFin <= $dateDebut) {
 			$errors[] = "La date de fin doit être après la date de début";
 		}
-		var_dump($errors);
+
 		if (!empty($errors)) {
 			throw new Exception(implode(', ', $errors));
 		}
-	
+
 		// Création de l'objet Evenement
 		$evenement = new Evenement(
 			null,
 			$data['titre_event'],
-			new DateTime(),
+			$dateDebut, // Utilisation correcte de $dateDebut
 			$dateFin,
 			$data['adresse'],
 			$data['description'],
 			(float)$data['prix'],
 			(int)$data['id_user']
 		);
-	
+
 		// Insertion dans la base de données
 		$stmt = $this->pdo->prepare('
 			INSERT INTO "evenement" 
 			(titre_event, date_debut, date_fin, adresse, description, prix, id_user) 
 			VALUES (:titre_event, :date_debut, :date_fin, :adresse, :description, :prix, :id_user)
 		');
-	
+
 		$success = $stmt->execute([
 			'titre_event' => $evenement->getTitreEvent(),
 			'date_debut' => $evenement->getDateDebut()->format('Y-m-d H:i:s'),
@@ -69,12 +69,12 @@ class EvenementRepository {
 			'prix' => $evenement->getPrix(),
 			'id_user' => $evenement->getIdUser()
 		]);
-	
+
 		if (!$success) {
 			$errorInfo = $stmt->errorInfo();
 			throw new Exception("Erreur SQL: " . ($errorInfo[2] ?? "Inconnue"));
 		}
-	
+
 		$evenement->setId((int)$this->pdo->lastInsertId());
 		return $evenement;
 	}
@@ -127,7 +127,7 @@ class EvenementRepository {
 	}
 
 
-
+	
 
 
 	public function findUpcomingEvents(int $limit = null): array {

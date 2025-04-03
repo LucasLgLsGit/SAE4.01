@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS Question;
 
 CREATE TABLE Utilisateur(
 	id_user SERIAL,
-	mail VARCHAR(50) NOT NULL,
+	mail VARCHAR(50) NOT NULL UNIQUE,
 	mdp VARCHAR(255) NOT NULL,
 	permission INT NOT NULL,
 	nom VARCHAR(50) NOT NULL,
@@ -88,8 +88,8 @@ CREATE TABLE Commande(
 	id_user INT,
 	id_produit INT,
 	quantite INT NOT NULL,
-	numero_commande SERIAL,
-	PRIMARY KEY(id_user, id_produit),
+	numero_commande VARCHAR(50),
+	PRIMARY KEY(id_user, id_produit,numero_commande),
 	FOREIGN KEY(id_user) REFERENCES Utilisateur(id_user),
 	FOREIGN KEY(id_produit) REFERENCES Produit(id_produit)
 );
