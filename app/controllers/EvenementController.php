@@ -33,9 +33,16 @@ class EvenementController extends Controller {
     public function create() {
         $data = $this->getAllPostParams();
         $errors = [];
+		$user = $this->getCurrentUser();
+
+		if (!$user) {
+			throw new Exception("Vous devez être connecté pour créer un événement !");
+		}
 
         if (!empty($data)) {
             try {
+				$data['id_user'] = $user->getId();
+
                 $eventRepo = new EvenementRepository();
                 $eventRepo->create($data);
                 $this->redirectTo('events_admin.php');
@@ -44,7 +51,11 @@ class EvenementController extends Controller {
             }
         }
 
-        $this->view('/admin/eventsAdmin.html.twig', ['errors' => $errors, 'data' => $data]);
+        $this->view('/admin/eventsAdmin.html.twig', [
+				'errors' => $errors, 
+				'data' => $data,
+				'user' => $user
+			]);
     }
 
     public function update() {
@@ -56,7 +67,6 @@ class EvenementController extends Controller {
 	
 		$data = $this->getAllPostParams();
 		$errors = [];
-	
 		$eventRepo = new EvenementRepository();
 		$user = $this->getCurrentUser(); 
 	
@@ -77,7 +87,7 @@ class EvenementController extends Controller {
 				$evenement->setAdresse($data['adresse']);
 				$evenement->setDescription($data['description']);
 				$evenement->setPrix((float)$data['prix']);
-				$evenement->setIdUser($user->getId()); 
+				$evenement->setIdUser(!empty($data['id_user']) ? (int)$data['id_user'] : $user->getId());
 	
 				$eventRepo->update($evenement);
 				$this->redirectTo('events_admin.php');
@@ -86,7 +96,12 @@ class EvenementController extends Controller {
 			}
 		}
 	
-		$this->view('admin/eventsAdmin.html.twig', ['errors' => $errors, 'data' => $data, 'id_event' => $id]);
+		$this->view('admin/eventsAdmin.html.twig', [
+				'errors' => $errors, 
+				'data' => $data, 
+				'id_event' => $id,
+				'user' => $user
+			]);
 	}
 
     public function delete() {

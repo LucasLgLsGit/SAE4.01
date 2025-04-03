@@ -10,53 +10,71 @@ class EvenementRepository {
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT * FROM "evenement"');
+		$stmt = $this->pdo->query('SELECT * FROM "evenement" ORDER BY id_event ASC');
 		$evenements = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$evenements[] = $this->createEvenementFromRow($row);
 		}
 		return $evenements;
-	}
+	}	
 
 	public function create(array $data): Evenement {
 		$errors = [];
+	
+		// Validation des champs obligatoires
 		if (empty($data['titre_event'])) $errors[] = "Le titre de l'événement est requis !";
-		if (empty($data['date_debut'])) $errors[] = "La date de début est requise !";
-		if (empty($data['date_fin'])) $errors[] = "La date de fin est requise !";
 		if (empty($data['adresse'])) $errors[] = "L'adresse est requise !";
 		if (empty($data['description'])) $errors[] = "La description est requise !";
 		if (!isset($data['prix']) || $data['prix'] < 0) $errors[] = "Le prix doit être un nombre positif !";
-		if (empty($data['id_user'])) $errors[] = "L'identifiant utilisateur (id_user) est requis !";
-		if (!empty($errors)) throw new Exception(implode(', ', $errors));
-
+		if (empty($data['id_user'])) $errors[] = "L'identifiant utilisateur est requis !";
+	
+		// Gestion des dates
+		$dateDebut = new DateTime($data['date_debut'] ?? 'now');
+		$dateFin = isset($data['date_fin']) ? new DateTime($data['date_fin']) : null;
+	
+		// Validation de la date de fin
+		if ($dateFin && $dateFin <= $dateDebut) {
+			$errors[] = "La date de fin doit être après la date de début";
+		}
+		var_dump($errors);
+		if (!empty($errors)) {
+			throw new Exception(implode(', ', $errors));
+		}
+	
+		// Création de l'objet Evenement
 		$evenement = new Evenement(
 			null,
 			$data['titre_event'],
-			new DateTime($data['date_debut']),
-			new DateTime($data['date_fin']),
+			new DateTime(),
+			$dateFin,
 			$data['adresse'],
 			$data['description'],
 			(float)$data['prix'],
 			(int)$data['id_user']
 		);
-
+	
+		// Insertion dans la base de données
 		$stmt = $this->pdo->prepare('
-			INSERT INTO "evenement" (titre_event, date_debut, date_fin, adresse, description, prix, id_user) 
+			INSERT INTO "evenement" 
+			(titre_event, date_debut, date_fin, adresse, description, prix, id_user) 
 			VALUES (:titre_event, :date_debut, :date_fin, :adresse, :description, :prix, :id_user)
 		');
-
+	
 		$success = $stmt->execute([
 			'titre_event' => $evenement->getTitreEvent(),
 			'date_debut' => $evenement->getDateDebut()->format('Y-m-d H:i:s'),
-			'date_fin' => $evenement->getDateFin()->format('Y-m-d H:i:s'),
+			'date_fin' => $evenement->getDateFin() ? $evenement->getDateFin()->format('Y-m-d H:i:s') : null,
 			'adresse' => $evenement->getAdresse(),
 			'description' => $evenement->getDescription(),
 			'prix' => $evenement->getPrix(),
 			'id_user' => $evenement->getIdUser()
 		]);
-
-		if (!$success) throw new Exception("La création de l'événement a échoué.");
-
+	
+		if (!$success) {
+			$errorInfo = $stmt->errorInfo();
+			throw new Exception("Erreur SQL: " . ($errorInfo[2] ?? "Inconnue"));
+		}
+	
 		$evenement->setId((int)$this->pdo->lastInsertId());
 		return $evenement;
 	}
