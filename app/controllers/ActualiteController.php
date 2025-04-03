@@ -74,17 +74,13 @@ class ActualiteController extends Controller {
 		$id = $this->getPostParam('id_article');
 
 		if (empty($id)) {
-			echo json_encode(['success' => false, 'message' => 'ID requis.']);
+			throw new Exception('L\'ID de l\'actualité est requis.');
 			return;
 		}
 
-		try {
-			$newsRepository = new ActualiteRepository();
-			$newsRepository->deleteById($id);
-			echo json_encode(['success' => true, 'message' => 'Actualité supprimée avec succès.']);
-		} catch (Exception $e) {
-			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-		}
+		$newsRepository = new ActualiteRepository();
+		$newsRepository->deleteById($id);
+		$this->redirectTo('news_admin.php');
 	}
 
 	public function getLastActualites(int $limit = 10)
