@@ -20,43 +20,27 @@ class CommandeRepository
 		return $commandes;
 	}
 
-	public function create(array $data): Commande {
+
+	public function create(array $data)
+	{
 		$errors = [];
-		if (empty($data['id_user'])) {
-			$errors[] = "L'identifiant utilisateur (id_user) est requis !";
-		}
-		if (empty($data['id_produit'])) {
-			$errors[] = "L'identifiant produit (id_produit) est requis !";
-		}
-		if (empty($data['quantite']) || $data['quantite'] < 0) {
-			$errors[] = "La quantité doit être supérieure à 0";
-		}
-		if (empty($data['numero_commande'])) {
-			$errors[] = "Le numéro de commande ne peut pas être nul";
-		}
+		if (empty($data['id_user'])) $errors[] = "L'identifiant utilisateur (id_user) est requis !";
+		if (empty($data['id_produit'])) $errors[] = "L'identifiant produit (id_produit) est requis !";
+		if (empty($data['quantite']) || $data['quantite'] <= 0) $errors[] = "La quantité doit être supérieure à 0.";
+
 		if (!empty($errors)) {
 			throw new Exception(implode(', ', $errors));
 		}
-		$commande = new Commande(
-			$data['id_user'],
-			$data['id_produit'],
-			$data['quantite'],
-			$data['numero_commande']
-		);
+
 		$stmt = $this->pdo->prepare('
-			INSERT INTO "commande" (id_user, id_produit, quantite, numero_commande) 
-			VALUES (:id_user, :id_produit, :quantite, :numero_commande)
+			INSERT INTO Commande (id_user, id_produit, quantite) 
+			VALUES (:id_user, :id_produit, :quantite)
 		');
-		$success = $stmt->execute([
-			'id_user' => $commande->getIdUser(),
-			'id_produit' => $commande->getIdProduit(),
-			'quantite' => $commande->getQuantite(),
-			'numero_commande' => $commande->getNumeroCommande()
+		$stmt->execute([
+			'id_user' => $data['id_user'],
+			'id_produit' => $data['id_produit'],
+			'quantite' => $data['quantite']
 		]);
-		if (!$success) {
-			throw new Exception("La création de la commande a échoué.");
-		}
-		return $commande;
 	}
 
 	private function createCommandeFromRow(array $row): Commande {
@@ -79,17 +63,36 @@ class CommandeRepository
 		if (empty($data['quantite']) || $data['quantite'] < 0) {
 			$errors[] = "La quantité doit être supérieure à 0";
 		}
-		if (empty($data['numero_commande'])) {
-			$errors[] = "Le numéro de commande ne peut pas être nul";
-		}
 		if (!empty($errors)) {
 			throw new Exception(implode(', ', $errors));
 		}
-		$commande = new Commande($data['id_user'], $data['id_produit'], $data['quantite'], $data['numero_commande']);
-		$commandeRepo = new CommandeRepository();
-		if (!$commandeRepo->update($commande)) {
+	
+		// Récupérer la commande existante pour obtenir le numero_commande
+		$existingCommande = $this->findById($data['id_user'], $data['id_produit']);
+		$numero_commande = $existingCommande ? $existingCommande->getNumeroCommande() : 0;
+	
+		$commande = new Commande(
+			$data['id_user'],
+			$data['id_produit'],
+			$data['quantite'],
+			$numero_commande
+		);
+	
+		$stmt = $this->pdo->prepare('
+			UPDATE "commande" 
+			SET quantite = :quantite 
+			WHERE id_user = :id_user AND id_produit = :id_produit
+		');
+		$success = $stmt->execute([
+			'quantite' => $commande->getQuantite(),
+			'id_user' => $commande->getIdUser(),
+			'id_produit' => $commande->getIdProduit()
+		]);
+	
+		if (!$success) {
 			throw new Exception("La mise à jour de la commande a échoué.");
 		}
+	
 		return true;
 	}
 
@@ -107,10 +110,6 @@ class CommandeRepository
 		}
 		return true;
 	}
-
-
-
-
 
 	public function findById(int $id_user, int $id_produit): ?Commande {
 		$stmt = $this->pdo->prepare('SELECT * FROM "commande" WHERE id_user = :id_user AND id_produit = :id_produit');

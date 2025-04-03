@@ -86,7 +86,7 @@ CREATE TABLE Commande(
 	id_user INT,
 	id_produit INT,
 	quantite INT NOT NULL,
-	numero_commande INT NOT NULL,
+	numero_commande SERIAL,
 	PRIMARY KEY(id_user, id_produit),
 	FOREIGN KEY(id_user) REFERENCES Utilisateur(id_user),
 	FOREIGN KEY(id_produit) REFERENCES Produit(id_produit)
