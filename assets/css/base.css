@@ -1,12 +1,65 @@
+:root {
+	--primary-color: #ffffff;
+	--secondary-color: #030C43;
+	--text-color: #030C43;
+	--background-color: #030C43;
+	--hover-background-color: #005ed0;
+	--hover-secondary-color: #005ed0;
+
+	--footer-background-color: #030C43;
+	--footer-text-color: #ffffff;
+	--footer-social-background: #ffffff;
+	--footer-social-text: #030C43;
+}
+
+[data-theme="dark"] {
+	--primary-color: #121212;
+	--secondary-color: #ffffff;
+	--text-color: #ffffff;
+	--background-color: #ffffff;
+	--hover-background-color: #c7c7c7;
+	--hover-secondary-color: #6BA8E6;
+
+	--footer-background-color: #121212;
+	--fotter-text-color: #ffffff;
+	--footer-social-background: #ffffff;
+	--footer-social-text: #121212;
+}
+
+#theme-toggle {
+	background-color: var(--secondary-color);
+	color: var(--primary-color);
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 20px;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#theme-toggle:hover {
+	background-color: var(--hover-background-color);
+	color: var(--primary-color);
+}
+
+.navbar {
+	background-color: var(--primary-color);
+	color: var(--text-color) !important;
+}
+
+.nav-link .bi-cart3{
+	color: var(--text-color) !important;
+}
+
 .nav-link.page {
-	color: #030C43;
+	color: var(--secondary-color);
 	width: max-content;
 	position: relative;
 }
 
 .nav-link.page:hover::after {
 	content: '';
-	background-color: #030C43;
+	background-color: var(--text-color);
 	height: 2px;
 	position: absolute;
 	border-radius: 20px;
@@ -15,9 +68,13 @@
 	animation: erase-width 0.3s ease forwards;
 }
 
+.nav-link.active {
+	color: var(--secondary-color) !important;
+}
+
 .nav-link.active::after {
 	content: '';
-	background-color: #030C43;
+	background-color: var(--text-color);
 	height: 2px;
 	position: absolute;
 	border-radius: 20px;
@@ -40,9 +97,9 @@
 }
 
 .login-button {
-	background-color: #030C43;
+	background-color: var(--secondary-color);
 	border: none;
-	color: white;
+	color: var(--primary-color);
 	padding: 10px 30px;
 	text-align: center;
 	text-decoration: none;
@@ -53,14 +110,14 @@
 }
 
 .login-button:hover {
-	background-color: #0A1D6E;
-	color: white;
+	background-color: var(--hover-secondary-color);
+	color: var(--primary-color);
 }
 
 .profil-button {
-	background-color: #030C43;
+	background-color: var(--secondary-color);
 	border: none;
-	color: white;
+	color: var(--primary-color);
 	padding: 10px 30px;
 	text-align: center;
 	text-decoration: none;
@@ -71,12 +128,12 @@
 }
 
 .profil-button:hover {
-	background-color: #0A1D6E;
-	color: white;
+	background-color: var(--hover-background-color);
+	color: var(--primary-color);
 }
 
 .logout-button {
-	background-color: #a20c0c;
+	background-color: #D9534F;
 	border: none;
 	color: white;
 	padding: 10px 30px;
@@ -89,7 +146,7 @@
 }
 
 .logout-button:hover {
-	background-color: #d50707;
+	background-color: #C9302C;
 	color: white;
 }
 
@@ -102,8 +159,8 @@
 }
 
 footer {
-	background-color: #030C43;
-	color: white;
+	background-color: var(--footer-background-color);
+	color: var(--footer-text-color);
 	height: 250px;
 	justify-content: center;
 	display: flex;
@@ -111,9 +168,10 @@ footer {
 }
 
 .social-button {
-	background-color: #06178a;
+	background-color: var(--footer-social-background);
+	color: var(--footer-social-text);
 	border: none;
-	color: white;
+	color: var(--text-color);
 	padding: 10px 20px;
 	text-align: center;
 	text-decoration: none;
@@ -123,18 +181,22 @@ footer {
 }
 
 .social-button:hover {
-	background-color: #0d34e6;
+	background-color: var(--hover-background-color);
+}
+
+.social-bi {
+	color: var(--footer-social-text);
 }
 
 .second-nav-link.page {
-	color: #030C43;
+	color: var(--secondary-color);
 	width: max-content;
 	position: relative;
 }
 
 .second-nav-link.page:hover::after {
 	content: '';
-	background-color: #ffffff;
+	background-color: var(--text-color);
 	height: 2px;
 	position: absolute;
 	border-radius: 20px;
@@ -145,7 +207,7 @@ footer {
 
 .second-nav-link.page.active::after {
 	content: '';
-	background-color: #ffffff;
+	background-color: var(--text-color);
 	height: 2px;
 	position: absolute;
 	border-radius: 20px;
