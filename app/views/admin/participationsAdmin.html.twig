@@ -1,0 +1,43 @@
+{% extends '_template/base.html.twig' %}
+
+{% block css %}
+	<link rel="stylesheet" href="/assets/css/participationAdmin.css">
+{% endblock %}
+
+{% block body %}
+<div class="container-participations">
+	<div class="container mt-5">
+		<h1 class="text-center mb-4">Gestion des Participations</h1>
+
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped">
+				<thead class="table-dark">
+					<tr>
+						<th>ID</th>
+						<th>Nom de l'Événement</th>
+						<th>Utilisateur</th>
+						<th>Date de Participation</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for participation in participations %}
+					<tr>
+						<td>{{ participation.id_user }}</td>
+						<td>{{ participation.event_titre }}</td>
+						<td>{{ participation.user_nom }} {{ participation.user_prenom }}</td>
+						<td>{{ participation.date_participation|date('d/m/Y H:i') }}</td>
+					</tr>
+					{% else %}
+					<tr>
+						<td colspan="5" class="text-center">Aucune participation trouvée.</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
