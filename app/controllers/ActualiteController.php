@@ -35,13 +35,12 @@ class ActualiteController extends Controller {
 			try {
 				$newsRepo = new ActualiteRepository();
 				$newsRepo->create($data);
-				$this->redirectTo('actualites.php');
+				$this->redirectTo('news_admin.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
 			}
 		}
 
-		$this->view('/admin/newsAdmin.html.twig', ['title' => 'Actus admin','errors' => $errors, 'data' => $data]);
 	}
 
 	public function update()
@@ -51,8 +50,8 @@ class ActualiteController extends Controller {
 		$contenu = $this->getPostParam('contenu');
 
 		if (empty($id) || empty($titre) || empty($contenu)) {
-			echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
-			http_response_code(400);
+			throw new Exception('Tous les champs sont requis.');
+			$this->redirectTo('news_admin.php');
 			return;
 		}
 
@@ -70,6 +69,7 @@ class ActualiteController extends Controller {
 
 		if (empty($id)) {
 			throw new Exception('L\'ID de l\'actualité est requis.');
+			$this->redirectTo('news_admin.php');
 			return;
 		}
 

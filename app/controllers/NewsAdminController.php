@@ -21,7 +21,8 @@ class NewsAdminController extends Controller
 				'title' => 'Actus admin',
 				'news' => $news,
 				'isLoggedIn' => $isLoggedIn,
-				'isAdmin' => $isAdmin
+				'isAdmin' => $isAdmin,
+				'utilisateur' => $user
 			]);
 		} else {
 			$this->view('index.html.twig', [

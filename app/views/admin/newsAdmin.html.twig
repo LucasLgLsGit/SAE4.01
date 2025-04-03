@@ -9,7 +9,7 @@
 	<div class="container mt-5">
 		<div class="d-flex align-items-center mb-4">
 			<h2 class="fw-bold">Gestion des actualités</h2>
-			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createNewsModal">Ajouter une actualité<i class="bi-create-news bi bi-plus-square"></i></button>
+			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createNewsModal" onclick="document.getElementById('createNewsForm').reset();">Ajouter une actualité<i class="bi-create-news bi bi-plus-square"></i></button>
 		</div>
 		<div class="mb-3 d-flex gap-2">
 			<select class="form-select w-25" id="searchAttribute">
@@ -124,11 +124,11 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="createNewsForm">
-					<input type="hidden" id="createNewsUserId" name="id_user" value="{{ utilisateur.getId() }}">
+				<form id="createNewsForm" action="news_create.php" method="POST">
+					<input type="hidden" id="createNewsUserId" name="id_user" value="{{ utilisateur.getId()}}">
 					<div class="mb-3">
 						<label for="createNewsTitle" class="form-label">Titre</label>
-						<input type="text" class="form-control" id="createNewsTitle" name="titre" required>
+						<input type="text" class="form-control" id="createNewsTitle" name="titre_article" required>
 					</div>
 					<div class="mb-3">
 						<label for="createNewsContent" class="form-label">Contenu</label>
@@ -138,7 +138,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-primary" id="saveNewsButton">Créer</button>
+				<button type="submit" class="btn btn-primary" form="createNewsForm">Créer</button>
 			</div>
 		</div>
 	</div>
