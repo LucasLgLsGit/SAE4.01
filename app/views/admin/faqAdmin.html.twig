@@ -1,0 +1,236 @@
+{% extends '_template/base.html.twig' %}
+
+{% block css %}
+<link rel="stylesheet" href="/assets/css/newsAdmin.css">
+{% endblock %}
+
+{% block body %}
+<div class="news-container">
+	<div class="container mt-5">
+		<div class="d-flex align-items-center mb-4">
+			<h2 class="fw-bold">Gestion de la FAQ</h2>
+			<button class="add-news-button ms-3" data-bs-toggle="modal" data-bs-target="#createQuestionModal" onclick="document.getElementById('createQuestionForm').reset();">
+				Ajouter une question<i class="bi-create-news bi bi-plus-square"></i>
+			</button>
+		</div>
+		<div class="mb-3 d-flex gap-2">
+			<select class="form-select w-25" id="searchAttribute">
+				<option value="id">ID</option>
+				<option value="question">Question</option>
+				<option value="reponse">Réponse</option>
+			</select>
+			<input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+			<button type="button" class="btn btn-research" id="resetSearch">
+				<i class="bi bi-arrow-clockwise"></i>
+			</button>
+		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Question</th>
+					<th>Réponse</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for faq in faqs %}
+				<tr>
+					<td>{{ faq.getId() }}</td>
+					<td>{{ faq.getQuestion() }}</td>
+					<td class="ellipsis-td">{{ faq.getReponse() }}</td>
+					<td>
+						<a href="#" 
+							class="btn btn-modifier btn-sm edit-faq" 
+							data-bs-toggle="modal" 
+							data-bs-target="#editQuestionModal" 
+							data-faq-id="{{ faq.getId() }}" 
+							data-faq-question="{{ faq.getQuestion() }}" 
+							data-faq-reponse="{{ faq.getReponse() }}" 
+							onclick="
+								document.getElementById('editFaqId').value = '{{ faq.getId() }}';
+								document.getElementById('editQuestion').value = '{{ faq.getQuestion() }}';
+								document.getElementById('editReponse').value = '{{ faq.getReponse() }}';
+							">
+							<i class="bi bi-pencil-square"></i>
+						</a>
+						<button class="btn btn-supprimer btn-sm delete-faq mt-1" data-bs-toggle="modal" data-bs-target="#deleteQuestionModal" data-faq-id="{{ faq.getId() }}" onclick="document.getElementById('deleteQuestionId').value = '{{ faq.getId() }}';">
+							<i class="bi bi-trash"></i>
+						</button>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="modal fade" id="editQuestionModal" tabindex="-1" aria-labelledby="editQuestionModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="editQuestionModalLabel">Modifier la question</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="editQuestionForm" action="faq_update.php" method="POST">
+					<input type="hidden" id="editFaqId" name="id_faq">
+					<div class="mb-3">
+						<label for="editQuestion" class="form-label">Question</label>
+						<input type="text" class="form-control" id="editQuestion" name="question" required>
+					</div>
+					<div class="mb-3">
+						<label for="editReponse" class="form-label">Réponse</label>
+						<textarea class="form-control" id="editReponse" name="reponse" rows="5" required></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="submit" class="btn btn-primary" form="editQuestionForm">Enregistrer</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteQuestionModal" tabindex="-1" aria-labelledby="deleteQuestionModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form action="faq_delete.php" method="POST">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteQuestionModalLabel">Confirmer la suppression</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Êtes-vous sûr de vouloir supprimer cette question ?
+					<input type="hidden" name="id_faq" id="deleteQuestionId">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-danger">Supprimer</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="createQuestionModal" tabindex="-1" aria-labelledby="createQuestionModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="createQuestionModalLabel">Créer une nouvelle question</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="createQuestionForm" action="faq_create.php" method="POST">
+					<div class="mb-3">
+						<label for="createQuestion" class="form-label">Question</label>
+						<input type="text" class="form-control" id="createQuestion" name="question" required>
+					</div>
+					<div class="mb-3">
+						<label for="createReponse" class="form-label">Réponse</label>
+						<textarea class="form-control" id="createReponse" name="reponse" rows="5" required></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+				<button type="submit" class="btn btn-primary" form="createQuestionForm">Créer</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+	document.addEventListener('DOMContentLoaded', function () 
+	{
+		document.querySelectorAll('.edit-faq').forEach(button => 
+		{
+			button.addEventListener('click', function () 
+			{
+				const faqId = this.getAttribute('data-faq-id');
+				const faqQuestion = this.getAttribute('data-faq-question');
+				const faqReponse = this.getAttribute('data-faq-reponse');
+				document.getElementById('editFaqId').value = faqId;
+				document.getElementById('editQuestion').value = faqQuestion;
+				document.getElementById('editReponse').value = faqReponse;
+			});
+		});
+	});
+
+	document.addEventListener('DOMContentLoaded', function () 
+	{
+		function setupSearch() 
+		{
+			const searchInput = document.getElementById('searchInput');
+			const searchAttribute = document.getElementById('searchAttribute');
+			const resetButton = document.getElementById('resetSearch');
+			const rows = document.querySelectorAll('.table tbody tr');
+
+			function filterRows() 
+			{
+				const searchTerm = searchInput.value.trim().toLowerCase();
+				const attribute = searchAttribute.value;
+				const columnIndices = {
+					'id': 0,
+					'titre': 1,
+					'contenu': 2,
+					'date': 3,
+					'auteur': 4
+				};
+				const columnIndex = columnIndices[attribute];
+				rows.forEach(row => 
+				{
+					const cell = row.querySelector(`td:nth-child(${columnIndex + 1})`);
+					let cellText = cell.textContent.trim().toLowerCase();
+					if (attribute === 'date') 
+					{
+						cellText = cellText.replace(/\//g, '');
+					}
+					if (cellText.includes(searchTerm)) 
+					{
+						row.style.display = '';
+					} 
+					else 
+					{
+						row.style.display = 'none';
+					}
+				});
+			}
+
+			function resetSearch() 
+			{
+				searchInput.value = '';
+				searchAttribute.value = 'titre';
+				rows.forEach(row => 
+				{
+					row.style.display = '';
+				});
+			}
+
+			function updatePlaceholder() 
+			{
+				const placeholders = {
+					'id': 'Rechercher par ID...',
+					'titre': 'Rechercher par titre...',
+					'contenu': 'Rechercher par contenu...',
+					'date': 'Rechercher par date (ex. 02042025)...',
+					'auteur': 'Rechercher par auteur (ID)...'
+				};
+				searchInput.placeholder = placeholders[searchAttribute.value];
+			}
+
+			searchInput.addEventListener('input', filterRows);
+			searchAttribute.addEventListener('change', function () 
+			{
+				updatePlaceholder();
+				filterRows();
+			});
+			resetButton.addEventListener('click', resetSearch);
+			updatePlaceholder();
+		}
+		setupSearch();
+	});
+</script>
+{% endblock %}

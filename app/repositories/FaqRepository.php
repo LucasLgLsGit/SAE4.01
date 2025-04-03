@@ -43,9 +43,6 @@ class FaqRepository {
 			'question' => $data['question'],
 			'reponse' => $data['reponse'],
 		]);
-		if (!$success) {
-			throw new Exception("La création de la question a échoué.");
-		}
 		$questionId = $this->pdo->lastInsertId();
 		return $question;
 
@@ -57,5 +54,19 @@ class FaqRepository {
 			$row['question'],
 			$row['reponse']
 		);
+	}
+
+	public function update($id, $question, $reponse) {
+		$stmt = $this->pdo->prepare('UPDATE question SET question = :question, reponse = :reponse WHERE id_question = :id');
+		$stmt->execute([
+			'id' => $id,
+			'question' => $question,
+			'reponse' => $reponse
+		]);
+	}
+
+	public function deleteById($id) {
+		$stmt = $this->pdo->prepare('DELETE FROM question WHERE id_question = :id');
+		$stmt->execute(['id' => $id]);
 	}
 }
