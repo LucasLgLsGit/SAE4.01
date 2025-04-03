@@ -96,6 +96,22 @@ class EvenementController extends Controller {
 		$this->view('/event/update.html.twig', 'Modification d\'un évenement', ['title'=> 'Modification evenement','errors' => $errors, 'data' => $data, 'id_event' => $id]);
 	}
 
+	public function delete() {
+        $id = $this->getPostParam('id_event');
+
+        if ($id === null) {
+            throw new Exception("L'identifiant de l'événement est requis !");
+        }
+
+        try {
+            $eventRepo = new EvenementRepository();
+            $eventRepo->delete($id);
+            $this->redirectTo('events_admin.php');
+        } catch (Exception $e) {
+            $this->redirectTo('events.php?error=' . urlencode($e->getMessage()));
+        }
+    }
+
     public function getUpcomingEvents() {
         $repository = new EvenementRepository();
         return $repository->findUpcomingEvents(3);
