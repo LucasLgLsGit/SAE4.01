@@ -44,7 +44,12 @@
 						<input type="checkbox" class="toggle-perm" data-user-id="{{ user.getId() }}" data-perm="adherent" {% if user.isAdherent() %}checked{% endif %}>
 					</td>
 					<td>
-						<a href="#" class="btn btn-modifier btn-sm edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.getId() }}" data-user-nom="{{ user.getNom() }}" data-user-prenom="{{ user.getPrenom() }}" data-user-mail="{{ user.getMail() }}">
+						<a href="#" class="btn btn-modifier btn-sm edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.getId() }}" data-user-nom="{{ user.getNom() }}" data-user-prenom="{{ user.getPrenom() }}" data-user-mail="{{ user.getMail() }}" onclick="
+							document.getElementById('editUserId').value = '{{ user.getId() }}';
+							document.getElementById('editUserNom').value = '{{ user.getNom() }}';
+							document.getElementById('editUserPrenom').value = '{{ user.getPrenom() }}';
+							document.getElementById('editUserMail').value = '{{ user.getMail() }}';
+						">
 							<i class="bi bi-pencil-square"></i>
 						</a>
 						<button class="btn btn-supprimer btn-sm delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ user.getId() }}" onclick="document.getElementById('deleteUserId').value = '{{ user.getId() }}';"><i class="bi bi-trash"></i></button>
@@ -103,7 +108,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="editUserForm">
+				<form id="editUserForm" action="user_update.php" method="POST">
 					<input type="hidden" id="editUserId" name="id_user">
 					<div class="mb-3">
 						<label for="editUserNom" class="form-label">Nom</label>
@@ -121,7 +126,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-				<button type="button" class="btn btn-primary" id="saveUserChanges">Enregistrer</button>
+				<button type="submit" class="btn btn-primary" form="editUserForm">Enregistrer</button>
 			</div>
 		</div>
 	</div>

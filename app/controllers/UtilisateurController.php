@@ -57,23 +57,17 @@ class UtilisateurController extends Controller {
 		$mail = $this->getPostParam('mail');
 
 		if (empty($id) || empty($nom) || empty($prenom) || empty($mail)) {
-			echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
-			http_response_code(400);
-			return;
+			throw new Exception("Tous les champs sont requis !");
+			$this->redirectTo('users_admin.php');
 		}
 
-		try {
-			$userRepository = new UtilisateurRepository();
-			$userRepository->updateById($id, [
-				'nom' => $nom,
-				'prenom' => $prenom,
-				'mail' => $mail,
-			]);
-			echo json_encode(['success' => true, 'message' => 'Utilisateur mis à jour avec succès.']);
-		} catch (Exception $e) {
-			http_response_code(500);
-			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-		}
+		$userRepository = new UtilisateurRepository();
+		$userRepository->updateById($id, [
+			'nom' => $nom,
+			'prenom' => $prenom,
+			'mail' => $mail,
+		]);
+		$this->redirectTo('users_admin.php');
 	}
 
 	public function deleteUser()
