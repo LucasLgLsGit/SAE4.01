@@ -1,61 +1,73 @@
 {% extends '_template/base.html.twig' %}
 
 {% block css %}
-<link rel="stylesheet" href="/assets/css/events.css">
+	<link rel="stylesheet" href="/assets/css/events.css">
 {% endblock %}
 
 {% block body %}
-<div class="events-container py-5">
-	<h2 class="text-center fw-bold">Événements</h2>
-	<p class="text-center text-muted">Découvrez les événements à venir et ne manquez pas l’occasion de vous amuser !</p>
+	<div class="events-container py-5">
+		<h2 class="text-center fw-bold">Événements</h2>
+		<p class="text-center text-muted">Découvrez les événements à venir et ne manquez pas l'occasion de vous amuser !</p>
 
-	{% if eventsByYear is defined and eventsByYear|length > 0 %}
-		{% for year, yearEvents in eventsByYear %}
-			<div class="row">
-				<div class="col-md-8 mx-auto mb-3">
-					<p class="event-year fw-bold">{{ year }}</p>
-				</div>
-			</div>
+		{% if isAdherent is defined %}
+		{% endif %}
 
-			<div class="row">
-				{% for event in yearEvents %}
+		{% if eventsByYear is defined and eventsByYear|length > 0 %}
+			{% for year, yearEvents in eventsByYear %}
+				<div class="row">
 					<div class="col-md-8 mx-auto mb-3">
-						<div class="event-card bg-white d-flex align-items-center p-3">
-							<div class="text-center me-3">
-								<i class="bi bi-calendar-event fs-2"></i>
-								<div class="event-date">{{ event.getDateDebut()|date("d/m") }}</div>
-							</div>
-							<div class="flex-grow-1">
-								<h5 class="event-title">
-									{{ event.getTitreEvent() }}
-									{% if event.getPrix() == 0 %}
-										<span class="badge-free ms-2">GRATUIT</span>
+						<p class="event-year fw-bold">{{ year }}</p>
+					</div>
+				</div>
+
+				<div class="row">
+					{% for event in yearEvents %}
+						<div class="col-md-8 mx-auto mb-3">
+							<div class="event-card bg-white d-flex align-items-center p-3">
+								<div class="text-center me-3">
+									<i class="bi bi-calendar-event fs-2"></i>
+									<div class="event-date">{{ event.getDateDebut()|date("d/m") }}</div>
+								</div>
+								<div class="flex-grow-1">
+									<h5 class="event-title">
+										{{ event.getTitreEvent() }}
+										{% if event.getPrix() == 0 %}
+											<span class="badge-free ms-2">GRATUIT</span>
+										{% endif %}
+									</h5>
+									<p class="text-muted small">
+										{{ event.getDateDebut()|date_fr("m F Y à H:i", "Europe/Paris") }} - {{ event.getAdresse() }}
+									</p>
+									<p class="mb-0">{{ event.getDescription() }}</p>
+								</div>
+								<div class="text-end">
+									{% if event.getPrix() > 0 %}
+										{% if isAdherent is defined and isAdherent %}
+											{% set prixReduit = event.getPrix() * 0.9 %}
+											<div class="event-price">
+												<span class="text-muted text-decoration-line-through me-2">{{ event.getPrix()|number_format(2, ',', ' ') }} €</span>
+												<span class="text-success fw-bold">{{ prixReduit|number_format(2, ',', ' ') }} €</span>
+												<small class="d-block text-success">(-10% adhérent)</small>
+											</div>
+										{% else %}
+											<div class="event-price">{{ event.getPrix()|number_format(2, ',', ' ') }} €</div>
+										{% endif %}
 									{% endif %}
-								</h5>
-								<p class="text-muted small">
-									{{ event.getDateDebut()|date_fr("m F Y à H:i", "Europe/Paris") }} - {{ event.getAdresse() }}
-								</p>
-								<p class="mb-0">{{ event.getDescription() }}</p>
-							</div>
-							<div class="text-end">
-								{% if event.getPrix() > 0 %}
-									<div class="event-price">{{ event.getPrix()|number_format(2, ',', ' ') }} €</div>
-								{% endif %}
-								<button onclick="window.location.href='/event.php?id={{ event.getId() }}'" class="btn btn-more mt-2">
-									<a class="text-decoration-none text-white">VOIR PLUS →</a>
-								</button>
+									<button onclick="window.location.href='/event.php?id={{ event.getId() }}'" class="btn btn-more mt-2">
+										<span class="text-decoration-none text-white">VOIR PLUS →</span>
+									</button>
+								</div>
 							</div>
 						</div>
-					</div>
-				{% endfor %}
+					{% endfor %}
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="row">
+				<div class="col-md-8 mx-auto">
+					<div class="alert alert-info">Aucun événement à venir pour le moment.</div>
+				</div>
 			</div>
-		{% endfor %}
-	{% else %}
-		<div class="row">
-			<div class="col-md-8 mx-auto">
-				<div class="alert alert-info">Aucun événement à venir pour le moment.</div>
-			</div>
-		</div>
-	{% endif %}
-</div>
+		{% endif %}
+	</div>
 {% endblock %}

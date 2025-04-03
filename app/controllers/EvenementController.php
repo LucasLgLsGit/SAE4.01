@@ -132,22 +132,22 @@ class EvenementController extends Controller
 	{
 >>>>>>> 91371610a996036315484ab159cc1962de2adffc
 		$id = $this->getPostParam('id_event');
-	
+
 		if ($id === null)
 		{
 			throw new Exception("L'identifiant événement est requis !");
 		}
-	
+
 		$data = $this->getAllPostParams();
 		$errors = [];
 		$eventRepo = new EvenementRepository();
-		$user = $this->getCurrentUser(); 
-	
+		$user = $this->getCurrentUser();
+
 		if (!$user)
 		{
 			throw new Exception("Vous devez être connecté pour modifier un événement !");
 		}
-	
+
 		if (!empty($data))
 		{
 			try
@@ -157,7 +157,7 @@ class EvenementController extends Controller
 				{
 					throw new Exception("Événement introuvable !");
 				}
-	
+
 				$evenement->setTitreEvent($data['titre']);
 				$evenement->setDateDebut(new DateTime($data['date_debut']));
 				$evenement->setDateFin(new DateTime($data['date_fin']));
@@ -165,7 +165,7 @@ class EvenementController extends Controller
 				$evenement->setDescription($data['description']);
 				$evenement->setPrix((float)$data['prix']);
 				$evenement->setIdUser(!empty($data['id_user']) ? (int)$data['id_user'] : $user->getId());
-	
+
 				$eventRepo->update($evenement);
 				$this->redirectTo('events_admin.php');
 			}
@@ -294,7 +294,7 @@ class EvenementController extends Controller
 
 		$this->view('event.html.twig', [
 			'title' => 'Événement',
-			'event' => $event, 
+			'event' => $event,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin,
 			'isRegistered' => $isRegistered,
