@@ -120,10 +120,23 @@
 			<div class="modal-footer">
 				<div class="me-auto">
 					<strong>Total : </strong>
-					<span id="cart-total">0.00 €</span>
+					{% if isAdherent is defined and isAdherent %}
+						{% set totalReduit = cartTotal * 0.9 %}
+						<span class="text-muted text-decoration-line-through me-2">{{ cartTotal|number_format(2, ',', ' ') }} €</span>
+						<span id="cart-total" class="text-success fw-bold">{{ totalReduit|number_format(2, ',', ' ') }} €</span>
+						<small class="text-success">(-10% adhérent)</small>
+					{% else %}
+						<span id="cart-total">{{ cartTotal|number_format(2, ',', ' ') }} €</span>
+					{% endif %}
 				</div>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-				<button type="button" id="checkout-button" class="btn btn-primary" disabled>Commander</button>
+				<form action="/commande.php" method="POST" class="d-inline">
+					<input type="hidden" name="id_user" value="{{ user.id }}"> 
+					<input type="hidden" name="id_produit" value="{{ produit.id }}"> 
+					<input type="hidden" name="quantite" value="{{ produit.quantite }}"> 
+					<input type="hidden" name="numero_commande" value="{{ numero_commande }}">
+					<button type="submit" class="btn btn-primary">Commander</button>
+				</form>
 			</div>
 		</div>
 	</div>

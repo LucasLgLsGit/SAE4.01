@@ -92,12 +92,6 @@ function updateCartModal()
 
 			checkoutButton.disabled = false;
 		})
-		.catch(error => 
-		{
-			console.error('Erreur:', error);
-			modalBody.innerHTML = '<p class="text-danger text-center py-4">Erreur de chargement du panier</p>';
-			checkoutButton.disabled = true;
-		});
 }
 
 function updateCartItemCount(cart = null) 
