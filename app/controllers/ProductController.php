@@ -4,13 +4,6 @@ require_once './app/repositories/ProduitRepository.php';
 require_once './app/controllers/ImageController.php';
 require_once './app/trait/FormTrait.php';
 
-function prettyDump($var, $label = '') {
-    echo "<pre>";
-    if ($label) echo "$label:\n";
-    print_r($var);
-    echo "</pre>";
-}
-
 class ProductController extends Controller
 {
     use FormTrait;
@@ -26,8 +19,6 @@ class ProductController extends Controller
 
     public function createProduct()
     {
-        echo "Début de createProduct\n";
-        prettyDump($_SERVER['REQUEST_METHOD'], 'Méthode HTTP');
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $this->getAllPostParams();
@@ -39,10 +30,6 @@ class ProductController extends Controller
                 if (empty($data['prix']) || !is_numeric($data['prix'])) $errors[] = "Le prix du produit est requis et doit être un nombre.";
                 if (empty($data['couleurs']) || !is_array($data['couleurs'])) $errors[] = "Au moins une couleur est requise.";
                 if (empty($data['stock']) || !is_array($data['stock'])) $errors[] = "Les stocks sont requis.";
-
-                prettyDump($errors, 'Erreurs de validation');
-                prettyDump($data, 'Données reçues');
-                prettyDump($_FILES, 'Fichiers uploadés');
 
                 if (!empty($errors)) {
                     throw new Exception(implode(', ', $errors));
@@ -57,11 +44,7 @@ class ProductController extends Controller
                         continue;
                     }
 
-                    prettyDump($data['stock'][$colorIndex], "Stocks pour la couleur $color (index $colorIndex)");
-
                     foreach ($data['stock'][$colorIndex] as $sizeIndex => $stock) {
-                        prettyDump($sizeIndex, "Index de taille");
-                        prettyDump($stock, "Stock pour cette taille");
                         if ($stock > 0) {
                             $productData = [
                                 'titre_produit' => $data['nom'],
@@ -73,9 +56,7 @@ class ProductController extends Controller
                                 'stock' => (int)$stock,
                                 'id_user' => 2
                             ];
-                            prettyDump($productData, "Produit à créer (couleur: $color, taille: " . $this->getSizeFromIndex($sizeIndex) . ")");
                             $product = $this->produitRepo->create($productData);
-                            echo "Produit créé pour $color / " . $this->getSizeFromIndex($sizeIndex) . " (ID: " . $product->getId_produit() . ")\n";
                             $createdProductIds[] = $product->getId_produit();
                         }
                     }
@@ -96,7 +77,6 @@ class ProductController extends Controller
                     }
                 }
 
-                echo "Tous les produits et l'image ont été créés avec succès\n";
                 $this->redirectTo('/products_admin.php');
             } catch (Exception $e) {
                 prettyDump($e->getMessage(), 'Exception');
@@ -104,6 +84,32 @@ class ProductController extends Controller
                     'errors' => explode(', ', $e->getMessage()),
                     'data' => $data,
                     'title' => 'Création d\'un produit'
+                ]);
+            }
+        } else {
+            http_response_code(405);
+            echo "Méthode non autorisée.";
+        }
+    }
+
+    public function deleteProduct()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $idProduit = $_POST['id_produit'] ?? null;
+    
+                if (!$idProduit) {
+                    throw new Exception("L'identifiant du produit est requis !");
+                }
+    
+                $this->produitRepo->delete($idProduit);
+    
+                $this->redirectTo('/products_admin.php');
+            } catch (Exception $e) {
+                http_response_code(400);
+                $this->view('/admin/shopAdmin.html.twig', [
+                    'errors' => [$e->getMessage()],
+                    'title' => 'Gestion des produits'
                 ]);
             }
         } else {

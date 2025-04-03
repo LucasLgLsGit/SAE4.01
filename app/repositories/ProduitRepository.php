@@ -166,10 +166,6 @@ class ProduitRepository {
 		return $stmt->execute(['id_produit' => $id]);
 	}
 
-
-
-
-
 	public function findById(int $id): ?Produit {
 		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE id_produit = :id_produit');
 		$stmt->execute(['id_produit' => $id]);

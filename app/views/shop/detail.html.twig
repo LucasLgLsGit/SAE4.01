@@ -54,7 +54,7 @@
 						<div>
 							{% for couleur in couleurs %}
 							<input type="radio" name="selected_couleur" id="couleur_{{ couleur }}" value="{{ couleur }}" class="d-none" required>
-							<label for="couleur_{{ couleur }}" class="btn btn-couleur me-2" style="background-color: {{ "#" ~ couleur }};"></label>
+							<label for="couleur_{{ couleur }}" class="btn btn-couleur me-2" style="background-color: {{ couleur }};"></label>
 							{% endfor %}
 						</div>
 					</div>

@@ -45,7 +45,7 @@
 					<td class="ellipsis-td">{{ product.getDescription_produit() }}</td>
 					<td>{{ product.getDate_produit().format('d/m/Y H:i') }}</td>
 					<td>
-						<div style="width: 20px; height: 20px; background-color: #{{ product.getCouleur() }}; border: 1px solid #000; border-radius:100%;"></div>
+						<div style="width: 20px; height: 20px; background-color: {{ product.getCouleur() }}; border: 1px solid #000; border-radius:100%;"></div>
 					</td>
 					<td>{{ product.getTaille() }}</td>
 					<td>{{ product.getStock() }}</td>
@@ -53,7 +53,7 @@
 					<td>{{ product.getId_user() }}</td>
 					<td>
 						<a href="#" class="btn btn-modifier btn-sm"><i class="bi bi-pencil-square"></i></a>
-						<button class="btn btn-supprimer btn-sm delete-product" data-product-id="{{ product.getId_product() }}"><i class="bi bi-trash"></i></button>
+						<button class="btn btn-supprimer btn-sm delete-product" data-bs-toggle="modal" data-bs-target="#deleteProductModal" data-product-id="{{ product.getId_produit() }}" onclick="document.getElementById('deleteProductId').value = '{{ product.getId_produit() }}';"><i class="bi bi-trash"></i></button>
 					</td>
 				</tr>
 				{% endfor %}
@@ -62,6 +62,30 @@
 	</div>
 </div>
 
+
+<!-- Modal Suppression -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form action="/products_admin.php?action=deleteProduct" method="POST">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteProductModalLabel">Confirmer la suppression</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Êtes-vous sûr de vouloir supprimer ce produit ?
+					<input type="hidden" name="id_produit" id="deleteProductId">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-danger">Supprimer</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal création produit -->
 <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
