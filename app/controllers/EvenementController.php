@@ -23,6 +23,7 @@ class EvenementController extends Controller {
 		$isAdmin = $user && $user->isAdmin();
 
 		$this->view('/event/index.html.twig', [
+			'title' => 'Événements',
 			'evenements' => $evenements,
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin
@@ -43,7 +44,7 @@ class EvenementController extends Controller {
 			}
 		}
 
-		$this->view('/event/create.html.twig', ['errors' => $errors, 'data' => $data]);
+		$this->view('/event/create.html.twig', ['errors' => $errors, 'data' => $data, 'title' => 'Création d\'un évenement']);
 	}
 
 	public function update() {
@@ -66,7 +67,7 @@ class EvenementController extends Controller {
 			}
 		}
 
-		$this->view('/event/update.html.twig', 'Modification d\'un évenement', ['errors' => $errors, 'data' => $data, 'id_event' => $id]);
+		$this->view('/event/update.html.twig', 'Modification d\'un évenement', ['title'=> 'Modification evenement','errors' => $errors, 'data' => $data, 'id_event' => $id]);
 	}
 
 	public function getUpcomingEvents() {
@@ -114,6 +115,7 @@ class EvenementController extends Controller {
 		}
 
 		$this->view('event.html.twig', [
+			'title' => 'Événement',
 			'event' => $event, 
 			'isLoggedIn' => $isLoggedIn,
 			'isAdmin' => $isAdmin,
