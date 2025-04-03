@@ -2,18 +2,18 @@
 
 class Question
 {
-	private int $id_question;
+	private ?int $id_question;
 	private string $question;
 	private string $reponse;
 
-	public function __construct(int $id_question, string $question, string $reponse)
+	public function __construct(?int $id_question, string $question, string $reponse)
 	{
 		$this->id_question = $id_question;
 		$this->question = $question;
 		$this->reponse = $reponse;
 	}
 
-	public function getIdQuestion(): int
+	public function getId(): int
 	{
 		return $this->id_question;
 	}

@@ -40,7 +40,6 @@ class ActualiteController extends Controller {
 				$errors = explode(', ', $e->getMessage());
 			}
 		}
-
 	}
 
 	public function update()
