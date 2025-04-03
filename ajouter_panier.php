@@ -1,65 +1,83 @@
 <?php
-require_once './init.php';
-require_once './app/repositories/ProduitRepository.php';
+try {
+    require_once './init.php';
+    require_once './app/repositories/ProduitRepository.php';
 
-header('Content-Type: application/json');
+    header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_produit = $_POST['id_produit'] ?? null;
-    $taille = $_POST['selected_taille'] ?? null;
-    $couleur = $_POST['selected_couleur'] ?? null;
-    $quantite = isset($_POST['quantite']) ? (int)$_POST['quantite'] : null;
-
-    // Collecter les erreurs
-    $erreurs = [];
-
-    if (!$id_produit) {
-        $erreurs[] = 'ID du produit manquant.';
-    }
-    if (!$taille) {
-        $erreurs[] = 'Taille non sélectionnée.';
-    }
-    if (!$couleur) {
-        $erreurs[] = 'Couleur non sélectionnée.';
-    }
-    if ($quantite === null || $quantite <= 0) {
-        $erreurs[] = 'Quantité invalide.';
+    if (session_status() === PHP_SESSION_NONE) {
+        ini_set('session.cookie_samesite', 'Lax');
+        session_start();
     }
 
-    if (!empty($erreurs)) {
-        http_response_code(400);
-        echo json_encode([
-            'success' => false,
-            'message' => 'Erreurs : ' . implode(' ', $erreurs)
-        ]);
-        exit;
-    }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $titre_produit = $_POST['titre_produit'] ?? null;
+        $taille = $_POST['selected_taille'] ?? null;
+        $couleur = $_POST['selected_couleur'] ?? null;
+        $quantite = isset($_POST['quantite']) ? (int)$_POST['quantite'] : null;
 
-    $produitRepository = new ProduitRepository();
-    $produit = $produitRepository->findById((int)$id_produit);
+        // Collecter les erreurs
+        $erreurs = [];
 
-    if (!$produit) {
-        http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Produit introuvable.']);
-        exit;
-    }
+        if (!$titre_produit) {
+            $erreurs[] = 'Titre du produit manquant.';
+        }
+        if (!$taille) {
+            $erreurs[] = 'Taille non sélectionnée.';
+        }
+        if (!$couleur) {
+            $erreurs[] = 'Couleur non sélectionnée.';
+        }
+        if ($quantite === null || $quantite <= 0) {
+            $erreurs[] = 'Quantité invalide.';
+        }
 
-    $titre_produit = $produit->getTitre_produit();
+        if (!empty($erreurs)) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Erreurs : ' . implode(' ', $erreurs)
+            ]);
+            exit;
+        }
 
-    $panierKey = $id_produit . '_'  . $titre_produit . '_' . $taille . '_' . $couleur;
+        // Débogage : afficher les valeurs reçues
+        error_log("Valeurs reçues : titre_produit=$titre_produit, taille=$taille, couleur=$couleur, quantite=$quantite");
 
-    if (isset($_SESSION['panier'][$panierKey])) {
-        $_SESSION['panier'][$panierKey]['quantite'] += $quantite;
+        $produitRepository = new ProduitRepository();
+        $produit = $produitRepository->findByAttributes($titre_produit, $taille, $couleur);
+        
+        if (!$produit) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Produit introuvable avec les attributs spécifiés.']);
+            exit;
+        }
+
+        $id_produit = $produit->getId_produit();
+
+        // Créer une clé unique pour le panier basée sur id_produit, taille et couleur
+        $panierKey = $id_produit . '_' . $taille . '_' . $couleur;
+
+        if (isset($_SESSION['panier'][$panierKey])) {
+            $_SESSION['panier'][$panierKey]['quantite'] += $quantite;
+        } else {
+            $_SESSION['panier'][$panierKey] = [
+                'id_produit' => $id_produit,
+                'titre_produit' => $produit->getTitre_produit(),
+                'prix' => $produit->getPrix(),
+                'taille' => $taille,
+                'couleur' => $couleur,
+                'quantite' => $quantite
+            ];
+        }
+
+        echo json_encode(['success' => true, 'message' => 'Produit ajouté au panier.']);
     } else {
-        $_SESSION['panier'][$panierKey] = [
-            'id_produit' => $id_produit,
-            'titre_produit' => $titre_produit,
-            'prix' => $produit->getPrix(),
-            'taille' => $taille,
-            'couleur' => $couleur,
-            'quantite' => $quantite
-        ];
+        http_response_code(405);
+        echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
     }
-
-    echo json_encode(['success' => true, 'message' => 'Produit ajouté au panier.']);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Erreur serveur : ' . $e->getMessage()]);
 }
+?>

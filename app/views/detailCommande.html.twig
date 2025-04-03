@@ -1,0 +1,31 @@
+{% extends '_template/base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">Détails de vos commandes</h2>
+    {% if commandes is not empty %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Numéro de commande</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ commande.id_produit }}</td>
+                    <td>{{ commande.quantite }}</td>
+                    <td>{{ commande.numero_commande }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune commande trouvée.</p>
+    {% endif %}
+</div>
+{% endblock %}
