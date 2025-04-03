@@ -11,12 +11,12 @@
             <!-- Image principale -->
             <div class="col-md-6">
                 <div class="d-flex justify-content-center align-items-center" style="height: 400px; background-color: #f8f9fa;">
-                    <img src="{{ produit.image_principale | default('#') }}" alt="{{ produit.titre_produit }}" class="img-fluid" style="max-height: 100%; max-width: 100%;">
+                    <img src="/assets/images/products/{{ produit.nom_image }}" alt="{{ produit.nom_image }}" class="img-fluid main-image" style="max-height: 100%; max-width: 100%;">
                 </div>
                 <!-- Miniatures -->
                 <div class="d-flex justify-content-center mt-3">
-                    {% for image in produit.images | default([]) %}
-                    <img src="{{ image }}" alt="Miniature" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">
+                    {% for image in images | default([]) %}
+                    <img src="/assets/images/products/{{image}}" alt="{{image}}" class="img-thumbnail me-2 miniature-image" style="width: 60px; height: 60px; object-fit: cover;">
                     {% endfor %}
                 </div>
             </div>
@@ -81,6 +81,17 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainImage = document.querySelector('.main-image');
+        const thumbnails = document.querySelectorAll('.miniature-image');
+    
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function () {
+                mainImage.src = this.src;
+            });
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         const tailleButtons = document.querySelectorAll('input[name="selected_taille"] + label');
         const couleurButtons = document.querySelectorAll('input[name="selected_couleur"] + label');

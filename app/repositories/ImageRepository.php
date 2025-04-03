@@ -23,6 +23,12 @@ class ImageRepository
 		return $images;
 	}
 
+	public function findByProduitId(int $id_produit): array {
+		$stmt = $this->pdo->prepare('SELECT nom_image FROM image WHERE id_produit = :id_produit');
+		$stmt->execute(['id_produit' => $id_produit]);
+		return $stmt->fetchAll(PDO::FETCH_COLUMN);
+	}
+
 	public function create(array $data): Image
 	{
 		$errors = [];

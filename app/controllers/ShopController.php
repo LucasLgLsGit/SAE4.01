@@ -1,6 +1,7 @@
 <?php
 require_once './app/core/Controller.php';
 require_once './app/repositories/ProduitRepository.php';
+require_once './app/repositories/ImageRepository.php';
 
 class ShopController extends Controller
 {
@@ -69,6 +70,12 @@ class ShopController extends Controller
                 throw new Exception("Produit non trouvé !");
             }
 
+            $imageRepository = new ImageRepository();
+            $images = $imageRepository->findByProduitId($representativeProduit->getId_Produit());
+            if (empty($images)) {
+                throw new Exception("Aucune image trouvée pour le produit !");
+            }
+
             $tailles = [];
             $couleurs = [];
             foreach ($produitsWithSameTitre as $produit) {
@@ -94,6 +101,7 @@ class ShopController extends Controller
             $this->view('/shop/detail.html.twig', [
                 'title' => 'Détail du Produit',
                 'produit' => $representativeProduit,
+                'images' => $images,
                 'tailles' => $tailles,
                 'couleurs' => $couleurs,
                 'isLoggedIn' => $isLoggedIn,
