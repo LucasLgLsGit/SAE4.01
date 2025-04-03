@@ -82,7 +82,7 @@ unset($_SESSION['derniere_commande']);
         <?php endif; ?>
 
         <div class="text-center">
-            <a href="/users.php" class="btn btn-primary">Voir mes commandes</a>
+            <a href="/orders_utilisateurs.php" class="btn btn-primary">Voir mes commandes</a>
             <a href="/shop.php" class="btn btn-secondary">Retour à la boutique</a>
         </div>
     </div>

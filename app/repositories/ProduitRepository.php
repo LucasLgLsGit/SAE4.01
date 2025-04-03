@@ -36,6 +36,7 @@ class ProduitRepository {
 		return $row ? $this->createProduitFromRow($row) : null;
 	}
 
+
 	public function create(array $data): Produit {
 		$errors = [];
 	
@@ -85,7 +86,8 @@ class ProduitRepository {
 			$data['taille'],
 			$data['stock'],
 			$data['prix'],
-			$data['id_user']
+			$data['id_user'],
+			null
 		);
 	}
 
@@ -173,7 +175,8 @@ class ProduitRepository {
             $updatedData['taille'],
             $updatedData['stock'],
             $updatedData['prix'],
-            $updatedData['id_user']
+            $updatedData['id_user'],
+			null
         );
     }
 
@@ -193,7 +196,7 @@ class ProduitRepository {
 	}
 
 	public function findByTitre(string $titre): ?Produit {
-		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE LOWER(titre_produit) = LOWER(:titre_produit)');
+		$stmt = $this->pdo->prepare('SELECT * FROM "produit" WHERE LOWER(titre_produit) = LOWER(:titre_produit) ORDER BY id_produit ASC LIMIT 1');
 		$stmt->execute(['titre_produit' => $titre]);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $row ? $this->createProduitFromRow($row) : null;

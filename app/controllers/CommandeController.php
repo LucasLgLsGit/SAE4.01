@@ -2,14 +2,19 @@
 
 require_once './app/core/Controller.php';
 require_once './app/repositories/CommandeRepository.php';
-
+require_once './app/repositories/ProduitRepository.php';
+require_once './app/repositories/ImageRepository.php';
 class CommandeController extends Controller
 {
     private CommandeRepository $CommandeRepository;
+    private ProduitRepository $ProduitRepository;
+    private ImageRepository $imageRepository;
 
     public function __construct()
     {
         $this->CommandeRepository = new CommandeRepository();
+        $this->ProduitRepository = new ProduitRepository();
+        $this->imageRepository = new ImageRepository();
     }
 
     public function getCommandesByUser(int $id_user): array
@@ -31,6 +36,7 @@ class CommandeController extends Controller
             exit;
         }
     }
+    
 
     public function upsertCommande(array $commandeData)
     {
@@ -110,6 +116,49 @@ class CommandeController extends Controller
         } catch (Exception $e) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+
+    public function afficherCommandesUtilisateur()
+    {
+        try {
+            $user = $this->getCurrentUser();
+            if (!$user) {
+                throw new Exception("Vous devez être connecté pour voir vos commandes.");
+            }
+
+            $id_user = $user->getId();
+            $commandes = $this->CommandeRepository->findByUserId($id_user);
+
+            $commandesParNumero = [];
+            foreach ($commandes as $commande) {
+                $numero = $commande->getNumeroCommande();
+                $produit = $this->ProduitRepository->findById($commande->getIdProduit());
+                
+                // Trouver le premier produit avec le même titre pour récupérer les images
+                $referenceProduit = $this->ProduitRepository->findByTitre($produit->getTitre_produit());
+                $images = $this->imageRepository->findByProduitId($referenceProduit->getId_produit());
+
+                if (!isset($commandesParNumero[$numero])) {
+                    $commandesParNumero[$numero] = [];
+                }
+                $commandesParNumero[$numero][] = [
+                    'commande' => $commande,
+                    'produit' => $produit,
+                    'images' => $images
+                ];
+            }
+
+            $this->view('/commandeUtilisateur.html.twig', [
+                'title' => 'Mes Commandes',
+                'commandesParNumero' => $commandesParNumero,
+                'isLoggedIn' => true,
+                'isAdmin' => $user->isAdmin(),
+                'isAdherent' => $user && $user->isAdherent()
+            ]);
+        } catch (Exception $e) {
+            echo "Erreur : " . $e->getMessage();
         }
     }
 }

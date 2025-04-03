@@ -1,0 +1,98 @@
+{% extends './_template/base.html.twig' %}
+
+{% block css %}
+<link rel="stylesheet" href="/assets/css/shop.css">
+<style>
+    .custom-hr {
+        border: 2px solid #000000;
+        margin: 1.5rem 0;
+    }
+    .commande-title {
+        margin-bottom: 1rem;
+        font-weight: bold;
+    }
+    .total-commande {
+        margin-top: 0.5rem;
+        font-weight: bold;
+    }
+    .miniature-image {
+        cursor: pointer;
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="shop-container">
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">{{ title }}</h1>
+        {% for numero_commande, items in commandesParNumero %}
+            {% set totalCommande = 0 %}
+            <div class="mb-5">
+                <h3 class="commande-title">Commande n°{{ numero_commande }}</h3>
+                <div class="row">
+                    {% for item in items %}
+                        {% set commande = item.commande %}
+                        {% set produit = item.produit %}
+                        {% set images = item.images %}
+                        {% set totalCommande = totalCommande + (commande.quantite * produit.prix) %}
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
+                            <div class="card h-100">
+                                <div class="card-img-top d-flex justify-content-center align-items-center" style="height: 200px; background-color: #f8f9fa;">
+                                    {% if images|length > 0 %}
+                                        <img src="/assets/images/products/{{ images[0] }}" alt="{{ produit.titre_produit }}" class="img-fluid main-image" style="max-height: 100%; max-width: 100%;">
+                                    {% else %}
+                                        <span>Image non disponible</span>
+                                    {% endif %}
+                                </div>
+                                {% if images|length > 1 %}
+                                    <div class="d-flex justify-content-center mt-3">
+                                        {% for image in images %}
+                                            <img src="/assets/images/products/{{ image }}" alt="{{ produit.titre_produit }}" class="img-thumbnail me-2 miniature-image" style="width: 60px; height: 60px; object-fit: cover;">
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ produit.titre_produit }}</h5>
+                                    <p class="card-text text-muted">Quantité : {{ commande.quantite }}</p>
+                                    {% if isAdherent is defined and isAdherent %}
+                                        {% set prixReduit = produit.prix * 0.9 %}
+                                        <p class="card-text font-weight-bold price">
+                                            <span class="text-muted text-decoration-line-through">{{ produit.prix }} €</span>
+                                            <span class="text-success">{{ prixReduit|round(2) }} €</span>
+                                            <small class="text-success">(-10% adhérent)</small>
+                                        </p>
+                                    {% else %}
+                                        <p class="card-text font-weight-bold price">{{ produit.prix }} €</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <h4 class="text-end total-commande">Total : {{ totalCommande|round(2) }} €</h4>
+            </div>
+            <hr class="custom-hr">
+        {% else %}
+            <p class="text-center">Aucune commande disponible.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        const mainImage = card.querySelector('.main-image');
+        const thumbnails = card.querySelectorAll('.miniature-image');
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function () {
+                mainImage.src = this.src;
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
