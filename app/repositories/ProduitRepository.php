@@ -10,7 +10,7 @@ class ProduitRepository {
 	}
 
 	public function findAll(): array {
-		$stmt = $this->pdo->query('SELECT p.*, nom_image FROM "produit" p LEFT JOIN "image" i ON p.id_produit = i.id_produit');
+		$stmt = $this->pdo->query('SELECT p.*, nom_image FROM "produit" p LEFT JOIN "image" i ON p.id_produit = i.id_produit ORDER BY id_produit ASC');
 		$produits = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$produits[] = $this->createProduitFromRow($row);

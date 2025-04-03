@@ -13,7 +13,7 @@ class ActualiteRepository
 
 	public function findAll(): array
 	{
-		$stmt = $this->pdo->query('SELECT * FROM "actualite"');
+		$stmt = $this->pdo->query('SELECT * FROM "actualite" ORDER BY id_article ASC');
 		$actualites = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
 		{
