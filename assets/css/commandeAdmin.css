@@ -1,3 +1,107 @@
-.commandes-container {
+.commandes-container 
+{
 	width: 100vw;
+	overflow-x: auto;
+	margin-bottom: 100px;
+	height: 80vh;
+}
+
+.container 
+{
+	max-height: 70vh;
+	margin-bottom: 100px;
+	width: 100%;
+}
+
+.add-commande-button 
+{
+	background-color: #030C43;
+	color: white;
+	font-weight: bold;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-left: 10px;
+}
+
+.add-commande-button:hover 
+{
+	background-color: #06178a;
+	color: white;
+}
+
+.bi-create-commande 
+{
+	margin-left: 10px;
+}
+
+.table .ellipsis-td 
+{
+	max-width: 150px;
+	height: auto;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 0.9rem;
+}
+
+.btn-modifier 
+{
+	background-color: #030C43;
+	color: white;
+}
+
+.btn-modifier:hover 
+{
+	background-color: #06178a;
+	color: white;
+}
+
+.btn-supprimer 
+{
+	background-color: #a20c0c;
+	color: white;
+}
+
+.btn-supprimer:hover 
+{
+	background-color: #d50707;
+	color: white;
+}
+
+.btn-research 
+{
+	background-color: #030C43;
+	color: white;
+}
+
+.btn-research:hover 
+{
+	background-color: #06178a;
+	color: white;
+}
+
+.sortable 
+{
+	cursor: pointer;
+}
+
+@media screen and (max-width: 768px) 
+{
+	.table .ellipsis-td 
+	{
+		max-width: 20px;
+		text-overflow: ellipsis;
+	}
+}
+
+@media screen and (max-width: 480px) 
+{
+	.table .ellipsis-td 
+	{
+		max-width: 20px;
+		text-overflow: ellipsis;
+	}
 }
