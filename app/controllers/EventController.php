@@ -10,16 +10,19 @@ class EventController extends Controller
 		setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'french');
 
 		$evenementController = new EvenementController();
-		$upcomingEvents = $evenementController->getAllUpcomingEvents(); 
+		$upcomingEvents = $evenementController->getAllUpcomingEvents();
 
 		$isLoggedIn = $this->isLoggedIn();
 		$user = $this->getCurrentUser();
 		$isAdmin = $user && $user->isAdmin();
+		$isAdherent = $user && $user->isAdherent();
 
 		$eventsByYear = [];
-		foreach ($upcomingEvents as $event) {
+		foreach ($upcomingEvents as $event)
+		{
 			$year = $event->getDateDebut()->format('Y');
-			if (!isset($eventsByYear[$year])) {
+			if (!isset($eventsByYear[$year]))
+			{
 				$eventsByYear[$year] = [];
 			}
 			$eventsByYear[$year][] = $event;
@@ -30,7 +33,8 @@ class EventController extends Controller
 			'title' => 'Événements',
 			'eventsByYear' => $eventsByYear,
 			'isLoggedIn' => $isLoggedIn,
-			'isAdmin' => $isAdmin
+			'isAdmin' => $isAdmin,
+			'isAdherent' => $isAdherent
 		]);
 	}
 }
