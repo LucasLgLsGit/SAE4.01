@@ -31,7 +31,7 @@ class ParticipationRepository
 
 		$participations = [];
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-			$participations[] = $row; // Pas besoin de transformer en objet si vous utilisez directement les données dans Twig
+			$participations[] = $row;
 		}
 		return $participations;
 	}
