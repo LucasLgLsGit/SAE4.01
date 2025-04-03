@@ -1,159 +1,160 @@
 {% extends './_template/base.html.twig' %}
 
 {% block css %}
-    <link rel="stylesheet" href="/assets/css/details.css">
+<link rel="stylesheet" href="/assets/css/details.css">
 {% endblock %}
 
 {% block body %}
 <div class="detail-container">
-    <div class="container mt-4">
-        <div class="row">
-            <!-- Image principale -->
-            <div class="col-md-6">
-                <div class="d-flex justify-content-center align-items-center" style="height: 400px; background-color: #f8f9fa;">
-                    <img src="/assets/images/products/{{ produit.nom_image }}" alt="{{ produit.nom_image }}" class="img-fluid main-image" style="max-height: 100%; max-width: 100%;">
-                </div>
-                <!-- Miniatures -->
-                <div class="d-flex justify-content-center mt-3">
-                    {% for image in images | default([]) %}
-                    <img src="/assets/images/products/{{image}}" alt="{{image}}" class="img-thumbnail me-2 miniature-image" style="width: 60px; height: 60px; object-fit: cover;">
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Détails du produit -->
-            <div class="col-md-6">
-                <h1 class="mb-2">{{ produit.titre_produit }}</h1>
-                <p class="text-muted">{{ produit.date_produit|date('Y') }}</p>
-                <p>{{ produit.description_produit }}</p>
-
-                <!-- Prix avec réduction -->
-                <div class="mb-3">
-                    {% if produit.reduction | default(0) %}
-                    <span class="text-danger fw-bold" style="font-size: 1.5rem;">-{{ produit.reduction }}%</span>
-                    <span class="text-decoration-line-through text-muted">{{ produit.prix_original | default(produit.prix) }} €</span>
-                    {% endif %}
-                    <span class="fw-bold" style="font-size: 1.5rem;">{{ produit.prix }} €</span>
-                </div>
-
-                <!-- Formulaire d'ajout au panier -->
-                <form id="add-to-cart-form">
-                    <input type="hidden" name="id_produit" value="{{ produit.id_produit }}">
-                
-                    <!-- Tailles disponibles -->
-                    <div class="mb-3">
-                        <p><strong>Taille :</strong></p>
-                        <div>
-                            {% for taille in tailles %}
-                            <input type="radio" name="selected_taille" id="taille_{{ taille }}" value="{{ taille }}" class="d-none" required>
-                            <label for="taille_{{ taille }}" class="btn btn-outline-secondary btn-sm me-2">{{ taille }}</label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                
-                    <!-- Couleurs disponibles -->
-                    <div class="mb-3">
-                        <p><strong>Couleur :</strong></p>
-                        <div>
-                            {% for couleur in couleurs %}
-                            <input type="radio" name="selected_couleur" id="couleur_{{ couleur }}" value="{{ couleur }}" class="d-none" required>
-                            <label for="couleur_{{ couleur }}" class="btn btn-couleur me-2" style="background-color: {{ "#" ~ couleur }};"></label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                
-                    <!-- Quantité -->
-                    <div class="mb-3">
-                        <label for="quantite" class="form-label">Quantité :</label>
-                        <select id="quantite" name="quantite" class="form-select" required>
-                            {% for i in 1..10 %}
-                            <option value="{{ i }}">{{ i }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                
-                    <!-- Bouton d'ajout au panier -->
-                    <button type="button" id="add-to-cart-button" class="btn btn-ajouter-panier btn-primary w-100">Ajouter au panier</button>
-                </form>
-            </div>
-        </div>
-    </div>
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="d-flex justify-content-center align-items-center" style="height: 400px; background-color: #f8f9fa;">
+					<img src="/assets/images/products/{{ produit.nom_image }}" alt="{{ produit.nom_image }}" class="img-fluid main-image" style="max-height: 100%; max-width: 100%;">
+				</div>
+				<div class="d-flex justify-content-center mt-3">
+					{% for image in images | default([]) %}
+					<img src="/assets/images/products/{{image}}" alt="{{image}}" class="img-thumbnail me-2 miniature-image" style="width: 60px; height: 60px; object-fit: cover;">
+					{% endfor %}
+				</div>
+			</div>
+			<div class="col-md-6">
+				<h1 class="mb-2">{{ produit.titre_produit }}</h1>
+				<p class="text-muted">{{ produit.date_produit|date('Y') }}</p>
+				<p>{{ produit.description_produit }}</p>
+				<div class="mb-3">
+					{% if produit.reduction | default(0) %}
+					<span class="text-danger fw-bold" style="font-size: 1.5rem;">-{{ produit.reduction }}%</span>
+					<span class="text-decoration-line-through text-muted">{{ produit.prix_original | default(produit.prix) }} €</span>
+					{% endif %}
+					{% if isAdherent is defined and isAdherent %}
+					{% set prixReduitAdherent = produit.prix * 0.9 %}
+					<p class="fw-bold" style="font-size: 1.5rem;">
+						<span class="text-muted text-decoration-line-through">{{ produit.prix }} €</span>
+						<span class="text-success">{{ prixReduitAdherent | number_format(2, '.', ',') }} €</span>
+						<small class="text-success">(-10% adhérent)</small>
+					</p>
+					{% else %}
+					<span class="fw-bold" style="font-size: 1.5rem;">{{ produit.prix }} €</span>
+					{% endif %}
+				</div>
+				<form id="add-to-cart-form">
+					<input type="hidden" name="id_produit" value="{{ produit.id_produit }}">
+					<div class="mb-3">
+						<p><strong>Taille :</strong></p>
+						<div>
+							{% for taille in tailles %}
+							<input type="radio" name="selected_taille" id="taille_{{ taille }}" value="{{ taille }}" class="d-none" required>
+							<label for="taille_{{ taille }}" class="btn btn-outline-secondary btn-sm me-2">{{ taille }}</label>
+							{% endfor %}
+						</div>
+					</div>
+					<div class="mb-3">
+						<p><strong>Couleur :</strong></p>
+						<div>
+							{% for couleur in couleurs %}
+							<input type="radio" name="selected_couleur" id="couleur_{{ couleur }}" value="{{ couleur }}" class="d-none" required>
+							<label for="couleur_{{ couleur }}" class="btn btn-couleur me-2" style="background-color: {{ "#" ~ couleur }};"></label>
+							{% endfor %}
+						</div>
+					</div>
+					<div class="mb-3">
+						<label for="quantite" class="form-label">Quantité :</label>
+						<select id="quantite" name="quantite" class="form-select" required>
+							{% for i in 1..10 %}
+							<option value="{{ i }}">{{ i }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button type="button" id="add-to-cart-button" class="btn btn-ajouter-panier btn-primary w-100">Ajouter au panier</button>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const mainImage = document.querySelector('.main-image');
-        const thumbnails = document.querySelectorAll('.miniature-image');
-    
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', function () {
-                mainImage.src = this.src;
-            });
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const tailleButtons = document.querySelectorAll('input[name="selected_taille"] + label');
-        const couleurButtons = document.querySelectorAll('input[name="selected_couleur"] + label');
-
-        tailleButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                tailleButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                const input = document.getElementById(this.getAttribute('for'));
-                input.checked = true;
-            });
-        });
-
-        couleurButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                couleurButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                const input = document.getElementById(this.getAttribute('for'));
-                input.checked = true;
-            });
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const addToCartButton = document.getElementById('add-to-cart-button');
-        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-
-        addToCartButton.addEventListener('click', function () {
-            const form = document.getElementById('add-to-cart-form');
-            const formData = new FormData(form);
-
-            fetch('/ajouter_panier.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Mettre à jour le contenu de la pop-up cartModal
-                    updateCartModal();
-                    // Ouvrir la pop-up cartModal
-                    cartModal.show();
-                } else {
-                    alert(data.message || 'Une erreur est survenue.');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur lors de l\'ajout au panier :', error);
-                alert('Une erreur est survenue.');
-            });
-        });
-
-        function updateCartModal() {
-            fetch('/contenu_panier.php')
-                .then(response => response.text())
-                .then(html => {
-                    document.querySelector('#cartModal .modal-body').innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la mise à jour du panier :', error);
-                });
-        }
-    });
+	document.addEventListener('DOMContentLoaded', function () 
+	{
+		const mainImage = document.querySelector('.main-image');
+		const thumbnails = document.querySelectorAll('.miniature-image');
+		thumbnails.forEach(thumbnail => 
+		{
+			thumbnail.addEventListener('click', function () 
+			{
+				mainImage.src = this.src;
+			});
+		});
+	});
+	document.addEventListener('DOMContentLoaded', function () 
+	{
+		const tailleButtons = document.querySelectorAll('input[name="selected_taille"] + label');
+		const couleurButtons = document.querySelectorAll('input[name="selected_couleur"] + label');
+		tailleButtons.forEach(button => 
+		{
+			button.addEventListener('click', function () 
+			{
+				tailleButtons.forEach(btn => btn.classList.remove('active'));
+				this.classList.add('active');
+				const input = document.getElementById(this.getAttribute('for'));
+				input.checked = true;
+			});
+		});
+		couleurButtons.forEach(button => 
+		{
+			button.addEventListener('click', function () 
+			{
+				couleurButtons.forEach(btn => btn.classList.remove('active'));
+				this.classList.add('active');
+				const input = document.getElementById(this.getAttribute('for'));
+				input.checked = true;
+			});
+		});
+	});
+	document.addEventListener('DOMContentLoaded', function () 
+	{
+		const addToCartButton = document.getElementById('add-to-cart-button');
+		const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+		addToCartButton.addEventListener('click', function () 
+		{
+			const form = document.getElementById('add-to-cart-form');
+			const formData = new FormData(form);
+			fetch('/ajouter_panier.php', 
+			{
+				method: 'POST',
+				body: formData
+			})
+			.then(response => response.json())
+			.then(data => 
+			{
+				if (data.success) 
+				{
+					updateCartModal();
+					cartModal.show();
+				} 
+				else 
+				{
+					alert(data.message || 'Une erreur est survenue.');
+				}
+			})
+			.catch(error => 
+			{
+				console.error('Erreur lors de l\'ajout au panier :', error);
+				alert('Une erreur est survenue.');
+			});
+		});
+		function updateCartModal() 
+		{
+			fetch('/contenu_panier.php')
+				.then(response => response.text())
+				.then(html => 
+				{
+					document.querySelector('#cartModal .modal-body').innerHTML = html;
+				})
+				.catch(error => 
+				{
+					console.error('Erreur lors de la mise à jour du panier :', error);
+				});
+		}
+	});
 </script>
 {% endblock %}
