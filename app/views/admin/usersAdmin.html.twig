@@ -21,10 +21,10 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th>ID</th>
-					<th>Nom</th>
-					<th>Prénom</th>
-					<th>Email</th>
+					<th id="sortId" class="sortable" data-column="id">ID<i class="bi bi-sort-up" id="sortIdArrow"></i></th>
+					<th id="sortNom" class="sortable" data-column="nom">Nom<i class="bi bi-sort-up" id="sortNomArrow"></i></th>
+					<th id="sortPrenom" class="sortable" data-column="prenom">Prénom<i class="bi bi-sort-up" id="sortPrenomArrow"></i></th>
+					<th id="sortEmail" class="sortable" data-column="email">Email<i class="bi bi-sort-up" id="sortEmailArrow"></i></th>
 					<th>Admin</th>
 					<th>Adhérent</th>
 					<th>Actions</th>
@@ -136,9 +136,59 @@
 {% block javascript %}
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
+		let sortOrder = {
+			id: 1,
+			nom: 1,
+			prenom: 1,
+			email: 1
+		};
+
+		function sortTableByColumn(columnName, type) {
+			const rows = Array.from(document.querySelectorAll('table tbody tr'));
+			const columnIndices = {
+				id: 0,
+				nom: 1,
+				prenom: 2,
+				email: 3
+			};
+		
+			const columnIndex = columnIndices[columnName];
+		
+			const sortedRows = rows.sort((a, b) => {
+				const cellA = a.cells[columnIndex].textContent.trim();
+				const cellB = b.cells[columnIndex].textContent.trim();
+		
+				let comparison = 0;
+				if (type === 'number') {
+					comparison = parseInt(cellA) - parseInt(cellB);
+				} else {
+					comparison = cellA.localeCompare(cellB);
+				}
+		
+				return comparison * sortOrder[columnName];
+			});
+		
+			const tbody = document.querySelector('table tbody');
+			tbody.innerHTML = '';
+			tbody.append(...sortedRows);
+		}
+
+		function setupSortableColumns() {
+			const headers = document.querySelectorAll('.sortable');
+			headers.forEach(header => {
+				header.addEventListener('click', function () {
+					const arrowIcon = header.querySelector('i');
+					const columnName = header.getAttribute('data-column');
+					sortOrder[columnName] = sortOrder[columnName] * -1;
+					sortTableByColumn(columnName, columnName === 'id' ? 'number' : 'string');
+				});
+			});
+		}
+
 		function setupTogglePermissions() {
 			const togglePermCheckboxes = document.querySelectorAll('.toggle-perm');
 			const confirmPermissionChangeButton = document.getElementById('confirmPermissionChange');
+			const confirmPermissionModal = new bootstrap.Modal(document.getElementById('confirmPermissionModal'));
 
 			togglePermCheckboxes.forEach(checkbox => {
 				checkbox.addEventListener('change', function () {
@@ -241,10 +291,10 @@
 			resetButton.addEventListener('click', resetSearch);
         }
 
-		setupDeleteUser();
-		setupEditUser();
+
 		setupTogglePermissions();
 		setupSearch();
+		setupSortableColumns();
 	});
 </script>
 {% endblock %}

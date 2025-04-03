@@ -40,3 +40,7 @@
 	background-color: #06178a;
 	color: white;
 }
+
+.sortable {
+	cursor: pointer;
+}
