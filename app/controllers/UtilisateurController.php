@@ -79,25 +79,16 @@ class UtilisateurController extends Controller {
 	public function deleteUser()
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			$id = filter_input(INPUT_POST, 'id_user', FILTER_VALIDATE_INT);
 
-			if ($id === null || $id === false) {
-				echo json_encode(['success' => false, 'message' => "L'identifiant utilisateur est requis !"]);
-				http_response_code(400);
-				return;
+			if (!isset($_POST['id_user'])) {
+				throw new Exception("L'identifiant utilisateur est requis !");
+				$this->redirectTo('users_admin.php');
 			}
 
-			try {
-				$userRepository = new UtilisateurRepository();
-				$userRepository->deleteById($id); // Supprime l'utilisateur de la base de données
-				echo json_encode(['success' => true, 'message' => 'Utilisateur supprimé avec succès.']);
-			} catch (Exception $e) {
-				http_response_code(500);
-				echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-			}
-		} else {
-			http_response_code(405);
-			echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
+			$id = (int)$_POST['id_user'];
+			$userRepository = new UtilisateurRepository();
+			$userRepository->deleteById($id);
+			$this->redirectTo('users_admin.php');
 		}
 	}
 
