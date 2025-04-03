@@ -46,7 +46,7 @@
 						<i class="bi bi-cart3 fs-4"></i>
 						<span class="badge bg-danger cart-item-count">0</span>
 					</a>
-						<a class="nav-link nav-link-button profil-button" href="/profile.php">
+						<a class="nav-link nav-link-button profil-button" href="/users.php">
 							<i class="bi bi-person-circle"></i> Profil
 						</a>
 						<a class="nav-link nav-link-button logout-button" href="/logout.php">Déconnexion <i class="logout-bi bi bi-box-arrow-left"></i></a>
@@ -64,7 +64,7 @@
 				<i class="bi bi-cart3 fs-4"></i>
 				<span class="badge bg-danger cart-item-count">0</span>
 			</a>
-				<a class="profil-button d-flex align-items-center gap-2" href="/profile.php">
+				<a class="profil-button d-flex align-items-center gap-2" href="/users.php">
 					<i class="bi bi-person-circle"></i> Profil
 				</a>
 				<a class="logout-button" href="/logout.php">Déconnexion <i class="logout-bi bi bi-box-arrow-left"></i></a>
@@ -113,6 +113,9 @@
                 <p>Chargement...</p>
             </div>
             <div class="modal-footer">
+				<div class="me-auto">
+					<strong>Total : </strong><span id="cart-total">0.00 €</span>
+				</div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 <form action="/commande.php" method="POST" class="d-inline">
 					<input type="hidden" name="id_user" value="{{ user.id }}"> 

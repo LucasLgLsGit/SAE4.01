@@ -211,4 +211,9 @@ class UtilisateurController extends Controller {
 			echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 		}
 	}
+
+	public function isUserAdmin(): bool {
+        $user = $this->getCurrentUser();
+        return $user && $user->isAdmin();
+    }
 }

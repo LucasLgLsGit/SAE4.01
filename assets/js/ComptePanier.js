@@ -24,11 +24,21 @@ function updateCartModal() {
         .then(response => response.json())
         .then(data => {
             const modalBody = document.querySelector('#cartModal .modal-body');
+            const cartTotalElement = document.querySelector('#cart-total'); // Sélectionner l'élément du total
+
             if (Object.keys(data).length === 0) {
                 modalBody.innerHTML = '<p>Votre panier est vide.</p>';
+                cartTotalElement.textContent = '0.00 €'; // Mettre à jour le total à 0
             } else {
                 let html = '<div class="list-group">';
+                let total = 0; // Initialiser le total
+
                 for (const [key, item] of Object.entries(data)) {
+                    const couleur = '#' + item.couleur || '#000'; // Valeur par défaut pour la couleur
+                    const prix = item.prix; // Valeur par défaut pour le prix
+                    const quantite = item.quantite || 0; // Valeur par défaut pour la quantité
+                    total += quantite * prix; // Calculer le total
+                
                     html += `
                         <div class="list-group-item d-flex align-items-center">
                             <img src="/assets/images/bde.webp" alt="Produit ${item.titre_produit || 'inconnu'}" class="img-fluid me-3" style="width: auto; height: 100px;">
@@ -37,22 +47,26 @@ function updateCartModal() {
                                     <h5 class="mb-1">${item.titre_produit || 'Produit inconnu'}</h5>
                                     <button class="btn btn-danger btn-sm" onclick="updateCart('${key}', 0)"><i class="bi bi-trash"></i></button>
                                 </div>
-                                <div class="d-flex gap-3 align-items-center mb-2">
-                                    <span>Taille: ${item.taille || 'N/A'}</span>
-                                    <span>Couleur: <div style="width: 20px; height: 20px; background-color: #${item.couleur || '000'}; border-radius: 50%;"></div></span>
+                                <div class="d-flex gap-3 align-items-center mb-2" style="align-items: center;">
+                                    <span>Taille : ${item.taille || 'N/A'}</span>
+                                    <span style="display: flex; align-items: center;">Couleur :&nbsp;&nbsp;<div style="width: 20px; height: 20px; background-color: ${couleur}; border-radius: 50%; display: inline-block;"></div></span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="d-flex align-items-center">
-                                        <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateCart('${key}', ${item.quantite - 1})">-</button>
-                                        <span>${item.quantite || 0}</span>
-                                        <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateCart('${key}', ${item.quantite + 1})">+</button>
+                                        <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateCart('${key}', ${quantite - 1})">-</button>
+                                        <span>${quantite}</span>
+                                        <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateCart('${key}', ${quantite + 1})">+</button>
                                     </div>
+                                    <span>${(quantite * prix).toFixed(2)} €</span>
                                 </div>
                             </div>
                         </div>`;
                 }
                 html += '</div>';
                 modalBody.innerHTML = html;
+
+                // Mettre à jour le prix total
+                cartTotalElement.textContent = `${total.toFixed(2)} €`;
             }
             updateCartItemCount(data); // Met à jour le compteur avec les données reçues
         })
