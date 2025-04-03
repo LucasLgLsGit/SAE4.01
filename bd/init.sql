@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS Evenement;
 DROP TABLE IF EXISTS Image;
 DROP TABLE IF EXISTS Produit;
 DROP TABLE IF EXISTS Utilisateur;
+DROP TABLE IF EXISTS Question;
 
 CREATE TABLE Utilisateur(
 	id_user SERIAL,
@@ -90,4 +91,11 @@ CREATE TABLE Commande(
 	PRIMARY KEY(id_user, id_produit),
 	FOREIGN KEY(id_user) REFERENCES Utilisateur(id_user),
 	FOREIGN KEY(id_produit) REFERENCES Produit(id_produit)
+);
+
+CREATE TABLE Question(
+	id_question SERIAL,
+	question TEXT NOT NULL,
+	reponse TEXT NOT NULL,
+	PRIMARY KEY(id_question)
 );
