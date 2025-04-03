@@ -1,7 +1,7 @@
 <?php
 require_once './init.php';
 require_once './app/controllers/CommandeController.php';
-require_once './app/services/AuthService.php'; // Ajout pour utiliser AuthService
+require_once './app/services/AuthService.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_samesite', 'Lax');
@@ -10,8 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['panier']) || empty($_SESSION['panier'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Le panier est vide.']);
+        header('Location: /confirmation.php?message=' . urlencode('Erreur : Le panier est vide.'));
         exit;
     }
 
@@ -20,29 +19,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $authService->getUser();
 
     if ($user === null || !method_exists($user, 'getId')) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté ou données invalides.']);
+        header('Location: /login.php');
         exit;
     }
 
     $id_user = $user->getId(); // Récupérer l'ID de l'utilisateur
 
-	$controller = new CommandeController();
-	foreach ($_SESSION['panier'] as $article) {
-		$controller->upsertCommande([
-			'id_user' => $id_user,
-			'id_produit' => $article['id_produit'],
-			'quantite' => $article['quantite']
-		]);
-	}
-	
-	$_SESSION['panier'] = [];
-	echo json_encode(['success' => true, 'message' => 'Commande(s) créée(s) ou mise(s) à jour avec succès.']);
-	
-	$_SESSION['panier'] = [];
-	echo json_encode(['success' => true, 'message' => 'Commande(s) créée(s) ou mise(s) à jour avec succès.']);
+    // Générer un numéro de commande initial pour cette commande
+    $numero_commande = uniqid('CMD_');
+
+    $controller = new CommandeController();
+    $articlesAvecNumero = [];
+
+    // Traiter chaque article du panier
+    foreach ($_SESSION['panier'] as $key => $article) {
+        $commandeData = [
+            'id_user' => $id_user,
+            'id_produit' => $article['id_produit'],
+            'quantite' => $article['quantite'],
+            'numero_commande' => $numero_commande
+        ];
+
+        // Insérer la commande dans la table Commande
+        // upsertCommande va s'assurer que le numero_commande est unique
+        $numero_commande = $controller->upsertCommande($commandeData);
+
+        // Ajouter le numéro de commande à l'article
+        $article['numero_commande'] = $numero_commande;
+        $article['date_commande'] = date('Y-m-d H:i:s');
+        $articlesAvecNumero[$key] = $article;
+    }
+
+    // Sauvegarder les articles avec leurs numéros de commande dans une variable de session temporaire
+    $_SESSION['derniere_commande'] = $articlesAvecNumero;
+
+    // Vider le panier après la commande
+    $_SESSION['panier'] = [];
+
+    // Rediriger vers la page de confirmation
+    header('Location: /confirmation.php?message=' . urlencode('Merci d\'avoir passé commande !'));
+    exit;
 } else {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
+    header('Location: /confirmation.php?message=' . urlencode('Erreur : Méthode non autorisée.'));
+    exit;
 }
 ?>

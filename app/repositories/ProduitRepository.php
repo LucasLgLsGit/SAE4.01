@@ -18,6 +18,24 @@ class ProduitRepository {
 		return $produits;
 	}
 
+
+	public function findByAttributes(string $titre_produit, string $taille, string $couleur): ?Produit {
+		$stmt = $this->pdo->prepare('
+			SELECT * FROM produit 
+			WHERE LOWER(titre_produit) = LOWER(:titre_produit) 
+			AND taille = :taille 
+			AND couleur = :couleur
+		');
+		$stmt->execute([
+			'titre_produit' => $titre_produit,
+			'taille' => $taille,
+			'couleur' => $couleur
+		]);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+		return $row ? $this->createProduitFromRow($row) : null;
+	}
+
 	public function create(array $data): Produit {
 		$errors = [];
 	

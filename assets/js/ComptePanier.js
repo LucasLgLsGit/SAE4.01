@@ -124,3 +124,4 @@ function updateCart(cartKey, quantite) {
         console.error('Erreur lors de la mise à jour du panier :', error);
     });
 }
+
