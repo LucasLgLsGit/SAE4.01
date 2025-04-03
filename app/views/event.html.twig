@@ -6,35 +6,37 @@
 
 {% block body %}
 <div class="events-container py-5">
-    <div class="row">
-        <div class="col-md-8 mx-auto">  
-            <div class="d-flex justify-content-between align-items-center mb-3 position-relative">
-                <h2 class="fw-bold mb-0">{{ event.getTitreEvent() }}</h2>
-                {% if event.getPrix() > 0 %}
-                    <span class="event-price">{{ event.getPrix()|number_format(2, ',', ' ') }} €</span>
-                {% else %}
-                    <span class="badge-free">GRATUIT</span>
-                {% endif %}
-            </div>
+	<div class="row">
+		<div class="col-md-8 mx-auto">  
+			<div class="d-flex justify-content-between align-items-center mb-3 position-relative">
+				<h2 class="fw-bold mb-0">{{ event.getTitreEvent() }}</h2>
+				{% if event.getPrix() > 0 %}
+					{% if isAdherent is defined and isAdherent %}
+						{% set prixReduit = event.getPrix() * 0.9 %}
+						<div class="event-price">
+							<span class="text-muted text-decoration-line-through me-2">{{ event.getPrix()|number_format(2, ',', ' ') }} €</span>
+							<span class="text-success fw-bold">{{ prixReduit|number_format(2, ',', ' ') }} €</span>
+							<small class="d-block text-success">(-10% adhérent)</small>
+						</div>
+					{% else %}
+						<div class="event-price">{{ event.getPrix()|number_format(2, ',', ' ') }} €</div>
+					{% endif %}
+				{% endif %}
+			</div>
+			<div class="border-bottom border-1 border-dark mb-4"></div>
+			<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+				<div class="d-flex align-items-center mb-2 mb-md-0">
+					<i class="bi bi-calendar-event me-2"></i>
+					<span>{{ event.getDateDebut()|date_fr("d F Y à H:i") }}</span>
+				</div>
+				<div class="d-flex align-items-center">
+					<i class="bi bi-geo-alt me-2"></i>
+					<span>{{ event.getAdresse() }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
 
-            <!-- Ligne de séparation -->
-            <div class="border-bottom border-1 border-dark mb-4"></div>
-
-            <!-- Date et adresse -->
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-                <div class="d-flex align-items-center mb-2 mb-md-0">
-                    <i class="bi bi-calendar-event me-2"></i>
-                    <span>{{ event.getDateDebut()|date_fr("d F Y à H:i") }}</span>
-                </div>
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-geo-alt me-2"></i>
-                    <span>{{ event.getAdresse() }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-	<!-- Description et bouton -->
 	<div class="row">
 		<div class="col-md-8 mx-auto"> 
 			<div class="event-card p-4 mb-4 d-flex justify-content-between align-items-center">
@@ -50,7 +52,6 @@
 						S'inscrire
 					</button>
 				</form>
-				
 				{% if isRegistered %}
 				<form method="post" action="/desinscription_event.php">
 					<input type="hidden" name="id_event" value="{{ event.getId() }}">
@@ -64,63 +65,56 @@
 		</div>
 	</div>
 
-
-    <!-- Formulaire de commentaire -->
-    <div class="row">
-        <div class="col-md-8 mx-auto">  {# Ajout du conteneur centré #}
-            <div class="event-card p-4 mt-4">
-                <h4 class="mb-3">Laisser un commentaire</h4>
-                <form method="post" action="/ajout_commentaire.php">
-                    <input type="hidden" name="id_event" value="{{ event.getId() }}">
-                    <input type="hidden" name="id_user" value="{{ utilisateur.getId() }}">
+	<div class="row">
+		<div class="col-md-8 mx-auto"> 
+			<div class="event-card p-4 mt-4">
+				<h4 class="mb-3">Laisser un commentaire</h4>
+				<form method="post" action="/ajout_commentaire.php">
+					<input type="hidden" name="id_event" value="{{ event.getId() }}">
+					<input type="hidden" name="id_user" value="{{ utilisateur.getId() }}">
 					<input type="hidden" name="date_commentaire" value="{{ "now"|date("Y-m-d H:i:s") }}">
-                    <div class="mb-3">
-                        <textarea class="form-control" name="texte" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-more">Envoyer</button>
-                </form>
-            </div>
-        </div>
-    </div>
+					<div class="mb-3">
+						<textarea class="form-control" name="texte" rows="4" required></textarea>
+					</div>
+					<button type="submit" class="btn btn-more">Envoyer</button>
+				</form>
+			</div>
+		</div>
+	</div>
 
-    <!-- Affichage des commentaires -->
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="event-card p-4 mt-4">
-                <h4 class="mb-3">Commentaires</h4>
-                {% if commentaires is not empty %}
-                    <ul class="list-unstyled">
-                        {% for commentaire in commentaires %}
-                        <li class="mb-3 p-3 border rounded shadow-sm position-relative">
-                            <!-- Conteneur en-tête commentaire -->
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <strong>{{ [commentaire.utilisateur.prenom, commentaire.utilisateur.nom]|join(' ')|trim }}</strong>
-                                    <span class="text-muted small ms-2">{{ commentaire.getDate_commentaire()|date_fr("d F Y à H:i") }}</span>
-                                </div>
-                                
-                                <!-- Bouton Supprimer (conditionnel) -->
-                                {% if isAdmin or commentaire.getId_user() == utilisateur.getId() %}
-                                    <form method="post" action="/delete_commentaire.php" class="ms-2">
-                                        <input type="hidden" name="id_commentaire" value="{{ commentaire.getId_commentaire() }}">
-                                        <input type="hidden" name="id_event" value="{{ event.getId() }}">
-                                        <button type="submit" class="btn btn-sm btn-danger" 
-                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                            
-                            <p class="mb-0">{{ commentaire.getTexte() }}</p>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="text-muted">Aucun commentaire pour le moment.</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-8 mx-auto">
+			<div class="event-card p-4 mt-4">
+				<h4 class="mb-3">Commentaires</h4>
+				{% if commentaires is not empty %}
+					<ul class="list-unstyled">
+						{% for commentaire in commentaires %}
+						<li class="mb-3 p-3 border rounded shadow-sm position-relative">
+							<div class="d-flex justify-content-between align-items-start mb-2">
+								<div>
+									<strong>{{ [commentaire.utilisateur.prenom, commentaire.utilisateur.nom]|join(' ')|trim }}</strong>
+									<span class="text-muted small ms-2">{{ commentaire.getDate_commentaire()|date_fr("d F Y à H:i") }}</span>
+								</div>
+								{% if isAdmin or commentaire.getId_user() == utilisateur.getId() %}
+									<form method="post" action="/delete_commentaire.php" class="ms-2">
+										<input type="hidden" name="id_commentaire" value="{{ commentaire.getId_commentaire() }}">
+										<input type="hidden" name="id_event" value="{{ event.getId() }}">
+										<button type="submit" class="btn btn-sm btn-danger" 
+												onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">
+											<i class="bi bi-trash"></i>
+										</button>
+									</form>
+								{% endif %}
+							</div>
+							<p class="mb-0">{{ commentaire.getTexte() }}</p>
+						</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p class="text-muted">Aucun commentaire pour le moment.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}

@@ -52,7 +52,16 @@
 					<td>{{ product.getPrix()|number_format(2, ',', ' ') }}</td>
 					<td>{{ product.getId_user() }}</td>
 					<td>
-						<a href="#" class="btn btn-modifier btn-sm"><i class="bi bi-pencil-square"></i></a>
+						<button class="btn btn-modifier btn-sm edit-product"
+                        data-product-id="{{ product.getId_produit() }}"
+                        data-product-name="{{ product.getTitre_produit() }}"
+                        data-product-description="{{ product.getDescription_produit() }}"
+                        data-product-price="{{ product.getPrix() }}"
+                        data-product-color="{{ product.getCouleur() }}"
+                        data-product-size="{{ product.getTaille() }}"
+                        data-product-stock="{{ product.getStock() }}">
+                    <i class="bi bi-pencil-square"></i> 
+                	</button>
 						<button class="btn btn-supprimer btn-sm delete-product" data-bs-toggle="modal" data-bs-target="#deleteProductModal" data-product-id="{{ product.getId_produit() }}" onclick="document.getElementById('deleteProductId').value = '{{ product.getId_produit() }}';"><i class="bi bi-trash"></i></button>
 					</td>
 				</tr>
@@ -70,7 +79,6 @@
 			<form action="/products_admin.php?action=deleteProduct" method="POST">
 				<div class="modal-header">
 					<h5 class="modal-title" id="deleteProductModalLabel">Confirmer la suppression</h5>
-					<p>Pour supprimer un article il faut commencer par son dernier id</p>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -162,7 +170,7 @@
 					<div class="mb-3 d-flex align-items-center gap-3">
 						<div>
 							<label for="imageInput0" class="form-label">Image principale (obligatoire) :</label>
-							<input class="form-control image-input" type="file" id="imageInput0" name="images[]" accept="image/*">
+							<input class="form-control image-input" type="file" id="imageInput0" name="images[]" accept="image/*" required>
 						</div>
 						<div id="previewContainer0" class="mt-2"></div>
 					</div>
@@ -178,6 +186,66 @@
 		</div>
 	</div>
 </div>
+
+<!-- Modal modification produit -->
+<div class="modal fade" id="modifProductModal" tabindex="-1" aria-labelledby="modifProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifProductModalLabel">Modifier un produit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="modifProductForm" method="POST" action="/products_admin.php?action=updateProduct">
+                    <input type="hidden" name="id_produit" id="modifProductId">
+
+                    <div class="mb-3">
+                        <label for="modifProductName" class="form-label fw-bold">Nom du produit</label>
+                        <input type="text" class="form-control" id="modifProductName" name="nom" required placeholder="Entrez le nom du produit">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modifProductDescription" class="form-label fw-bold">Description</label>
+                        <textarea class="form-control" id="modifProductDescription" name="description" rows="3" required placeholder="Entrez une description"></textarea>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="modifProductPrice" class="form-label fw-bold">Prix (€)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="modifProductPrice" name="prix" required placeholder="Ex: 19.99">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modifProductStock" class="form-label fw-bold">Stock</label>
+                            <input type="number" min="0" class="form-control" id="modifProductStock" name="stock" required placeholder="Ex: 10">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="modifProductColor" class="form-label fw-bold">Couleur</label>
+                            <input type="color" class="form-control form-control-color" id="modifProductColor" name="couleur" value="#000000">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modifProductSize" class="form-label fw-bold">Taille</label>
+                            <select class="form-select" id="modifProductSize" name="taille" required>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block javascript %}

@@ -37,7 +37,6 @@ class ProductController extends Controller
 
                 $createdProductIds = [];
 
-                // Création des produits
                 foreach ($data['couleurs'] as $colorIndex => $color) {
                     if (!isset($data['stock'][$colorIndex])) {
                         echo "Aucun stock pour la couleur $color\n";
@@ -100,7 +99,6 @@ class ProductController extends Controller
                     throw new Exception("L'identifiant du produit est requis !");
                 }
     
-                // Appel au repository pour supprimer le produit
                 $this->produitRepo->delete($idProduit);
     
                 $this->redirectTo('/products_admin.php');
@@ -109,6 +107,47 @@ class ProductController extends Controller
                 $this->view('/admin/shopAdmin.html.twig', [
                     'errors' => [$e->getMessage()],
                     'title' => 'Gestion des produits'
+                ]);
+            }
+        } else {
+            http_response_code(405);
+            echo "Méthode non autorisée.";
+        }
+    }
+
+    public function updateProduct()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $data = $this->getAllPostParams();
+                
+                if (empty($data['id_produit'])) {
+                    throw new Exception("ID produit manquant");
+                }
+    
+                $productData = [
+                    'id_produit' => (int)$data['id_produit'],
+                    'titre_produit' => $data['nom'],
+                    'description_produit' => $data['description'],
+                    'prix' => (float)$data['prix'],
+                    'couleur' => $data['couleur'],
+                    'taille' => $data['taille'],
+                    'stock' => (int)$data['stock']
+                ];
+    
+                $success = $this->produitRepo->update($productData);
+                
+                if (!$success) {
+                    throw new Exception("Échec de la mise à jour");
+                }
+    
+                $this->redirectTo('/products_admin.php');
+    
+            } catch (Exception $e) {
+                http_response_code(400);
+                $this->view('/admin/shopAdmin.html.twig', [
+                    'errors' => [$e->getMessage()],
+                    'title' => 'Erreur modification'
                 ]);
             }
         } else {
