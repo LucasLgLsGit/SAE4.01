@@ -42,6 +42,36 @@
 	font-size: 0.9rem;
 }
 
+.btn-modifier {
+	background-color: #030C43;
+	color: white;
+}
+
+.btn-modifier:hover {
+	background-color: #06178a;
+	color: white;
+}
+
+.btn-supprimer {
+	background-color: #a20c0c;
+	color: white;
+}
+
+.btn-supprimer:hover {
+	background-color: #d50707;
+	color: white;
+}
+
+.btn-research {
+	background-color: #030C43;
+	color: white;
+}
+
+.btn-research:hover {
+	background-color: #06178a;
+	color: white;
+}
+
 @media screen and (max-width: 768px) {
 	.table .ellipsis-td {
 		max-width: 20px;

@@ -1,3 +1,21 @@
 .sign-up-container {
 	width: 100vw;
 }
+
+.btn-sign-up {
+	background-color: #030C43;
+	border: none;
+	color: white;
+	padding: 7px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 40px;
+	transition: background-color 0.3s ease;
+}
+
+.btn-sign-up:hover {
+	background-color: #0A1D6E;
+	color: white;
+}
