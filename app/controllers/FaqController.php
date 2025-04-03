@@ -36,7 +36,7 @@ class FaqController extends Controller
 			try {
 				$faqRepo = new FaqRepository();
 				$faqRepo->create($data);
-				$this->redirectTo('faq_admin.php');
+				$this->redirectTo('faqs_admin.php');
 			} catch (Exception $e) {
 				$errors = explode(', ', $e->getMessage());
 			}
@@ -51,14 +51,14 @@ class FaqController extends Controller
 
 		if (empty($id) || empty($question) || empty($reponse)) {
 			throw new Exception('Tous les champs sont requis.');
-			$this->redirectTo('faq_admin.php');
+			$this->redirectTo('faqs_admin.php');
 			return;
 		}
 
 		$faqRepository = new FaqRepository();
 		$faqRepository->update($id, $question, $reponse);
 
-		$this->redirectTo('faq_admin.php');
+		$this->redirectTo('faqs_admin.php');
 	}
 
 	public function delete()
@@ -67,13 +67,13 @@ class FaqController extends Controller
 
 		if (empty($id)) {
 			throw new Exception('L\'identifiant de la FAQ est requis.');
-			$this->redirectTo('faq_admin.php');
+			$this->redirectTo('faqs_admin.php');
 			return;
 		}
 
 		$faqRepository = new FaqRepository();
 		$faqRepository->deleteById($id);
 
-		$this->redirectTo('faq_admin.php');
+		$this->redirectTo('faqs_admin.php');
 	}
 }

@@ -72,7 +72,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="editQuestionForm" action="faq_update.php" method="POST">
+				<form id="editQuestionForm" action="faqs_admin.php?action=update" method="POST">
 					<input type="hidden" id="editFaqId" name="id_faq">
 					<div class="mb-3">
 						<label for="editQuestion" class="form-label">Question</label>
@@ -95,7 +95,7 @@
 <div class="modal fade" id="deleteQuestionModal" tabindex="-1" aria-labelledby="deleteQuestionModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form action="faq_delete.php" method="POST">
+			<form action="faqs_admin.php?action=delete" method="POST">
 				<div class="modal-header">
 					<h5 class="modal-title" id="deleteQuestionModalLabel">Confirmer la suppression</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -121,7 +121,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="createQuestionForm" action="faq_create.php" method="POST">
+				<form id="createQuestionForm" action="faqs_admin.php?action=create" method="POST">
 					<div class="mb-3">
 						<label for="createQuestion" class="form-label">Question</label>
 						<input type="text" class="form-control" id="createQuestion" name="question" required>
