@@ -55,7 +55,7 @@
             <!-- Nouvelle adresse mail -->
             <div class="col-md-6">
                 <label for="new_mail" class="form-label">Nouvelle adresse mail</label>
-                <form method="POST" action="users.php?updateMail" class="d-flex">
+                <form method="POST" action="users.php?action=updateMail" class="d-flex">
                     <input type="hidden" name="id_user" value="{{ utilisateur.id }}">
                     <input type="email" class="form-control me-2" id="new_mail" name="new_mail" placeholder="Nouvelle adresse mail" required>
                     <button type="submit" class="profile-btn">Changer</button>
@@ -73,7 +73,7 @@
             <!-- Nouveau mot de passe -->
             <div class="col-md-12">
                 <label for="new_mdp" class="form-label">Nouveau mot de passe</label>
-                <form method="POST" action="users.php?updateMdp" class="d-flex">
+                <form method="POST" action="users.php?action=updateMdp" class="d-flex">
                     <input type="hidden" name="id_user" value="{{ utilisateur.id }}">
                     <input type="password" class="form-control me-2" id="new_mdp" name="new_mdp" placeholder="Nouveau mot de passe" required>
                     <input type="password" class="form-control me-2" id="confirm_new_mdp" name="confirm_new_mdp" placeholder="Confirmation du mot de passe" required>
